@@ -1,0 +1,15 @@
+{
+  "name": "orvel-portal",
+  "private": true,
+  "description": "Portal de clientes (white label): área de cliente e painel da equipa",
+  "scripts": {
+    "db:start": "supabase start",
+    "db:reset": "supabase db reset",
+    "db:test": "supabase test db",
+    "db:reset:local": "scripts/local/db-reset.sh",
+    "db:test:local": "scripts/local/db-test.sh"
+  },
+  "devDependencies": {
+    "supabase": "^2.122.0"
+  }
+}
