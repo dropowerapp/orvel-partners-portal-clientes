@@ -1,5 +1,7 @@
--- Dados FICTÍCIOS para desenvolvimento local. Nunca usar dados de clientes reais.
--- Corre depois das migrações em `supabase db reset` (ou scripts/local/db-reset.sh).
+-- Dados FICTÍCIOS para desenvolvimento (local e projeto Supabase de dev). Nunca usar dados de
+-- clientes reais e nunca correr em produção.
+-- Corre depois das migrações em `supabase db reset` (ou scripts/local/db-reset.sh), ou no projeto
+-- de dev com scripts/remote/db-seed.sh.
 -- Emails em @exemplo.test (domínio reservado, nunca entrega).
 --
 -- Acessos locais:
@@ -50,14 +52,18 @@ begin
       ('parceiro@exemplo.test', true)
     ) as u (email, has_password)
   loop
+    -- Compatível com o Supabase Auth real (GoTrue): as datas e os campos de token não podem ficar
+    -- a NULL (o login falha com "Database error querying schema"); sem password = texto vazio.
     insert into auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
-      raw_app_meta_data, raw_user_meta_data, confirmation_token, recovery_token, email_change_token_new, email_change)
+      raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+      confirmation_token, recovery_token, email_change_token_new, email_change)
     values ('00000000-0000-0000-0000-000000000000', md5('seed:' || v_user.email)::uuid, 'authenticated', 'authenticated',
-      v_user.email, case when v_user.has_password then v_password end, now(),
-      '{"provider": "email", "providers": ["email"]}', '{}', '', '', '', '');
-    insert into auth.identities (provider_id, user_id, identity_data, provider, last_sign_in_at)
+      v_user.email, case when v_user.has_password then v_password else '' end, now(),
+      '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', now(), now(), '', '', '', '');
+    insert into auth.identities (provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
     values (md5('seed:' || v_user.email)::uuid::text, md5('seed:' || v_user.email)::uuid,
-      jsonb_build_object('sub', md5('seed:' || v_user.email)::uuid::text, 'email', v_user.email), 'email', now());
+      jsonb_build_object('sub', md5('seed:' || v_user.email)::uuid::text, 'email', v_user.email,
+        'email_verified', true, 'phone_verified', false), 'email', now(), now(), now());
   end loop;
 
   insert into public.memberships (user_id, organization_id, role, display_name) values

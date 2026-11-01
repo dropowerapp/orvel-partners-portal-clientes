@@ -182,6 +182,50 @@ npx supabase secrets set BREVO_API_KEY=<chave> SEND_EMAIL_HOOK_SECRET=<segredo> 
 9. Frontend (Vercel ou `web/.env.local`): `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`
    (Project Settings → API; a chave pública "anon"/"publishable").
 
+### Alternativa sem CLI nem password da base de dados (`scripts/remote/`)
+
+Os mesmos passos pela Management API (`https://api.supabase.com`), só com `curl` e `jq`. Precisam
+de `SUPABASE_PROJECT_REF` e de um token pessoal (`sbp_…`, criado em Account → Access Tokens) em
+`SUPABASE_ACCESS_TOKEN`, ou de um proxy que o acrescente aos pedidos. Nunca guardar o token no
+repositório.
+
+| Script | O que faz |
+|---|---|
+| `db-push.sh [--dry-run]` | Aplica as migrações em falta, por ordem, cada uma numa transação, e regista-as em `supabase_migrations.schema_migrations` (compatível com `supabase db push`) |
+| `db-seed.sh --sim-e-desenvolvimento` | Carrega os dados fictícios; recusa se houver utilizadores fora de `@exemplo.test` e não repete |
+| `functions-deploy.sh [função …]` | Publica as Edge Functions com o `verify_jwt` de `config.toml` |
+| `secrets-set.sh NOME=valor … \| --list` | Define segredos das funções (só mostra os nomes) |
+| `auth-config.sh [--apply]` | Mostra as definições de autenticação atuais e as pretendidas; com `--apply`, aplica-as e liga o hook de email com um segredo novo |
+| `db-test.sh` | Corre os testes pgTAP no projeto (tudo desfeito no fim) |
+| `e2e.sh` | Teste de ponta a ponta: link mágico, consentimento, equipa com MFA, convite e Storage |
+
+Projeto de desenvolvimento, por esta ordem (dados fictícios; enquanto não houver chave da Brevo,
+os emails ficam no log da função):
+
+```bash
+export SUPABASE_PROJECT_REF=<referencia-do-projeto>
+```
+
+```bash
+scripts/remote/db-push.sh && scripts/remote/db-seed.sh --sim-e-desenvolvimento
+```
+
+```bash
+scripts/remote/functions-deploy.sh
+```
+
+```bash
+scripts/remote/secrets-set.sh EMAIL_MODE=log PUBLIC_SITE_URL=http://localhost:5173 ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173 AUTH_LINK_EXPIRY_HOURS=1
+```
+
+```bash
+scripts/remote/auth-config.sh
+```
+
+```bash
+scripts/remote/db-test.sh && scripts/remote/e2e.sh
+```
+
 Membro da equipa que perdeu a aplicação de autenticação: em Authentication → Users, abrir o
 utilizador e remover o fator MFA; no login seguinte, o portal pede para o configurar de novo.
 
