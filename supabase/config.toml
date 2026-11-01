@@ -249,10 +249,15 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
-# Uncomment to customize email template
-# [auth.email.template.invite]
-# subject = "You have been invited"
-# content_path = "./supabase/templates/invite.html"
+# Modelos usados só quando o hook de email (auth-send-email) está desligado, como no ambiente
+# local (os emails aparecem no Inbucket/Mailpit). Em produção os emails saem pelo hook, pela Brevo.
+[auth.email.template.magic_link]
+subject = "O seu link de acesso ao portal"
+content_path = "./supabase/templates/magic_link.html"
+
+[auth.email.template.recovery]
+subject = "Redefinir a password do portal"
+content_path = "./supabase/templates/recovery.html"
 
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]
@@ -281,6 +286,14 @@ max_frequency = "5s"
 # timebox = "24h"
 # Force log out if the user has been inactive longer than the specified duration.
 # inactivity_timeout = "8h"
+
+# Emails de autenticação com a marca da organização, enviados pela Brevo (Edge Function
+# auth-send-email). Desligado localmente; em produção liga-se no painel do Supabase
+# (Authentication → Hooks → Send Email) com o URL da função e o segredo SEND_EMAIL_HOOK_SECRET.
+[auth.hook.send_email]
+enabled = false
+uri = "http://host.docker.internal:54321/functions/v1/auth-send-email"
+secrets = "env(SEND_EMAIL_HOOK_SECRET)"
 
 # This hook runs before a new user is created and allows developers to reject the request based on the incoming user object.
 # [auth.hook.before_user_created]
@@ -419,3 +432,12 @@ enabled = true
 # formatted with uppercase keywords, indent 2, max width 180, trailing commas,
 # and column/key alignment. Set to "null" to emit raw, unformatted SQL.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":180,\"commaStyle\":\"trailing\"}"
+
+# Edge Functions ---------------------------------------------------------------------------------
+# Convite: só com sessão válida (e a função confirma equipa com MFA).
+[functions.invite-client]
+verify_jwt = true
+
+# Hook do Supabase Auth: autenticado pela assinatura (SEND_EMAIL_HOOK_SECRET), não por JWT.
+[functions.auth-send-email]
+verify_jwt = false

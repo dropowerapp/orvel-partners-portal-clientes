@@ -1,0 +1,17 @@
+{
+  "nodeModulesDir": "none",
+  "tasks": {
+    "test": "deno test --allow-env tests/",
+    "check": "deno check invite-client/index.ts auth-send-email/index.ts"
+  },
+  "lint": {
+    "rules": {
+      "tags": [
+        "recommended"
+      ]
+    }
+  },
+  "fmt": {
+    "lineWidth": 130
+  }
+}

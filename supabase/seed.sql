@@ -6,6 +6,7 @@
 --   Equipa Orvel ........ equipa@exemplo.test / Orvel-Local-2026!  (pede MFA no 1.º login)
 --   Equipa Exemplo ...... equipa.exemplo@exemplo.test / Orvel-Local-2026!
 --   Clientes ............ link mágico (ver emails no Inbucket/Mailpit local)
+--                         O Rui ainda não aceitou o aviso de privacidade; os outros já.
 
 do $$
 declare
@@ -84,6 +85,13 @@ begin
     (md5('seed:marta.exemplo@exemplo.test')::uuid, v_orvel, 'client', md5('seed:client-marta')::uuid),
     (md5('seed:joao.teste@exemplo.test')::uuid, v_orvel, 'client', md5('seed:client-joao')::uuid),
     (md5('seed:carla.exemplo@exemplo.test')::uuid, v_ex, 'client', md5('seed:client-carla')::uuid);
+
+  -- Aviso de privacidade já aceite por todos menos o Rui (para ver o ecrã de consentimento).
+  insert into public.privacy_consents (organization_id, user_id, notice_id, accepted_at)
+  select n.organization_id, md5('seed:' || u.email)::uuid, n.id, now() - interval '30 days'
+  from (values ('marta.exemplo@exemplo.test', v_orvel), ('joao.teste@exemplo.test', v_orvel),
+               ('carla.exemplo@exemplo.test', v_ex)) as u(email, org)
+  join public.privacy_notices n on n.organization_id = u.org and n.version = 1;
 
   -- Processo 1 — Rui: proposta enviada com dois planos
   insert into public.processes (id, organization_id, client_id, free_zone, visa_count, bank_account_id)

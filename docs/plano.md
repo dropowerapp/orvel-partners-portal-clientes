@@ -305,3 +305,17 @@ O editor de modelos no ecrã de definições ficaria para a fase 2. Dias de avis
 - **Repositório GitHub:** o nome (ex.: `orvel-partners/portal-clientes`). Pode ser um repositório vazio criado por ti; eu ligo-o a esta sessão.
 - **Logótipo:** os ficheiros, a pedir à Cátia. Até lá uso um marcador neutro, sem redesenhar o logótipo.
 - **Só no deploy:** projetos Supabase de dev e de produção, Vercel, `BREVO_API_KEY` e o DNS na GoDaddy.
+
+---
+
+## 12. Notas da etapa 2 (01/11/2026)
+
+- **Consentimento exigido pela base de dados**: sem aceitar o aviso de privacidade em vigor, o
+  cliente não lê nem altera nada (só o aviso). Uma nova versão publicada volta a pedir a aceitação.
+- **Recuperação de password da equipa** acrescentada (ecrã "Esqueci-me da password"). Quem já tem
+  MFA passa o código antes de definir a nova password.
+- **Emails de autenticação** com o link `/auth/confirmar?token_hash=…`, tratado pelo portal. O hook
+  `auth-send-email` envia-os pela Brevo com a marca da organização; os modelos em
+  `supabase/templates/` só servem quando o hook está desligado (ambiente local).
+- **Painel da equipa provisório**: lista de clientes com enviar/reenviar convite, até à etapa 3.
+- **Logótipo**: até haver ficheiro carregado, o cabeçalho mostra só o nome da organização.

@@ -1,0 +1,32 @@
+{
+  "common": {
+    "greeting": "Olá {name},",
+    "greeting_anonymous": "Olá,",
+    "signature": "Equipa {org}",
+    "button_fallback": "Se o botão não funcionar, copie este endereço para o navegador:",
+    "footer": "Este email foi enviado por {org}. Para qualquer questão, responda a este email ou escreva para {contact}.",
+    "expiry_hours_one": "1 hora",
+    "expiry_hours_other": "{count} horas"
+  },
+  "invite": {
+    "subject": "O seu acesso ao portal {org}",
+    "title": "Boas-vindas ao portal de clientes",
+    "intro": "Preparámos a sua área de cliente no portal {org}. Aqui pode acompanhar o seu processo, enviar documentos e consultar prazos e renovações.",
+    "button": "Entrar no portal",
+    "security": "Por segurança, este link é pessoal, só pode ser usado uma vez e expira em {expiry}. Se expirar, abra o portal e peça um novo link com o seu email."
+  },
+  "magiclink": {
+    "subject": "O seu link de acesso ao portal {org}",
+    "title": "Entrar no portal",
+    "intro": "Recebemos um pedido para entrar no portal {org} com este email.",
+    "button": "Entrar no portal",
+    "security": "O link só pode ser usado uma vez e expira em {expiry}. Se não foi você que fez o pedido, pode ignorar este email."
+  },
+  "recovery": {
+    "subject": "Redefinir a password do portal {org}",
+    "title": "Redefinir a password",
+    "intro": "Recebemos um pedido para redefinir a password da sua conta no portal {org}.",
+    "button": "Definir nova password",
+    "security": "O link só pode ser usado uma vez e expira em {expiry}. Se não foi você que fez o pedido, ignore este email: a password atual continua válida."
+  }
+}

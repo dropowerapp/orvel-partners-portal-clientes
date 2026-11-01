@@ -1,0 +1,144 @@
+{
+  "app": {
+    "title": "Portal de clientes · {{org}}",
+    "loading": "A carregar…",
+    "sign_out": "Sair",
+    "back_to_login": "Voltar ao início de sessão",
+    "contact_line": "Precisa de ajuda? Escreva para {{email}}.",
+    "skip_to_content": "Saltar para o conteúdo"
+  },
+  "org": {
+    "not_found_title": "Portal não encontrado",
+    "not_found_body": "Este endereço não corresponde a nenhum portal de clientes. Confirme o link que recebeu.",
+    "load_error_title": "Não foi possível abrir o portal",
+    "load_error_body": "Verifique a sua ligação à internet e tente novamente.",
+    "retry": "Tentar novamente"
+  },
+  "client_login": {
+    "title": "Entrar na sua área de cliente",
+    "intro": "Indique o email registado pela equipa {{org}}. Enviamos um link para entrar, sem password.",
+    "email_label": "Email",
+    "email_placeholder": "nome@exemplo.com",
+    "submit": "Enviar link de acesso",
+    "submitting": "A enviar…",
+    "team_link": "É da equipa? Entrar com password",
+    "check_title": "Verifique o seu email",
+    "check_body": "Se {{email}} tiver acesso ao portal, vai receber dentro de momentos um email com o link para entrar. O link só pode ser usado uma vez e expira em 1 hora.",
+    "check_spam": "Não recebeu? Veja a pasta de spam ou peça um novo link daqui a um minuto.",
+    "check_again": "Pedir um novo link",
+    "rate_limited": "Já pedimos um link há pouco. Aguarde um minuto antes de pedir outro."
+  },
+  "confirm": {
+    "verifying": "A confirmar o seu acesso…",
+    "expired_title": "Este link já não é válido",
+    "expired_body": "Os links de acesso só podem ser usados uma vez e expiram em 1 hora. Peça um novo link com o seu email.",
+    "invalid_title": "Link incompleto",
+    "invalid_body": "O link que abriu está incompleto. Copie o endereço completo do email ou peça um novo link."
+  },
+  "privacy": {
+    "title": "Aviso de privacidade",
+    "intro": "Antes de entrar, leia como tratamos os seus dados pessoais.",
+    "version": "Versão {{version}}",
+    "checkbox": "Li e aceito o aviso de privacidade.",
+    "accept": "Aceitar e continuar",
+    "accepting": "A guardar…",
+    "must_check": "Para continuar, confirme que leu e aceita o aviso.",
+    "missing_title": "A sua área de cliente ainda não está disponível",
+    "missing_body": "Estamos a terminar a preparação do portal. Assim que estiver disponível, recebe um email da equipa {{org}}."
+  },
+  "client_home": {
+    "title": "Olá, {{name}}",
+    "title_anonymous": "Olá",
+    "body": "A sua área de cliente está a ser preparada. Em breve vai poder acompanhar aqui o seu processo, enviar documentos e consultar prazos."
+  },
+  "team_login": {
+    "title": "Entrar como equipa",
+    "intro": "Use o seu email e password. A seguir pedimos o código da aplicação de autenticação.",
+    "email_label": "Email",
+    "password_label": "Password",
+    "submit": "Entrar",
+    "submitting": "A entrar…",
+    "forgot": "Esqueci-me da password",
+    "client_link": "É cliente? Entrar com link por email"
+  },
+  "mfa": {
+    "title_verify": "Código de verificação",
+    "intro_verify": "Abra a aplicação de autenticação e escreva o código de 6 dígitos do portal.",
+    "title_enroll": "Configurar a verificação em dois passos",
+    "intro_enroll": "A equipa entra sempre com password e código. Configure agora a aplicação de autenticação (por exemplo, Google Authenticator, Microsoft Authenticator ou 1Password).",
+    "step_scan": "1. Leia este código QR com a aplicação.",
+    "qr_alt": "Código QR para a aplicação de autenticação",
+    "step_manual": "Não consegue ler o código? Introduza esta chave manualmente:",
+    "step_code": "2. Escreva o código de 6 dígitos que aparece na aplicação.",
+    "code_label": "Código de 6 dígitos",
+    "submit": "Confirmar",
+    "submitting": "A confirmar…",
+    "lost_device": "Perdeu o acesso à aplicação? Peça a outro administrador para remover o seu segundo fator no painel do Supabase."
+  },
+  "forgot": {
+    "title": "Redefinir a password",
+    "intro": "Indique o seu email de equipa. Se tiver conta, enviamos-lhe um link para definir uma nova password.",
+    "submit": "Enviar link",
+    "sent": "Se {{email}} tiver conta de equipa, vai receber um email com o link. O link expira em 1 hora."
+  },
+  "new_password": {
+    "title": "Nova password",
+    "intro": "Escolha uma password com pelo menos 12 caracteres, com maiúsculas, minúsculas e números.",
+    "password_label": "Nova password",
+    "confirm_label": "Repita a password",
+    "submit": "Guardar password",
+    "saved": "Password alterada."
+  },
+  "no_access": {
+    "title": "Sem acesso a este portal",
+    "body": "A sua conta não tem acesso a este portal. Se recebeu um convite, abra o link desse email. Em caso de dúvida, contacte {{email}}."
+  },
+  "not_found": {
+    "title": "Página não encontrada",
+    "back": "Ir para o início"
+  },
+  "team_home": {
+    "title": "Clientes",
+    "intro": "Por agora, esta página serve para enviar e reenviar convites. A ficha completa de cada processo chega na próxima etapa.",
+    "empty": "Ainda não há clientes.",
+    "col_name": "Nome",
+    "col_email": "Email",
+    "col_invite": "Convite",
+    "not_invited": "Por enviar",
+    "invited_on": "Enviado a {{date}}",
+    "invite": "Enviar convite",
+    "resend": "Reenviar",
+    "sending": "A enviar…",
+    "sent": "Convite enviado para {{email}}.",
+    "load_error": "Não foi possível carregar os clientes."
+  },
+  "validation": {
+    "email": "Indique um email válido.",
+    "required": "Campo obrigatório.",
+    "code": "O código tem 6 dígitos.",
+    "password_rules": "Pelo menos 12 caracteres, com maiúsculas, minúsculas e números.",
+    "password_match": "As passwords não coincidem."
+  },
+  "errors": {
+    "generic": "Ocorreu um erro. Tente novamente; se o problema continuar, contacte a equipa.",
+    "network": "Sem ligação ao servidor. Verifique a sua internet e tente novamente.",
+    "invalid_credentials": "Email ou password incorretos.",
+    "mfa_verification_failed": "Código incorreto ou expirado. Escreva o código que aparece agora na aplicação.",
+    "mfa_challenge_expired": "O pedido de código expirou. Tente novamente.",
+    "over_email_send_rate_limit": "Já pedimos um email há pouco. Aguarde um minuto antes de pedir outro.",
+    "over_request_rate_limit": "Demasiadas tentativas. Aguarde alguns minutos.",
+    "weak_password": "A password não cumpre as regras: pelo menos 12 caracteres, com maiúsculas, minúsculas e números.",
+    "same_password": "A nova password tem de ser diferente da anterior.",
+    "otp_expired": "Este link já não é válido. Peça um novo.",
+    "session_expired": "A sua sessão terminou. Entre novamente.",
+    "not_found": "Não encontrado ou sem acesso.",
+    "process_closed": "Este processo já está fechado e não pode ser alterado.",
+    "mfa_required": "Para esta ação precisa de entrar com o código da aplicação de autenticação.",
+    "invite_too_soon": "O convite acabou de ser enviado. Aguarde um minuto antes de reenviar.",
+    "membership_inactive": "O acesso deste cliente foi desativado. Reative-o antes de reenviar o convite.",
+    "client_linked_to_other_user": "Este cliente já está ligado a outra conta.",
+    "membership_conflict": "Este email já pertence a uma conta da equipa nesta organização.",
+    "email_send_failed": "Não foi possível enviar o email. Tente novamente daqui a pouco.",
+    "insufficient_aal": "Confirme primeiro o código da aplicação de autenticação."
+  }
+}

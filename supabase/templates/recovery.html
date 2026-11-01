@@ -1,0 +1,6 @@
+<!-- Modelo de reserva (ambiente local / hook desligado). Em produção o email sai pela função auth-send-email. -->
+<h2>Redefinir a password</h2>
+<p>Olá,</p>
+<p>Recebemos um pedido para redefinir a password da sua conta no portal.</p>
+<p><a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=recovery">Definir nova password</a></p>
+<p>O link só pode ser usado uma vez e expira em 1 hora. Se não foi você que fez o pedido, ignore este email: a password atual continua válida.</p>

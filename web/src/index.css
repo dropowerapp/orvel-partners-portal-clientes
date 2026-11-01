@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/* Valores por omissão; o tema da organização substitui-os (lib/theme.ts). */
+:root {
+  --org-primary: #0b1628;
+  --org-primary-deep: #1e3a5f;
+  --org-wordmark: #546275;
+  --org-action: #2a57c4;
+  --org-silver: #c3c9d2;
+  --org-background: #f4f6f9;
+  --org-line: #d5dae2;
+  --org-font: "Source Sans 3";
+}
+
+@theme inline {
+  --color-primary: var(--org-primary);
+  --color-primary-deep: var(--org-primary-deep);
+  --color-wordmark: var(--org-wordmark);
+  --color-action: var(--org-action);
+  --color-silver: var(--org-silver);
+  --color-background: var(--org-background);
+  --color-line: var(--org-line);
+  --color-muted: #4b5563;
+  --font-sans: var(--org-font), ui-sans-serif, system-ui, sans-serif;
+}
+
+html,
+body {
+  @apply bg-background font-sans text-primary antialiased;
+}

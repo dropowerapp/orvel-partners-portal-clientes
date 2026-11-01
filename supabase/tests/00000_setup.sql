@@ -6,7 +6,7 @@ create extension if not exists pgtap with schema extensions;
 
 drop schema if exists tests cascade;
 create schema tests;
-grant usage on schema tests to anon, authenticated;
+grant usage on schema tests to anon, authenticated, service_role;
 
 -- Identificadores determinísticos: tests.id('client_a') devolve sempre o mesmo uuid.
 create function tests.id(p_name text) returns uuid
@@ -179,10 +179,17 @@ begin
   values (v_x, tests.id('partner'), tests.id('proc_a'), tests.id('staff_x'));
 
   update public.privacy_notices set published_at = now() where organization_id in (v_x, v_y);
+
+  -- Os clientes do cenário base já aceitaram o aviso em vigor (o portão do consentimento é
+  -- testado em 08_auth.sql).
+  insert into public.privacy_consents (organization_id, user_id, notice_id)
+  select n.organization_id, tests.id(u.name), n.id
+  from (values ('client_a', v_x), ('client_b', v_x), ('client_c', v_y)) as u(name, org)
+  join public.privacy_notices n on n.organization_id = u.org and n.published_at is not null;
 end
 $$;
 
-grant execute on all functions in schema tests to anon, authenticated;
+grant execute on all functions in schema tests to anon, authenticated, service_role;
 
 begin;
 select plan(1);

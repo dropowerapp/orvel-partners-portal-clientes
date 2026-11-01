@@ -1,0 +1,6 @@
+<!-- Modelo de reserva (ambiente local / hook desligado). Em produção o email sai pela função auth-send-email. -->
+<h2>Entrar no portal</h2>
+<p>Olá,</p>
+<p>Recebemos um pedido para entrar no portal de clientes com este email.</p>
+<p><a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=magiclink">Entrar no portal</a></p>
+<p>O link só pode ser usado uma vez e expira em 1 hora. Se não foi você que fez o pedido, pode ignorar este email.</p>
