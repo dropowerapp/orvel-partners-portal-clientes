@@ -11,23 +11,25 @@ export function AppShell({ children, afterSignOut }: { children: ReactNode; afte
   const navigate = useNavigate();
   return (
     <div className="flex min-h-dvh flex-col bg-background">
-      <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:bg-white focus:p-2">
+      <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:bg-white focus:p-2">
         {t("app.skip_to_content")}
       </a>
-      <header className="flex items-center justify-between bg-primary px-5 py-3">
-        <OrgMark inverted />
-        <button
-          type="button"
-          className="rounded-md px-3 py-1.5 text-sm font-semibold text-white hover:bg-white/10"
-          onClick={async () => {
-            await signOut();
-            navigate(afterSignOut, { replace: true });
-          }}
-        >
-          {t("app.sign_out")}
-        </button>
+      <header className="border-b border-line bg-white">
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-4 sm:px-6">
+          <OrgMark />
+          <button
+            type="button"
+            className="rounded-md px-3 py-1.5 text-sm font-semibold text-primary-deep hover:bg-background"
+            onClick={async () => {
+              await signOut();
+              navigate(afterSignOut, { replace: true });
+            }}
+          >
+            {t("app.sign_out")}
+          </button>
+        </div>
       </header>
-      <main id="conteudo" className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:px-6">
+      <main id="conteudo" className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
         {children}
       </main>
     </div>

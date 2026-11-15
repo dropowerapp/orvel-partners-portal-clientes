@@ -33,8 +33,18 @@ export function resolveOrgKey(
   return location.hostname.toLowerCase();
 }
 
+/** URL público de um ficheiro do bucket "branding" (logótipo, símbolo). */
+export function brandingUrl(path: string | null | undefined, supabaseUrl: string): string | null {
+  if (!path || !supabaseUrl) return null;
+  const encoded = path.split("/").map(encodeURIComponent).join("/");
+  return `${supabaseUrl.replace(/\/+$/, "")}/storage/v1/object/public/branding/${encoded}`;
+}
+
 export function logoUrl(org: Pick<PublicOrg, "logo_path">, supabaseUrl: string): string | null {
-  if (!org.logo_path || !supabaseUrl) return null;
-  const path = org.logo_path.split("/").map(encodeURIComponent).join("/");
-  return `${supabaseUrl.replace(/\/+$/, "")}/storage/v1/object/public/branding/${path}`;
+  return brandingUrl(org.logo_path, supabaseUrl);
+}
+
+/** Símbolo da organização (ex.: a esfera da Orvel), usado no painel de entrada e no ícone do separador. */
+export function symbolUrl(org: Pick<PublicOrg, "theme">, supabaseUrl: string): string | null {
+  return brandingUrl(org.theme?.symbol_path, supabaseUrl);
 }

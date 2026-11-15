@@ -51,3 +51,17 @@ sql_file() {
 sql_quote() {
   printf "'%s'" "$(printf '%s' "$1" | sed "s/'/''/g")"
 }
+
+# project_key anon|service → chave do projeto (pública ou de serviço), lida pela Management API.
+# Nunca a escrever em ficheiros; usar só em variáveis do próprio processo.
+project_key() {
+  local legacy type
+  case "$1" in
+    anon) legacy=anon; type=publishable ;;
+    service) legacy=service_role; type=secret ;;
+    *) echo "project_key: use anon ou service" >&2; return 1 ;;
+  esac
+  api GET "/projects/$REF/api-keys?reveal=true" | jq -r --arg legacy "$legacy" --arg type "$type" '
+    (map(select(.name == $legacy and (.api_key // "") != "")) + map(select(.type == $type and (.api_key // "") != "")))
+    | first | .api_key // empty'
+}

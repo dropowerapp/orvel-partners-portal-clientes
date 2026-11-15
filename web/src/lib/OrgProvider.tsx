@@ -5,6 +5,7 @@ import { CenteredMessage } from "../components/CenteredMessage";
 import { Spinner } from "../components/ui";
 import { setLocale } from "../i18n";
 import { type PublicOrg, resolveOrgKey } from "./org";
+import { orgSymbolSrc } from "./branding";
 import { supabase } from "./supabase";
 import { applyTheme } from "./theme";
 
@@ -35,6 +36,9 @@ export function OrgProvider({ children }: { children: ReactNode }) {
     applyTheme(org.theme);
     setLocale(org.default_locale);
     document.title = t("app.title", { org: org.name });
+    const icon = orgSymbolSrc(org);
+    const link = document.querySelector<HTMLLinkElement>("link[rel='icon']");
+    if (icon && link) link.href = icon;
   }, [org, t]);
 
   if (query.isPending) return <Spinner fullScreen />;

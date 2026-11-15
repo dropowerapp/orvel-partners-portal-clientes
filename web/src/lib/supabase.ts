@@ -2,17 +2,12 @@
 // está na RLS e nas funções da base de dados. Nenhuma chave secreta entra no frontend.
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { createDemoClient } from "./demo/client";
+import { DEMO_MODE } from "./demoMode";
+
+export { DEMO_MODE };
 
 const url = import.meta.env.VITE_SUPABASE_URL;
 const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-/**
- * Modo de demonstração: Supabase simulado com dados fictícios, para ver os ecrãs sem projeto
- * Supabase (`npm run web:demo`). Só existe no servidor de desenvolvimento; no build esta condição é
- * sempre falsa e o código da demonstração não entra no pacote.
- */
-export const DEMO_MODE = import.meta.env.DEV &&
-  (import.meta.env.MODE === "demo" || import.meta.env.VITE_DEMO_MODE === "true");
 
 if (!DEMO_MODE && (!url || !anonKey)) {
   // Mensagem para quem está a desenvolver; o utilizador final nunca chega a ver isto.
@@ -31,3 +26,4 @@ export const supabase: SupabaseClient = DEMO_MODE
   });
 
 export const SUPABASE_URL = DEMO_MODE ? "" : (url ?? "");
+

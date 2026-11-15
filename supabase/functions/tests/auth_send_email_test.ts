@@ -84,6 +84,7 @@ Deno.test("hook: link mágico sai com a marca da organização e link para /auth
     "https://portal.orvelpartners.com/auth/confirmar?token_hash=hash%3Cficticio%3E&type=magiclink",
   );
   assertStringIncludes(email.html, "https://ficticio.supabase.co/storage/v1/object/public/branding/orvel/logo.png");
+  assertStringIncludes(email.html, "background:#ffffff;padding:20px 28px;border-bottom", "com logótipo, cabeçalho claro");
   assertEquals(email.html.includes("javascript:"), false, "cor inválida no tema é ignorada");
   assertEquals(email.html.includes("<ficticio>"), false, "valores escapados no HTML");
 });

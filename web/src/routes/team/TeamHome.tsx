@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppShell } from "../../components/AppShell";
-import { Alert, Button, Spinner } from "../../components/ui";
+import { Alert, Button, PageTitle, Spinner } from "../../components/ui";
 import { ROUTES } from "../../lib/access";
 import { functionErrorCode } from "../../lib/errors";
 import { useOrg } from "../../lib/OrgProvider";
@@ -54,8 +54,9 @@ export default function TeamHome() {
 
   return (
     <AppShell afterSignOut={ROUTES.teamLogin}>
-      <h1 className="mb-2 text-2xl font-semibold text-primary">{t("team_home.title")}</h1>
-      <p className="mb-6 max-w-prose text-muted">{t("team_home.intro")}</p>
+      <PageTitle eyebrow={t("auth_layout.eyebrow_team")} title={t("team_home.title")}>
+        {t("team_home.intro")}
+      </PageTitle>
       {feedback && <div className="mb-4"><Alert tone={feedback.tone}>{feedback.text}</Alert></div>}
       {clients.isPending && <Spinner />}
       {clients.isError && <Alert>{t("team_home.load_error")}</Alert>}

@@ -34,6 +34,7 @@ supabase/
   seed.sql             Dados fictícios para desenvolvimento local
   tests/               Testes pgTAP (RLS e lógica de negócio)
 scripts/local/         Alternativa sem Docker: Postgres simples + réplica mínima do Supabase
+branding/<slug>/       Ficheiros da marca de cada organização (logótipo e símbolo, sem alterações)
 docs/plano.md          Plano técnico aprovado
 ```
 
@@ -205,6 +206,7 @@ repositório.
 |---|---|
 | `db-push.sh [--dry-run]` | Aplica as migrações em falta, por ordem, cada uma numa transação, e regista-as em `supabase_migrations.schema_migrations` (compatível com `supabase db push`) |
 | `db-seed.sh --sim-e-desenvolvimento` | Carrega os dados fictícios; recusa se houver utilizadores fora de `@exemplo.test` e não repete |
+| `branding-upload.sh [slug]` | Carrega o logótipo e o símbolo (`branding/<slug>/`) para o bucket `branding` e preenche `logo_path` e `theme.symbol_path` |
 | `functions-deploy.sh [função …]` | Publica as Edge Functions com o `verify_jwt` de `config.toml` |
 | `secrets-set.sh NOME=valor … \| --list` | Define segredos das funções (só mostra os nomes) |
 | `auth-config.sh [--apply]` | Mostra as definições de autenticação atuais e as pretendidas; com `--apply`, aplica-as e liga o hook de email com um segredo novo |
@@ -220,6 +222,10 @@ export SUPABASE_PROJECT_REF=<referencia-do-projeto>
 
 ```bash
 scripts/remote/db-push.sh && scripts/remote/db-seed.sh --sim-e-desenvolvimento
+```
+
+```bash
+scripts/remote/branding-upload.sh orvel
 ```
 
 ```bash

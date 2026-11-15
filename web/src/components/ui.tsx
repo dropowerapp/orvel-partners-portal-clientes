@@ -16,7 +16,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primar
 
 export function Button({ variant = "primary", busy = false, className = "", disabled, children, ...props }: ButtonProps) {
   const styles = {
-    primary: "bg-action text-white hover:brightness-110 disabled:opacity-60",
+    primary: "bg-action text-white hover:bg-primary disabled:opacity-60",
     secondary: "border border-line bg-white text-primary hover:bg-background disabled:opacity-60",
     link: "text-action underline-offset-2 hover:underline px-0 py-0",
   }[variant];
@@ -76,6 +76,23 @@ export function Alert({ tone = "error", children }: { tone?: "error" | "info" | 
   return (
     <div role={tone === "error" ? "alert" : "status"} className={`rounded-md border px-4 py-3 text-sm ${styles}`}>
       {children}
+    </div>
+  );
+}
+
+/** Rótulo pequeno em maiúsculas espaçadas, por cima dos títulos (como nos documentos da marca). */
+export function Eyebrow({ children }: { children: ReactNode }) {
+  return <p className="mb-3 text-xs font-semibold tracking-[0.2em] text-wordmark uppercase">{children}</p>;
+}
+
+/** Título das páginas das áreas de cliente e equipa. */
+export function PageTitle({ eyebrow, title, children }: { eyebrow: string; title: ReactNode; children?: ReactNode }) {
+  return (
+    <div className="mb-8">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h1 className="text-3xl leading-tight font-light text-primary sm:text-4xl">{title}</h1>
+      <span className="my-5 block h-px w-10 bg-silver" />
+      {children && <div className="max-w-prose text-base leading-relaxed text-muted">{children}</div>}
     </div>
   );
 }

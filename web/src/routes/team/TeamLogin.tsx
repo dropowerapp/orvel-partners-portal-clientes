@@ -33,7 +33,7 @@ export default function TeamLogin() {
   });
 
   return (
-    <AuthLayout title={t("team_login.title")} intro={t("team_login.intro")}>
+    <AuthLayout area="team" title={t("team_login.title")} intro={t("team_login.intro")}>
       <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
         {error && <Alert>{t(error)}</Alert>}
         <TextField

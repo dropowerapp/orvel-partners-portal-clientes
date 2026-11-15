@@ -14,6 +14,13 @@
     "load_error_body": "Verifique a sua ligação à internet e tente novamente.",
     "retry": "Tentar novamente"
   },
+  "auth_layout": {
+    "eyebrow_client": "Área de cliente",
+    "eyebrow_team": "Área da equipa",
+    "panel_eyebrow": "Portal de clientes",
+    "panel_title": "O seu processo, num só lugar.",
+    "panel_body": "Acompanhe cada etapa, envie documentos e consulte prazos em segurança, com a equipa {{org}}."
+  },
   "client_login": {
     "title": "Entrar na sua área de cliente",
     "intro": "Indique o email registado pela equipa {{org}}. Enviamos um link para entrar, sem password.",

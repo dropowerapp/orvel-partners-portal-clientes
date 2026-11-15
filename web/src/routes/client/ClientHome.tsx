@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { AppShell } from "../../components/AppShell";
+import { PageTitle } from "../../components/ui";
 import { ROUTES } from "../../lib/access";
 import { useAuth } from "../../lib/AuthProvider";
 import { supabase } from "../../lib/supabase";
@@ -21,10 +22,12 @@ export default function ClientHome() {
   const firstName = clientQuery.data?.full_name.split(" ")[0];
   return (
     <AppShell afterSignOut={ROUTES.clientLogin}>
-      <h1 className="mb-3 text-2xl font-semibold text-primary">
-        {firstName ? t("client_home.title", { name: firstName }) : t("client_home.title_anonymous")}
-      </h1>
-      <p className="max-w-prose text-base leading-relaxed text-muted">{t("client_home.body")}</p>
+      <PageTitle
+        eyebrow={t("auth_layout.eyebrow_client")}
+        title={firstName ? t("client_home.title", { name: firstName }) : t("client_home.title_anonymous")}
+      >
+        {t("client_home.body")}
+      </PageTitle>
     </AppShell>
   );
 }

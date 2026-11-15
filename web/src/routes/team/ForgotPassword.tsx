@@ -34,7 +34,7 @@ export default function ForgotPassword() {
   });
 
   return (
-    <AuthLayout title={t("forgot.title")} intro={sentTo ? undefined : t("forgot.intro")}>
+    <AuthLayout area="team" title={t("forgot.title")} intro={sentTo ? undefined : t("forgot.intro")}>
       {sentTo ? <Alert tone="success">{t("forgot.sent", { email: sentTo })}</Alert> : (
         <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
           {error && <Alert>{t(error)}</Alert>}

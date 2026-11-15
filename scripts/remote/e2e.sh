@@ -6,14 +6,8 @@
 # Uso: SUPABASE_PROJECT_REF=<ref> scripts/remote/e2e.sh
 source "$(dirname "$0")/_lib.sh"
 
-keys="$(api GET "/projects/$REF/api-keys?reveal=true")"
-pick() {
-  jq -r --arg legacy "$1" --arg type "$2" '
-    (map(select(.name == $legacy and (.api_key // "") != "")) + map(select(.type == $type and (.api_key // "") != "")))
-    | first | .api_key // empty' <<<"$keys"
-}
-SUPABASE_ANON_KEY="$(pick anon publishable)"
-SUPABASE_SERVICE_ROLE_KEY="$(pick service_role secret)"
+SUPABASE_ANON_KEY="$(project_key anon)"
+SUPABASE_SERVICE_ROLE_KEY="$(project_key service)"
 [[ -n "$SUPABASE_ANON_KEY" && -n "$SUPABASE_SERVICE_ROLE_KEY" ]] || { echo "Não encontrei as chaves do projeto." >&2; exit 1; }
 
 export SUPABASE_URL="https://$REF.supabase.co" SUPABASE_ANON_KEY SUPABASE_SERVICE_ROLE_KEY

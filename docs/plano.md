@@ -319,3 +319,18 @@ O editor de modelos no ecrã de definições ficaria para a fase 2. Dias de avis
   `supabase/templates/` só servem quando o hook está desligado (ambiente local).
 - **Painel da equipa provisório**: lista de clientes com enviar/reenviar convite, até à etapa 3.
 - **Logótipo**: até haver ficheiro carregado, o cabeçalho mostra só o nome da organização.
+
+## 13. Identidade visual (15/11/2026)
+
+- Baseada nos documentos da marca (apresentação dos planos e guia de constituição): azul-marinho
+  `#0b1628` e `#1e3a5f`, fundo `#f4f6f9`, linhas finas `#d5dae2`, Source Sans 3 (títulos em peso
+  leve) e rótulos pequenos em maiúsculas espaçadas.
+- Botões e ligações passam do azul vivo provisório para o azul-marinho `#1e3a5f` (migração
+  `20261115100000_orvel_marca.sql`).
+- Logótipo da Cátia usado tal como veio (`branding/orvel/`). Como o texto do logótipo é cinzento,
+  os cabeçalhos do portal e dos emails passam a ser claros. Não há versão para fundo escuro: se for
+  precisa, pede-se à Cátia.
+- Ecrãs de entrada: painel azul-marinho com a esfera (como na capa da apresentação) e formulário à
+  direita; no telemóvel, só o formulário com o logótipo no topo. O símbolo e o logótipo vêm da
+  organização (bucket `branding`), por isso cada organização do white label tem os seus.
+

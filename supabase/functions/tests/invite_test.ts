@@ -102,6 +102,7 @@ Deno.test("convida: cria conta, liga ao cliente e envia o email com a marca", as
   assertStringIncludes(email.html, "https://portal.orvelpartners.com/auth/confirmar?token_hash=hash-ficticio&amp;type=magiclink");
   assertStringIncludes(email.text, "Olá Rui Fictício,");
   assertStringIncludes(email.text, "Equipa Orvel Partners");
+  assertStringIncludes(email.html, 'font-weight:600">Orvel Partners</span>', "sem logótipo, mostra o nome");
   assertEquals(res.headers.get("access-control-allow-origin"), "https://portal.orvelpartners.com");
 });
 

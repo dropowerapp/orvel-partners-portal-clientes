@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { logoUrl, resolveOrgKey } from "./org";
+import { brandingUrl, logoUrl, resolveOrgKey, symbolUrl } from "./org";
 
 function memoryStorage() {
   const data = new Map<string, string>();
@@ -28,5 +28,14 @@ describe("logoUrl", () => {
     expect(logoUrl({ logo_path: "orvel/logo final.png" }, "https://x.supabase.co/"))
       .toBe("https://x.supabase.co/storage/v1/object/public/branding/orvel/logo%20final.png");
     expect(logoUrl({ logo_path: null }, "https://x.supabase.co")).toBeNull();
+  });
+});
+
+describe("symbolUrl e brandingUrl", () => {
+  it("símbolo da organização no bucket branding (opcional no tema)", () => {
+    expect(symbolUrl({ theme: { symbol_path: "org-1/simbolo.png" } }, "https://x.supabase.co"))
+      .toBe("https://x.supabase.co/storage/v1/object/public/branding/org-1/simbolo.png");
+    expect(symbolUrl({ theme: null }, "https://x.supabase.co")).toBeNull();
+    expect(brandingUrl("org-1/a.png", "")).toBeNull();
   });
 });

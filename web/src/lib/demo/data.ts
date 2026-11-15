@@ -2,6 +2,11 @@
 // Só usados em desenvolvimento, com VITE_DEMO_MODE=true. Nunca dados de clientes reais.
 import type { PublicOrg } from "../org";
 
+// Ficheiros da marca (branding/orvel, sem alterações), servidos em /demo-branding só pelo servidor
+// de desenvolvimento em modo de demonstração (vite.config.ts). Não entram no build.
+const orvelLogo = "/demo-branding/orvel/logotipo.png";
+const orvelSymbol = "/demo-branding/orvel/simbolo.png";
+
 export interface DemoOrg extends PublicOrg {
   /** Hostnames que abrem esta organização (como organizations.hostnames). */
   keys: string[];
@@ -13,17 +18,19 @@ export const DEMO_ORGS: DemoOrg[] = [
     name: "Orvel Partners",
     slug: "orvel",
     keys: ["orvel", "portal.orvelpartners.com"],
-    logo_path: null,
+    // Na demonstração os caminhos já são URLs locais (no Supabase são caminhos no bucket "branding").
+    logo_path: orvelLogo,
     contact_email: "hello@orvelpartners.com",
     contact_whatsapp: "+971500000000",
     default_locale: "pt-PT",
-    // Igual a supabase/migrations/20261031100500_org_orvel.sql
+    // Igual às migrações (20261031100500_org_orvel.sql e 20261115100000_orvel_marca.sql)
     theme: {
+      symbol_path: orvelSymbol,
       colors: {
         primary: "#0b1628",
         "primary-deep": "#1e3a5f",
         wordmark: "#546275",
-        action: "#2a57c4",
+        action: "#1e3a5f",
         silver: "#c3c9d2",
         background: "#f4f6f9",
         line: "#d5dae2",

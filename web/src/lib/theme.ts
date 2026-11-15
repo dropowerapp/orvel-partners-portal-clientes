@@ -2,6 +2,8 @@
 export interface OrgTheme {
   colors?: Record<string, string>;
   font?: { family?: string; url?: string };
+  /** Caminho do símbolo no bucket "branding" (opcional). */
+  symbol_path?: string;
 }
 
 const COLOR_KEYS = ["primary", "primary-deep", "wordmark", "action", "silver", "background", "line"] as const;

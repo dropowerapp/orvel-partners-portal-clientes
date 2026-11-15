@@ -74,6 +74,7 @@ export default function Mfa() {
   const enrolling = state.mode === "enroll";
   return (
     <AuthLayout
+      area="team"
       title={enrolling ? t("mfa.title_enroll") : t("mfa.title_verify")}
       intro={enrolling ? t("mfa.intro_enroll") : t("mfa.intro_verify")}
     >

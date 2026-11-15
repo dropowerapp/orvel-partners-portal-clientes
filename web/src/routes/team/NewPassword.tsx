@@ -54,7 +54,7 @@ export default function NewPassword() {
   });
 
   return (
-    <AuthLayout title={t("new_password.title")} intro={t("new_password.intro")}>
+    <AuthLayout area="team" title={t("new_password.title")} intro={t("new_password.intro")}>
       <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
         {error && <Alert>{t(error)}</Alert>}
         <TextField

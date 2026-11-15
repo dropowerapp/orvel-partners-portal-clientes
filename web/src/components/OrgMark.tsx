@@ -1,12 +1,16 @@
-// Marca da organização no cabeçalho. Usa o ficheiro do logótipo quando existir (carregado nas
-// definições); até lá mostra apenas o nome, sem tentar reproduzir o logótipo.
+// Marca da organização no cabeçalho: o ficheiro do logótipo, tal como foi carregado (nunca se
+// redesenha). Sem ficheiro, ou se não carregar, mostra apenas o nome. Os cabeçalhos são claros
+// porque os logótipos costumam ser feitos para fundo claro.
+import { useState } from "react";
 import { useOrg } from "../lib/OrgProvider";
-import { logoUrl } from "../lib/org";
-import { SUPABASE_URL } from "../lib/supabase";
+import { orgLogoSrc } from "../lib/branding";
 
-export function OrgMark({ inverted = false }: { inverted?: boolean }) {
+export function OrgMark({ className = "h-9 sm:h-10" }: { className?: string }) {
   const org = useOrg();
-  const src = logoUrl(org, SUPABASE_URL);
-  if (src) return <img src={src} alt={org.name} className="h-8 w-auto" />;
-  return <span className={`text-lg font-semibold ${inverted ? "text-white" : "text-primary"}`}>{org.name}</span>;
+  const src = orgLogoSrc(org);
+  const [failed, setFailed] = useState(false);
+  if (src && !failed) {
+    return <img src={src} alt={org.name} className={`${className} w-auto`} onError={() => setFailed(true)} />;
+  }
+  return <span className="text-lg font-semibold text-primary">{org.name}</span>;
 }

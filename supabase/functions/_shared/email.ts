@@ -93,14 +93,20 @@ export function buildAuthEmail(input: AuthEmailInput): EmailMessage {
   const fallback = t(locale, "common.button_fallback");
 
   const primary = color(org, "primary", "#0b1628");
-  const action = color(org, "action", "#2a57c4");
+  const action = color(org, "action", "#1e3a5f");
   const background = color(org, "background", "#f4f6f9");
   const line = color(org, "line", "#d5dae2");
   const font = `${org.theme?.font?.family ? `'${escapeHtml(org.theme.font.family)}', ` : ""}Arial, Helvetica, sans-serif`;
   const logo = logoUrl(org, input.supabaseUrl);
+  // Com logótipo: cabeçalho branco (os logótipos são feitos para fundo claro, e o ficheiro nunca é
+  // alterado). Sem logótipo: o nome da organização sobre a cor principal.
   const header = logo
-    ? `<img src="${escapeHtml(logo)}" alt="${escapeHtml(org.name)}" height="32" style="display:block;height:32px;border:0">`
-    : `<span style="color:#ffffff;font-size:18px;font-weight:600">${escapeHtml(org.name)}</span>`;
+    ? `<tr><td style="background:#ffffff;padding:20px 28px;border-bottom:1px solid ${line}"><img src="${escapeHtml(logo)}" alt="${
+      escapeHtml(org.name)
+    }" height="36" style="display:block;height:36px;width:auto;border:0"></td></tr>`
+    : `<tr><td style="background:${primary};padding:20px 28px"><span style="color:#ffffff;font-size:18px;font-weight:600">${
+      escapeHtml(org.name)
+    }</span></td></tr>`;
 
   const html = `<!doctype html>
 <html lang="${escapeHtml(locale ?? "pt-PT")}">
@@ -111,7 +117,7 @@ export function buildAuthEmail(input: AuthEmailInput): EmailMessage {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${background};padding:24px 12px">
 <tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border:1px solid ${line};border-radius:8px;overflow:hidden">
-<tr><td style="background:${primary};padding:20px 28px">${header}</td></tr>
+${header}
 <tr><td style="padding:28px">
 <h1 style="margin:0 0 16px;font-size:20px;color:${primary}">${escapeHtml(title)}</h1>
 <p style="margin:0 0 12px;font-size:15px;line-height:1.5">${escapeHtml(greeting)}</p>
