@@ -6,6 +6,7 @@ import { Spinner } from "../components/ui";
 import { setLocale } from "../i18n";
 import { type PublicOrg, resolveOrgKey } from "./org";
 import { orgSymbolSrc } from "./branding";
+import { DEMO_MODE } from "./demoMode";
 import { supabase } from "./supabase";
 import { applyTheme } from "./theme";
 
@@ -19,7 +20,8 @@ export function useOrg(): PublicOrg {
 
 export function OrgProvider({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
-  const key = resolveOrgKey(window.location, import.meta.env.DEV);
+  // ?org=slug só em desenvolvimento e na demonstração; em produção conta sempre o hostname.
+  const key = resolveOrgKey(window.location, import.meta.env.DEV || DEMO_MODE);
   const query = useQuery({
     queryKey: ["org", key],
     queryFn: async () => {

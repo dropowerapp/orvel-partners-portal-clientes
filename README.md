@@ -95,8 +95,12 @@ npm run web:test
 Para ver os ecrãs sem projeto Supabase (por exemplo, para rever o aspeto), com dados fictícios
 guardados só no browser. Nenhum email é enviado. Uma faixa amarela no topo tem atalhos para entrar
 como cliente novo, cliente com acesso ou equipa (qualquer password; código MFA: quaisquer 6
-dígitos), abrir o "email" do link mágico ou do convite e ver outra organização. Só funciona no
-servidor de desenvolvimento: no build de produção o código da demonstração não entra.
+dígitos), abrir o "email" do link mágico ou do convite e ver outra organização.
+
+Num build, a demonstração só entra com a variável `VITE_DEMO_MODE=true` definida no momento do
+build. Na Vercel, essa variável fica **só no ambiente Preview** (nunca em Production), para as
+pré-visualizações mostrarem a demonstração enquanto o projeto Supabase não está pronto. Sem a
+variável, o código da demonstração não entra no pacote.
 
 ```bash
 npm run web:demo
