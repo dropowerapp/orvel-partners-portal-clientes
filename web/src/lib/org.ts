@@ -48,3 +48,8 @@ export function logoUrl(org: Pick<PublicOrg, "logo_path">, supabaseUrl: string):
 export function symbolUrl(org: Pick<PublicOrg, "theme">, supabaseUrl: string): string | null {
   return brandingUrl(org.theme?.symbol_path, supabaseUrl);
 }
+
+/** Versão do logótipo para fundo escuro (painel dos ecrãs de entrada), se a organização a tiver. */
+export function logoDarkUrl(org: Pick<PublicOrg, "theme">, supabaseUrl: string): string | null {
+  return brandingUrl(org.theme?.logo_dark_path, supabaseUrl);
+}

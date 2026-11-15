@@ -4,6 +4,8 @@ export interface OrgTheme {
   font?: { family?: string; url?: string };
   /** Caminho do símbolo no bucket "branding" (opcional). */
   symbol_path?: string;
+  /** Caminho da versão do logótipo para fundo escuro, no bucket "branding" (opcional). */
+  logo_dark_path?: string;
 }
 
 const COLOR_KEYS = ["primary", "primary-deep", "wordmark", "action", "silver", "background", "line"] as const;

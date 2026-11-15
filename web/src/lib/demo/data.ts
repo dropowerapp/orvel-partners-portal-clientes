@@ -6,6 +6,7 @@ import type { PublicOrg } from "../org";
 // de desenvolvimento em modo de demonstração (vite.config.ts). Não entram no build.
 const orvelLogo = "/demo-branding/orvel/logotipo.png";
 const orvelSymbol = "/demo-branding/orvel/simbolo.png";
+const orvelLogoDark = "/demo-branding/orvel/logotipo-fundo-escuro.png";
 
 export interface DemoOrg extends PublicOrg {
   /** Hostnames que abrem esta organização (como organizations.hostnames). */
@@ -26,6 +27,7 @@ export const DEMO_ORGS: DemoOrg[] = [
     // Igual às migrações (20261031100500_org_orvel.sql e 20261115100000_orvel_marca.sql)
     theme: {
       symbol_path: orvelSymbol,
+      logo_dark_path: orvelLogoDark,
       colors: {
         primary: "#0b1628",
         "primary-deep": "#1e3a5f",

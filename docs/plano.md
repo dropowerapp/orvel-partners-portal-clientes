@@ -328,9 +328,11 @@ O editor de modelos no ecrã de definições ficaria para a fase 2. Dias de avis
 - Botões e ligações passam do azul vivo provisório para o azul-marinho `#1e3a5f` (migração
   `20261115100000_orvel_marca.sql`).
 - Logótipo da Cátia usado tal como veio (`branding/orvel/`). Como o texto do logótipo é cinzento,
-  os cabeçalhos do portal e dos emails passam a ser claros. Não há versão para fundo escuro: se for
-  precisa, pede-se à Cátia.
-- Ecrãs de entrada: painel azul-marinho com a esfera (como na capa da apresentação) e formulário à
-  direita; no telemóvel, só o formulário com o logótipo no topo. O símbolo e o logótipo vêm da
+  os cabeçalhos do portal e dos emails são claros.
+- Versão do logótipo para fundo escuro (autorizada pela Orvel): igual ao original, só com o texto
+  em `#eef1f5`, como nos fundos escuros do guia da marca. Usada no painel dos ecrãs de entrada.
+- Ecrãs de entrada: painel azul-marinho com o logótipo no topo e a esfera (como na capa da
+  apresentação), formulário à direita; no telemóvel, só o formulário com o logótipo normal no topo.
+- Títulos em Source Sans 3 leve (aprovado); texto do painel aprovado. O símbolo e o logótipo vêm da
   organização (bucket `branding`), por isso cada organização do white label tem os seus.
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { brandingUrl, logoUrl, resolveOrgKey, symbolUrl } from "./org";
+import { brandingUrl, logoDarkUrl, logoUrl, resolveOrgKey, symbolUrl } from "./org";
 
 function memoryStorage() {
   const data = new Map<string, string>();
@@ -37,5 +37,8 @@ describe("symbolUrl e brandingUrl", () => {
       .toBe("https://x.supabase.co/storage/v1/object/public/branding/org-1/simbolo.png");
     expect(symbolUrl({ theme: null }, "https://x.supabase.co")).toBeNull();
     expect(brandingUrl("org-1/a.png", "")).toBeNull();
+    expect(logoDarkUrl({ theme: { logo_dark_path: "org-1/logotipo-fundo-escuro.png" } }, "https://x.supabase.co"))
+      .toBe("https://x.supabase.co/storage/v1/object/public/branding/org-1/logotipo-fundo-escuro.png");
+    expect(logoDarkUrl({ theme: {} }, "https://x.supabase.co")).toBeNull();
   });
 });

@@ -1,10 +1,10 @@
-// Ecrãs de entrada. Em ecrãs largos: painel da marca à esquerda (cor principal e símbolo da
-// organização, como nas apresentações) e formulário à direita. No telemóvel: só o formulário,
-// com o logótipo no topo.
+// Ecrãs de entrada. Em ecrãs largos: painel da marca à esquerda (cor principal, logótipo para
+// fundo escuro e símbolo da organização, como na capa das apresentações) e formulário à direita.
+// No telemóvel: só o formulário, com o logótipo normal no topo.
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useOrg } from "../lib/OrgProvider";
-import { orgSymbolSrc } from "../lib/branding";
+import { orgLogoDarkSrc, orgSymbolSrc } from "../lib/branding";
 import { OrgMark } from "./OrgMark";
 import { Eyebrow } from "./ui";
 
@@ -14,6 +14,7 @@ export function AuthLayout(
   const { t } = useTranslation();
   const org = useOrg();
   const symbol = orgSymbolSrc(org);
+  const darkLogo = orgLogoDarkSrc(org);
   return (
     <div className="flex min-h-dvh bg-white">
       <aside className="relative hidden w-[42%] max-w-2xl shrink-0 flex-col justify-between overflow-hidden bg-primary p-12 text-white lg:flex">
@@ -30,8 +31,13 @@ export function AuthLayout(
             className="pointer-events-none absolute top-1/2 -right-40 w-[30rem] max-w-none -translate-y-1/2 select-none"
           />
         )}
-        <p className="relative text-xs uppercase tracking-[0.3em] text-silver">{t("auth_layout.panel_eyebrow")}</p>
+        <div className="relative">
+          {darkLogo
+            ? <img src={darkLogo} alt={org.name} className="h-10 w-auto" />
+            : <span className="text-lg font-semibold">{org.name}</span>}
+        </div>
         <div className="relative max-w-xs">
+          <p className="mb-5 text-xs tracking-[0.3em] text-silver uppercase">{t("auth_layout.panel_eyebrow")}</p>
           <p className="text-4xl leading-tight font-light">{t("auth_layout.panel_title")}</p>
           <span className="my-6 block h-px w-12 bg-silver/60" />
           <p className="text-base leading-relaxed font-light text-silver">{t("auth_layout.panel_body", { org: org.name })}</p>
@@ -40,7 +46,8 @@ export function AuthLayout(
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="border-b border-line px-6 py-5 sm:px-10">
+        {/* Em ecrãs largos a marca está no painel; aqui só no telemóvel. */}
+        <header className="border-b border-line px-6 py-5 sm:px-10 lg:hidden">
           <OrgMark />
         </header>
         <main id="conteudo" className="flex flex-1 items-start justify-center px-6 py-10 sm:px-10 lg:items-center">
