@@ -9,6 +9,7 @@
     "db:reset:local": "scripts/local/db-reset.sh",
     "db:test:local": "scripts/local/db-test.sh",
     "web:dev": "npm --prefix web run dev",
+    "web:demo": "npm --prefix web run demo",
     "web:build": "npm --prefix web run build",
     "web:test": "npm --prefix web test",
     "functions:test": "cd supabase/functions && deno task test",

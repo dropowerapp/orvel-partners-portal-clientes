@@ -89,6 +89,18 @@ npm run web:dev
 npm run web:test
 ```
 
+### Modo de demonstração (sem Supabase)
+
+Para ver os ecrãs sem projeto Supabase (por exemplo, para rever o aspeto), com dados fictícios
+guardados só no browser. Nenhum email é enviado. Uma faixa amarela no topo tem atalhos para entrar
+como cliente novo, cliente com acesso ou equipa (qualquer password; código MFA: quaisquer 6
+dígitos), abrir o "email" do link mágico ou do convite e ver outra organização. Só funciona no
+servidor de desenvolvimento: no build de produção o código da demonstração não entra.
+
+```bash
+npm run web:demo
+```
+
 Em `localhost`, o portal abre a organização Orvel (o seed acrescenta `localhost` aos hostnames).
 Para ver a organização fictícia "Consultora Exemplo", abrir `http://localhost:5173/?org=exemplo`
 (só em desenvolvimento).

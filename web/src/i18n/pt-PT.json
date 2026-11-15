@@ -140,5 +140,19 @@
     "membership_conflict": "Este email já pertence a uma conta da equipa nesta organização.",
     "email_send_failed": "Não foi possível enviar o email. Tente novamente daqui a pouco.",
     "insufficient_aal": "Confirme primeiro o código da aplicação de autenticação."
+  },
+  "demo": {
+    "title": "Modo de demonstração",
+    "body": "Dados fictícios. Nenhum email é enviado e nada fica gravado fora deste browser.",
+    "open_link": "Abrir o link enviado para {{email}}",
+    "as_client_new": "Cliente novo (pede o aviso de privacidade)",
+    "as_client": "Cliente que já aceitou o aviso",
+    "as_team": "Entrar como equipa",
+    "team_hint": "Equipa: equipa@exemplo.test, com qualquer password. Código MFA: quaisquer 6 dígitos.",
+    "org_exemplo": "Ver outra organização (white label)",
+    "org_orvel": "Voltar à Orvel Partners",
+    "reset": "Recomeçar a demonstração",
+    "hide": "Esconder atalhos",
+    "show": "Mostrar atalhos"
   }
 }
