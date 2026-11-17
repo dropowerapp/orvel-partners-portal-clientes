@@ -1,6 +1,8 @@
 // Composição e envio de emails com a marca da organização.
-// Envio pela API da Brevo. Em desenvolvimento local, EMAIL_MODE=log escreve o email no log em vez
-// de o enviar. Sem BREVO_API_KEY e fora do modo log, o envio falha (nunca se perde em silêncio).
+// Envio pela API da Resend. Em desenvolvimento local, EMAIL_MODE=log escreve o email no log em vez
+// de o enviar; EMAIL_LOG_DOMAINS faz o mesmo só para alguns domínios (ex.: os endereços fictícios
+// exemplo.test do projeto de desenvolvimento). Sem RESEND_API_KEY e fora do log, o envio falha
+// (nunca se perde em silêncio).
 import { expiryText, t } from "./i18n.ts";
 
 export interface OrgBranding {
@@ -27,7 +29,8 @@ export interface EmailMessage {
   subject: string;
   html: string;
   text: string;
-  tags?: string[];
+  /** Etiquetas para os relatórios do serviço de email (nome → valor). */
+  tags?: Record<string, string>;
 }
 
 export function escapeHtml(value: string): string {
@@ -152,38 +155,67 @@ ${paragraphs.map((p) => `<p style="margin:0 0 12px;font-size:15px;line-height:1.
     subject: t(locale, `${kind}.subject`, vars),
     html,
     text,
-    tags: [`auth-${kind}`, `org-${org.slug}`],
+    tags: { type: `auth-${kind}`, org: org.slug },
   };
 }
 
 export interface SendEnv {
-  BREVO_API_KEY?: string;
+  RESEND_API_KEY?: string;
   EMAIL_MODE?: string;
+  /** Domínios cujos emails ficam só no log, separados por vírgulas (ex.: "exemplo.test"). */
+  EMAIL_LOG_DOMAINS?: string;
 }
 
-/** Envia pela Brevo (ou escreve no log com EMAIL_MODE=log). Lança erro se falhar. */
+/** "Nome <email>" no formato da Resend; o nome vai entre aspas se tiver carateres especiais. */
+export function formatAddress({ email, name }: { email: string; name?: string }): string {
+  const clean = (name ?? "").replace(/[\r\n<>"\\]/g, "").trim();
+  if (!clean) return email;
+  return /[(),.:;@[\]]/.test(clean) ? `"${clean}" <${email}>` : `${clean} <${email}>`;
+}
+
+/** Verdadeiro se o endereço pertence a um dos domínios (ou subdomínios) da lista. */
+export function inLogDomains(email: string, domains: string | undefined): boolean {
+  const domain = email.split("@").pop()?.trim().toLowerCase() ?? "";
+  return (domains ?? "")
+    .split(",")
+    .map((d) => d.trim().toLowerCase().replace(/^@/, ""))
+    .filter(Boolean)
+    .some((d) => domain === d || domain.endsWith(`.${d}`));
+}
+
+// A Resend só aceita letras, números, "_" e "-" nas etiquetas.
+const tagText = (value: string) => value.replace(/[^A-Za-z0-9_-]/g, "_").slice(0, 256);
+
+/** Envia pela Resend (ou escreve no log, ver EMAIL_MODE e EMAIL_LOG_DOMAINS). Lança erro se falhar. */
 export async function sendEmail(message: EmailMessage, env: SendEnv, fetchImpl: typeof fetch = fetch): Promise<void> {
-  if (env.EMAIL_MODE === "log") {
+  if (env.EMAIL_MODE === "log" || inLogDomains(message.to.email, env.EMAIL_LOG_DOMAINS)) {
     console.log(`[email:log] to=${message.to.email} subject=${JSON.stringify(message.subject)}\n${message.text}`);
     return;
   }
-  if (!env.BREVO_API_KEY) throw new Error("email_not_configured");
+  if (!env.RESEND_API_KEY) throw new Error("email_not_configured");
 
-  const response = await fetchImpl("https://api.brevo.com/v3/smtp/email", {
+  const response = await fetchImpl("https://api.resend.com/emails", {
     method: "POST",
-    headers: { "api-key": env.BREVO_API_KEY, "content-type": "application/json", accept: "application/json" },
+    headers: { authorization: `Bearer ${env.RESEND_API_KEY}`, "content-type": "application/json" },
     body: JSON.stringify({
-      sender: message.from,
-      to: [message.to],
-      replyTo: message.replyTo,
+      from: formatAddress(message.from),
+      to: [formatAddress(message.to)],
+      reply_to: message.replyTo.email,
       subject: message.subject,
-      htmlContent: message.html,
-      textContent: message.text,
-      tags: message.tags,
+      html: message.html,
+      text: message.text,
+      tags: Object.entries(message.tags ?? {}).map(([name, value]) => ({ name: tagText(name), value: tagText(value) })),
     }),
   });
   if (!response.ok) {
-    // Não incluir o corpo do email no erro (contém o link de acesso).
-    throw new Error(`email_send_failed:${response.status}`);
+    // Só o tipo de erro da Resend (ex.: validation_error): o corpo do email contém o link de acesso.
+    let kind = "";
+    try {
+      const body = await response.json();
+      if (typeof body?.name === "string") kind = `:${tagText(body.name)}`;
+    } catch {
+      // resposta sem JSON
+    }
+    throw new Error(`email_send_failed:${response.status}${kind}`);
   }
 }

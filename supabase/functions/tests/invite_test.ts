@@ -155,7 +155,7 @@ Deno.test("convida: erros da base de dados passam com código estável", async (
 });
 
 Deno.test("convida: falha no envio devolve email_send_failed", async () => {
-  const { d } = deps({ sendEmail: () => Promise.reject(new Error("brevo em baixo")) });
+  const { d } = deps({ sendEmail: () => Promise.reject(new Error("serviço de email em baixo")) });
   const res = await handleInvite(request({ client_id: CLIENT_ID }), d);
   assertEquals(res.status, 502);
   assertEquals(await res.json(), { error: "email_send_failed" });

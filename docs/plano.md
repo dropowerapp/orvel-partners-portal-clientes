@@ -14,7 +14,7 @@ Versão 1.1 · 31/10/2026 · Baseado no briefing v2. **Aprovado** a 31/10/2026, 
 | Segurança | Toda na base de dados (RLS) e nas Edge Functions. O frontend só tem o URL e a chave anónima do Supabase, que são públicos. |
 | Edge Functions (Deno) | `invite-client`, `auth-send-email` (hook de email do Supabase Auth), `accept-proposal`, `sign-download`, `send-emails`, `daily-jobs`, `weekly-digest` |
 | Tarefas agendadas | `pg_cron` → `pg_net` → Edge Function, com o segredo de chamada no Vault. Horários na hora do Dubai. |
-| Emails | Fila `email_outbox`: os triggers põem mensagens na fila e `send-emails` envia-as pela Brevo a cada minuto, com novas tentativas e registo. Templates em código, com os textos nos ficheiros de tradução e a marca da organização. |
+| Emails | Fila `email_outbox`: os triggers põem mensagens na fila e `send-emails` envia-as pela Resend a cada minuto, com novas tentativas e registo. Templates em código, com os textos nos ficheiros de tradução e a marca da organização. |
 | Ambientes | Supabase local (CLI) para desenvolvimento e testes, um projeto Supabase de dev (só dados fictícios) e o projeto de produção |
 
 ---
@@ -158,7 +158,7 @@ L = ler · E = escrever · F = só através de função validada · — = sem ac
 - Teste de proteção: percorre o catálogo da base de dados e falha se alguma tabela de `public` não tiver RLS ativa.
 
 ### Teste do fluxo completo (Vitest + supabase-js contra o Supabase local)
-Convite → aceitação → pagamento → documentos → emitidos → prazo → conclusão → limpeza. Usa um relógio simulado para os 30 dias e a Brevo em modo de teste, que grava os emails em vez de os enviar.
+Convite → aceitação → pagamento → documentos → emitidos → prazo → conclusão → limpeza. Usa um relógio simulado para os 30 dias e o envio em modo de log (`EMAIL_MODE=log`), que grava os emails em vez de os enviar.
 
 ---
 
@@ -213,7 +213,7 @@ Ações na ficha do processo (E4):
 - **Todas as segundas-feiras às 08:00:** resumo semanal para a equipa.
 - **Todos os minutos:** envio da fila de emails.
 
-## 6. Emails (Brevo)
+## 6. Emails (Resend)
 
 | Email | Quando é enviado |
 |---|---|
@@ -230,12 +230,12 @@ Ações na ficha do processo (E4):
 
 ## 7. Etapas de construção
 1. Repositório, Supabase local, esquema, RLS, testes de RLS e dados fictícios.
-2. Autenticação (MFA da equipa, link mágico com o hook da Brevo, convite), consentimento, tema da organização e i18n.
+2. Autenticação (MFA da equipa, link mágico com o hook de email, convite), consentimento, tema da organização e i18n.
 3. Painel da equipa: lista de processos, ficha, pessoas, proposta e pagamentos.
 4. Área do cliente: início, proposta e aceitação, pagamento, os meus dados.
 5. Documentos: pedidos, upload, validação, emitidos e downloads assinados com registo.
 6. Cronologia, prazos e calendário.
-7. Emails (fila e Brevo) e tarefas agendadas (avisos, resumo semanal, limpeza).
+7. Emails (fila e Resend) e tarefas agendadas (avisos, resumo semanal, limpeza).
 8. Teste do fluxo completo e README (deploy na Vercel, secrets, primeiro administrador, DNS na GoDaddy).
 
 ---
@@ -290,7 +290,7 @@ O editor de modelos no ecrã de definições ficaria para a fase 2. Dias de avis
 - **Reabrir:** concluir pode ser desfeito até ao dia da limpeza.
 - **Data de limpeza:** fica gravada no momento da conclusão (é a que aparece no aviso). Se a organização mudar os dias de conservação, só afeta as conclusões seguintes.
 - **MFA:** verificado na própria base de dados. Uma sessão da equipa sem MFA não lê nada.
-- **Acesso por convite:** o registo público fica desligado. Os links mágicos e os convites saem pela Brevo com a marca da organização.
+- **Acesso por convite:** o registo público fica desligado. Os links mágicos e os convites saem pela Resend com a marca da organização.
 - **Templates de email:** em código, com os textos nos ficheiros de tradução.
 - **Ficheiros:** PDF, JPG e PNG até 10 MB. URLs assinados válidos 60 segundos.
 - **Fuso horário:** Dubai.
@@ -304,7 +304,7 @@ O editor de modelos no ecrã de definições ficaria para a fase 2. Dias de avis
 ## 11. O que preciso para começar
 - **Repositório GitHub:** o nome (ex.: `orvel-partners/portal-clientes`). Pode ser um repositório vazio criado por ti; eu ligo-o a esta sessão.
 - **Logótipo:** os ficheiros, a pedir à Cátia. Até lá uso um marcador neutro, sem redesenhar o logótipo.
-- **Só no deploy:** projetos Supabase de dev e de produção, Vercel, `BREVO_API_KEY` e o DNS na GoDaddy.
+- **Só no deploy:** projetos Supabase de dev e de produção, Vercel, `RESEND_API_KEY` e o DNS na GoDaddy.
 
 ---
 
@@ -315,10 +315,14 @@ O editor de modelos no ecrã de definições ficaria para a fase 2. Dias de avis
 - **Recuperação de password da equipa** acrescentada (ecrã "Esqueci-me da password"). Quem já tem
   MFA passa o código antes de definir a nova password.
 - **Emails de autenticação** com o link `/auth/confirmar?token_hash=…`, tratado pelo portal. O hook
-  `auth-send-email` envia-os pela Brevo com a marca da organização; os modelos em
-  `supabase/templates/` só servem quando o hook está desligado (ambiente local).
+  `auth-send-email` envia-os pela Resend (até 17/11/2026, pela Brevo) com a marca da organização;
+  os modelos em `supabase/templates/` só servem quando o hook está desligado (ambiente local).
 - **Painel da equipa provisório**: lista de clientes com enviar/reenviar convite, até à etapa 3.
 - **Logótipo**: até haver ficheiro carregado, o cabeçalho mostra só o nome da organização.
+- **Resend em vez da Brevo (17/11/2026)**: os emails passam a sair pela API da Resend
+  (`RESEND_API_KEY`), com o domínio da organização confirmado na Resend por DNS. Novo segredo
+  `EMAIL_LOG_DOMAINS`: os emails para esses domínios ficam só no log (no projeto de desenvolvimento,
+  `exemplo.test`, para o e2e continuar a ler os links) e os restantes saem a sério.
 
 ## 13. Identidade visual (15/11/2026)
 

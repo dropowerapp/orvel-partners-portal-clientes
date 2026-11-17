@@ -250,7 +250,7 @@ otp_expiry = 3600
 # sender_name = "Admin"
 
 # Modelos usados só quando o hook de email (auth-send-email) está desligado, como no ambiente
-# local (os emails aparecem no Inbucket/Mailpit). Em produção os emails saem pelo hook, pela Brevo.
+# local (os emails aparecem no Inbucket/Mailpit). Em produção os emails saem pelo hook, pela Resend.
 [auth.email.template.magic_link]
 subject = "O seu link de acesso ao portal"
 content_path = "./supabase/templates/magic_link.html"
@@ -287,7 +287,7 @@ max_frequency = "5s"
 # Force log out if the user has been inactive longer than the specified duration.
 # inactivity_timeout = "8h"
 
-# Emails de autenticação com a marca da organização, enviados pela Brevo (Edge Function
+# Emails de autenticação com a marca da organização, enviados pela Resend (Edge Function
 # auth-send-email). Desligado localmente; em produção liga-se no painel do Supabase
 # (Authentication → Hooks → Send Email) com o URL da função e o segredo SEND_EMAIL_HOOK_SECRET.
 [auth.hook.send_email]

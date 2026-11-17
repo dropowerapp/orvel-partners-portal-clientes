@@ -5,7 +5,7 @@ Primeira organização: Orvel Partners. Preparado para white label (várias orga
 base de dados), sem o construir já.
 
 - Plano aprovado (esquema, RLS, ecrãs, decisões): [`docs/plano.md`](docs/plano.md)
-- Stack: Supabase (Postgres + RLS, Auth, Storage, Edge Functions, pg_cron) · React + TypeScript + Tailwind (Vite) · Vercel · Brevo
+- Stack: Supabase (Postgres + RLS, Auth, Storage, Edge Functions, pg_cron) · React + TypeScript + Tailwind (Vite) · Vercel · Resend
 
 > Em desenvolvimento usam-se **só dados fictícios** (`supabase/seed.sql`, emails `@exemplo.test`).
 
@@ -14,12 +14,12 @@ base de dados), sem o construir já.
 | Etapa | Conteúdo | Estado |
 |---|---|---|
 | 1 | Esquema, RLS, funções do cliente, Storage, dados fictícios, testes de RLS | ✅ |
-| 2 | Autenticação (MFA equipa, link mágico, convite), consentimento, tema, i18n | ✅ (por validar num Supabase real) |
+| 2 | Autenticação (MFA equipa, link mágico, convite), consentimento, tema, i18n | ✅ (validada no Supabase de dev a 17/11/2026) |
 | 3 | Painel da equipa: processos, ficha, pessoas, proposta, pagamentos | — |
 | 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | — |
 | 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | — |
 | 6 | Cronologia, prazos e calendário | — |
-| 7 | Emails (Brevo) e tarefas agendadas (avisos, resumo semanal, limpeza) | — |
+| 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | — |
 | 8 | Teste do fluxo completo, deploy | — |
 
 ## Estrutura
@@ -98,9 +98,11 @@ como cliente novo, cliente com acesso ou equipa (qualquer password; código MFA:
 dígitos), abrir o "email" do link mágico ou do convite e ver outra organização.
 
 Num build, a demonstração só entra com a variável `VITE_DEMO_MODE=true` definida no momento do
-build. Na Vercel, essa variável fica **só no ambiente Preview** (nunca em Production), para as
-pré-visualizações mostrarem a demonstração enquanto o projeto Supabase não está pronto. Sem a
-variável, o código da demonstração não entra no pacote.
+build. Na Vercel, essa variável fica **só no ambiente Preview** (nunca em Production). Desde
+17/11/2026 está a `false`, porque a pré-visualização passou a usar o projeto Supabase de
+desenvolvimento (ver "Pré-visualização da Vercel ligada ao Supabase"). Para voltar à
+demonstração, pô-la a `true` e fazer Redeploy. Sem a variável, o código da demonstração não entra
+no pacote.
 
 ```bash
 npm run web:demo
@@ -120,10 +122,12 @@ já aceitou). Os emails de login aparecem no Inbucket/Mailpit (`http://127.0.0.1
 | Função | Para quê | Autenticação |
 |---|---|---|
 | `invite-client` | Envia ou reenvia o convite a um cliente (cria a conta, liga-a ao cliente, email com a marca) | Token da sessão; exige equipa com MFA |
-| `auth-send-email` | Hook do Supabase Auth: link mágico e recuperação de password pela Brevo, com a marca da organização | Assinatura `SEND_EMAIL_HOOK_SECRET` |
+| `auth-send-email` | Hook do Supabase Auth: link mágico e recuperação de password pela Resend, com a marca da organização | Assinatura `SEND_EMAIL_HOOK_SECRET` |
 
 Segredos: ver `supabase/functions/.env.example`. Localmente, copiar para `supabase/functions/.env`
-(com `EMAIL_MODE=log`, os emails do convite são escritos no log da função em vez de enviados).
+(com `EMAIL_MODE=log`, os emails do convite são escritos no log da função em vez de enviados;
+com `EMAIL_LOG_DOMAINS=exemplo.test`, só os dos endereços fictícios ficam no log e os outros saem
+pela Resend).
 
 ```bash
 npm run functions:serve
@@ -190,13 +194,17 @@ npx supabase functions deploy invite-client auth-send-email
 
 7. **Authentication → Hooks → Send Email**: tipo HTTPS, URL
    `https://<referencia-do-projeto>.supabase.co/functions/v1/auth-send-email`, gerar o segredo.
-8. Segredos das funções (o segredo do passo 7 e a chave da Brevo):
+8. Resend: em Domains, juntar o domínio da organização (ex.: `orvelpartners.com`, região
+   Ireland/eu-west-1) e pôr os registos DNS que a Resend indica (DKIM `resend._domainkey` e o
+   subdomínio `send`, que não mexem nas caixas de correio existentes). Quando o domínio estiver
+   "Verified", criar uma API key com permissão "Sending access" só para esse domínio.
+9. Segredos das funções (o segredo do passo 7 e a chave da Resend):
 
 ```bash
-npx supabase secrets set BREVO_API_KEY=<chave> SEND_EMAIL_HOOK_SECRET=<segredo> ALLOWED_ORIGINS=https://portal.orvelpartners.com AUTH_LINK_EXPIRY_HOURS=1
+npx supabase secrets set RESEND_API_KEY=<chave> SEND_EMAIL_HOOK_SECRET=<segredo> ALLOWED_ORIGINS=https://portal.orvelpartners.com AUTH_LINK_EXPIRY_HOURS=1
 ```
 
-9. Frontend (Vercel ou `web/.env.local`): `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`
+10. Frontend (Vercel ou `web/.env.local`): `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`
    (Project Settings → API; a chave pública "anon"/"publishable").
 
 ### Alternativa sem CLI nem password da base de dados (`scripts/remote/`)
@@ -217,7 +225,7 @@ repositório.
 | `db-test.sh` | Corre os testes pgTAP no projeto (tudo desfeito no fim) |
 | `e2e.sh` | Teste de ponta a ponta: link mágico, consentimento, equipa com MFA, convite e Storage |
 
-Projeto de desenvolvimento, por esta ordem (dados fictícios; enquanto não houver chave da Brevo,
+Projeto de desenvolvimento, por esta ordem (dados fictícios; enquanto não houver chave da Resend,
 os emails ficam no log da função):
 
 ```bash
@@ -246,6 +254,34 @@ scripts/remote/auth-config.sh
 
 ```bash
 scripts/remote/db-test.sh && scripts/remote/e2e.sh
+```
+
+### Pré-visualização da Vercel ligada ao Supabase
+
+A pré-visualização do ramo (`https://orvel-partners-portal-clientes-git-e-38d300-dropower-s-projects.vercel.app`)
+usa o projeto de desenvolvimento, com os dados fictícios. Para isso:
+
+- Vercel, só no ambiente Preview: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (a chave pública
+  `sb_publishable_…`) e `VITE_DEMO_MODE=false`. Depois de mudar variáveis, fazer Redeploy.
+- Supabase: o endereço da pré-visualização está nas Redirect URLs (`…vercel.app/**`), em
+  `ALLOWED_ORIGINS` e em `PUBLIC_SITE_URL` (os convites apontam para a pré-visualização) e em
+  `organizations.hostnames` da Orvel (é pelo hostname que o portal escolhe a organização).
+- Emails (desde 17/11/2026): saem pela Resend (`RESEND_API_KEY`, chave "portal-supabase-dev",
+  só envio e só `orvelpartners.com`), com `EMAIL_LOG_DOMAINS=exemplo.test`: os emails para os
+  endereços fictícios continuam só no log da função (Edge Functions → `auth-send-email` → Logs; os
+  convites em `invite-client`), e o e2e lê-os de lá. Os envios reais aparecem em Resend → Emails.
+- Conta de cliente de teste com email real: `hello@orvelpartners.com` ("Teste Orvel", sem
+  processos), criada a pedido para experimentar o link mágico. Por causa dela, o `db-seed.sh`
+  recusa voltar a correr (há um utilizador fora de `@exemplo.test`).
+- Com esta configuração, o e2e corre com o endereço da pré-visualização, e o `auth-config.sh`
+  tem de manter o endereço nas Redirect URLs:
+
+```bash
+SITE_URL=https://orvel-partners-portal-clientes-git-e-38d300-dropower-s-projects.vercel.app scripts/remote/e2e.sh
+```
+
+```bash
+REDIRECT_URLS='http://localhost:5173/**,http://127.0.0.1:5173/**,https://orvel-partners-portal-clientes-git-e-38d300-dropower-s-projects.vercel.app/**' scripts/remote/auth-config.sh
 ```
 
 Membro da equipa que perdeu a aplicação de autenticação: em Authentication → Users, abrir o

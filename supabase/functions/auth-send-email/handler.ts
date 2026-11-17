@@ -1,5 +1,5 @@
 // Hook "Send Email" do Supabase Auth: os emails de login (link mágico) e de recuperação de
-// password saem pela Brevo com a marca da organização, em vez dos modelos genéricos do Supabase.
+// password saem pela Resend com a marca da organização, em vez dos modelos genéricos do Supabase.
 //
 // O Supabase Auth assina cada pedido (Standard Webhooks); pedidos sem assinatura válida são
 // recusados. O link aponta para /auth/confirmar no portal, que conclui o login com verifyOtp.
