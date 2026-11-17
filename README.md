@@ -17,7 +17,7 @@ base de dados), sem o construir já.
 | 2 | Autenticação (MFA equipa, link mágico, convite), consentimento, tema, i18n | ✅ (validada no Supabase de dev a 17/11/2026) |
 | 3 | Painel da equipa: processos, ficha, pessoas, proposta, pagamentos | ✅ no ramo `etapa-3-painel-equipa` (testada no Supabase de dev a 17/11/2026; falta a revisão no browser) |
 | 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | ✅ ramo `etapa-4-area-cliente` (também percurso por fases e prazos; testada no Supabase de dev a 18/11/2026: db-test 268/268, e2e 66/66) |
-| 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | ✅ `codex/documentos-design`, publicada como Vercel Preview em 17/11/2026; migração aplicada no Supabase. Teste completo autenticado de Storage/Auth remoto ainda pendente. |
+| 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | ✅ `codex/documentos-design`, publicada como Vercel Preview; migração e fluxo autenticado online de envio, revisão e download validados em 17/11/2026. Ver relatório e âmbito abaixo. |
 | 6 | Cronologia, prazos e calendário | — |
 | 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | — |
 | 8 | Teste do fluxo completo, deploy | — |
@@ -56,10 +56,13 @@ Publicação concluída em 17/11/2026:
 - Verificações remotas: página de entrada com marca Orvel; seis funções instaladas com execução
   negada a `anon`; preflight CORS de `sign-download` e `invite-client` devolve o novo endereço.
 
-Ainda por validar com uma sessão autenticada e ficheiros fictícios no serviço remoto:
+Validação online concluída em 17/11/2026 com sessão real e PDFs fictícios:
 envio → revisão → rejeição → reenvio → aprovação; emitido interno → disponibilizar → download.
-Os testes automatizados referidos acima foram executados localmente. Esta publicação não
-executou reset/seed remoto nem enviou emails reais.
+Revisão, emissão e abertura de PDFs na interface publicada; envio/reenvio do cliente pela API
+pública autenticada. Downloads comparados byte a byte por SHA-256; acesso anónimo e aprovação
+pelo próprio cliente recusados. [Relatório, evidências e limites](docs/validacao-documentos-2026-11-17.md).
+Não foi executado reset/seed remoto nem foram enviados emails reais. Os 78 testes de frontend
+e 308 testes SQL referidos acima foram executados localmente.
 
 ## Estrutura
 
