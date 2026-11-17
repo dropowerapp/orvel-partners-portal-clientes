@@ -45,6 +45,7 @@ export default function ProcessActivity() {
       from: typeof meta.from === "string" ? t(`process_status.${meta.from}`) : "",
       to: typeof meta.to === "string" ? t(`process_status.${meta.to}`) : "",
       reference: typeof meta.reference === "string" ? meta.reference : "",
+      title: typeof meta.title === "string" ? (row.action.startsWith("deadline.") ? t(`deadline_type.${meta.title}`, { defaultValue: meta.title }) : meta.title) : "",
       reason: typeof meta.reason === "string" ? meta.reason : "",
     });
   };

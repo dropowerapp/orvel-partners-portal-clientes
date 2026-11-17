@@ -23,6 +23,8 @@ export function useDocuments(processId?: string, staff = false) {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: ["documents"] }),
       queryClient.invalidateQueries({ queryKey: ["client"] }),
+      queryClient.invalidateQueries({ queryKey: ["schedule"] }),
+      queryClient.invalidateQueries({ queryKey: ["team-steps", processId] }),
       queryClient.invalidateQueries({ queryKey: ["client-processes"] }),
       queryClient.invalidateQueries({ queryKey: ["team-process", processId] }),
       queryClient.invalidateQueries({ queryKey: ["team-processes"] }),

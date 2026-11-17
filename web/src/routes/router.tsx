@@ -1,6 +1,4 @@
-import { useTranslation } from "react-i18next";
 import { createBrowserRouter, Navigate, type RouteObject } from "react-router";
-import { ComingSoonPanel } from "../components/ComingSoon";
 import { RequireArea } from "../components/Guards";
 import { TEAM_PATHS } from "../lib/teamData";
 import Confirm from "./auth/Confirm";
@@ -31,15 +29,11 @@ import ProcessPeople from "./team/process/ProcessPeople";
 import ProcessProposals from "./team/process/ProcessProposals";
 import ProcessSummary from "./team/process/ProcessSummary";
 import ProcessTimeline from "./team/process/ProcessTimeline";
+import ProcessDeadlines from "./team/process/ProcessDeadlines";
+import Calendar from "./team/Calendar";
 import ProcessList from "./team/ProcessList";
 import TeamLayout, { TeamComingSoon } from "./team/TeamLayout";
 import TeamLogin from "./team/TeamLogin";
-
-/** Separadores da ficha que chegam nas etapas seguintes (documentos, prazos). */
-function ProcessTabComingSoon({ tab }: { tab: "deadlines" }) {
-  const { t } = useTranslation();
-  return <ComingSoonPanel body={t(`process.coming_soon.${tab}`)} />;
-}
 
 export const routes: RouteObject[] = [
   // Públicas
@@ -94,13 +88,13 @@ export const routes: RouteObject[] = [
               { path: "pagamentos", element: <ProcessPayments /> },
               { path: "documentos", element: <ProcessDocuments /> },
               { path: "percurso", element: <ProcessTimeline /> },
-              { path: "prazos", element: <ProcessTabComingSoon tab="deadlines" /> },
+              { path: "prazos", element: <ProcessDeadlines /> },
               { path: "interno", element: <ProcessInternal /> },
               { path: "atividade", element: <ProcessActivity /> },
             ],
           },
           { path: "clientes", element: <Clients /> },
-          { path: "calendario", element: <TeamComingSoon section="calendar" /> },
+          { path: "calendario", element: <Calendar /> },
           { path: "definicoes", element: <TeamComingSoon section="settings" /> },
         ],
       },

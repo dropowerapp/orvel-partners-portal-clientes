@@ -1,8 +1,10 @@
-// Prazos e renovações do cliente (licença, contrato de escritório, Establishment Card, vistos…).
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Badge, PageTitle, Spinner } from "../../components/ui";
-import { daysUntil } from "../../lib/client";
-import { useClientDeadlines, useClientProcesses } from "../../lib/clientData";
+import { DeadlineBadge, DeadlineDownload, ScheduleEmpty, ScheduleStats } from "../../components/ScheduleUI";
+import { Alert, Card, PageTitle, Spinner } from "../../components/ui";
+import { useClientProcesses } from "../../lib/clientData";
+import { isActiveDeadline } from "../../lib/schedule";
+import { useDeadlines } from "../../lib/scheduleData";
 import { todayIn } from "../../lib/team";
 import { useFormat } from "../../lib/teamData";
 
@@ -11,45 +13,30 @@ export default function ClientDeadlines() {
   const format = useFormat();
   const today = todayIn("Asia/Dubai");
   const { current } = useClientProcesses();
-  const deadlines = useClientDeadlines(current?.id);
-  const rows = (deadlines.data ?? []).filter((d) => d.status !== "dismissed");
-
-  return (
-    <>
-      <PageTitle eyebrow={t("auth_layout.eyebrow_client")} title={t("client_deadlines.title")}>
-        {t("client_deadlines.intro")}
-      </PageTitle>
-      {deadlines.isPending && current && <Spinner />}
-      {deadlines.isError && <Alert>{t("client_deadlines.load_error")}</Alert>}
-      {deadlines.isSuccess && rows.length === 0 && (
-        <div className="rounded-lg border border-dashed border-line bg-white px-5 py-8 text-center text-muted">{t("client_deadlines.empty")}</div>
-      )}
-      {rows.length > 0 && (
-        <ul className="divide-y divide-line overflow-hidden rounded-lg border border-line bg-white">
-          {rows.map((d) => {
-            const days = daysUntil(d.due_on, today);
-            const tone = d.status === "renewed" ? "success" : days < 0 ? "danger" : days <= 30 ? "warning" : "neutral";
-            return (
-              <li key={d.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-                <div>
-                  <p className="font-semibold text-primary">{d.title || t(`deadline_type.${d.deadline_type}`)}</p>
-                  <p className="text-sm text-muted">{t("client_deadlines.due_on", { date: format.date(d.due_on) })}</p>
-                </div>
-                <Badge tone={tone}>
-                  {d.status === "renewed"
-                    ? t("client_deadlines.renewed")
-                    : d.status === "renewing"
-                    ? t("client_deadlines.renewing")
-                    : days < 0
-                    ? t("client_deadlines.expired")
-                    : t("client_deadlines.in_days", { days })}
-                </Badge>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-      <p className="mt-6 text-xs text-muted">{t("client_deadlines.disclaimer")}</p>
-    </>
-  );
+  const query = useDeadlines(current?.id);
+  const [history, setHistory] = useState(false);
+  const rows = (query.data ?? []).filter((row) => history ? row.status === "renewed" : isActiveDeadline(row));
+  return <>
+    <PageTitle eyebrow={t("auth_layout.eyebrow_client")} title={t("client_deadlines.title")}>{t("client_deadlines.intro")}</PageTitle>
+    <div className="flex flex-col gap-6">
+      {query.isPending && current && <Spinner />}{query.isError && <Alert>{t("client_deadlines.load_error")}</Alert>}
+      {query.isSuccess && <ScheduleStats rows={query.data} today={today} />}
+      <div role="group" aria-label={t("schedule.filter")} className="inline-flex self-start rounded-xl border border-line bg-white p-1">
+        {[false, true].map((value) => <button key={String(value)} aria-pressed={history === value} onClick={() => setHistory(value)} className={"rounded-lg px-4 py-2 text-sm font-semibold " + (history === value ? "bg-primary text-white" : "text-muted")}>{t(value ? "schedule.renewed_history" : "schedule.active")}</button>)}
+      </div>
+      {query.isSuccess && <Card>
+        {!rows.length ? <ScheduleEmpty title={t(history ? "schedule.no_history" : "schedule.empty")} body={t("client_deadlines.empty")} /> : <ul className="divide-y divide-line">
+          {rows.map((row) => <li key={row.id} className="py-5 first:pt-0 last:pb-0">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div><h2 className="font-semibold">{row.title || t("deadline_type." + row.deadline_type)}</h2>
+                <p className="mt-1 text-sm text-muted">{format.date(row.due_on)}<span aria-hidden="true"> · </span>{row.person?.full_name || t("schedule.company")}</p></div>
+              <DeadlineBadge deadline={row} today={today} />
+            </div>
+            {row.document && <div className="mt-4"><DeadlineDownload document={row.document} /></div>}
+          </li>)}
+        </ul>}
+      </Card>}
+      <p className="text-xs leading-relaxed text-muted">{t("client_deadlines.disclaimer")}</p>
+    </div>
+  </>;
 }

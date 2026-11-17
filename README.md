@@ -18,7 +18,7 @@ base de dados), sem o construir já.
 | 3 | Painel da equipa: processos, ficha, pessoas, proposta, pagamentos | ✅ no ramo `etapa-3-painel-equipa` (testada no Supabase de dev a 17/11/2026; falta a revisão no browser) |
 | 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | ✅ ramo `etapa-4-area-cliente` (também percurso por fases e prazos; testada no Supabase de dev a 18/11/2026: db-test 268/268, e2e 66/66) |
 | 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | ✅ `codex/documentos-design`, publicada como Vercel Preview; migração e fluxo autenticado online de envio, revisão e download validados em 17/11/2026. Ver relatório e âmbito abaixo. |
-| 6 | Cronologia, prazos e calendário | — |
+| 6 | Cronologia, prazos e calendário | Implementada e validada localmente em `codex/documentos-design`; migração remota e publicação pendentes de acesso ao Supabase. |
 | 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | — |
 | 8 | Teste do fluxo completo, deploy | — |
 
@@ -66,6 +66,36 @@ pelo próprio cliente recusados. [Relatório, evidências e limites](docs/valida
 Não foi executado reset/seed remoto nem foram enviados emails reais. Os 78 testes de frontend
 e 308 testes SQL referidos acima foram executados localmente.
 
+## Etapa 6: percurso, prazos e calendário (17/11/2026)
+
+Implementação local no ramo `codex/documentos-design`, mantendo a navegação, a tipografia,
+o azul-marinho e os cartões com espaço do design anterior:
+
+- Equipa: criar, editar e remover passos manuais do percurso; datas previstas e de conclusão,
+  notas visíveis ao cliente e progresso por fase. Os passos automáticos continuam ligados aos
+  eventos do processo e não são editáveis manualmente.
+- Prazos por processo: criar prazos manuais, acompanhar renovações e consultar o histórico.
+  A validade dos prazos documentais vem do documento de origem; a emissão de um documento novo
+  confirma a renovação. Os prazos continuam geríveis após a conclusão do processo.
+- Calendário: vista mensal com seleção do dia, vista semanal dos próximos 90 dias, prazos
+  vencidos, pesquisa por cliente/pessoa/tipo/título e acesso à ficha do processo.
+- Cliente: prazos ativos e histórico de renovações, indicação da pessoa, acesso ao documento
+  de origem e consulta das datas e notas do percurso. Prazos de documentos internos não ficam
+  visíveis ao cliente.
+- Migração `20261118120000_timeline_deadlines.sql`: três funções validadas, MFA e isolamento
+  por organização, controlo de alterações concorrentes e auditoria. As escritas diretas nas
+  tabelas de passos e prazos passam a ser substituídas por estas funções.
+
+Validação local: **89 testes de frontend e 351 verificações SQL aprovados**, build de produção
+gerado e revisão da demonstração no Chrome em computador e telemóvel. O build conserva o aviso
+de tamanho do bundle. [Âmbito e publicação pendente](docs/validacao-percurso-prazos-2026-11-17.md).
+
+**Ainda não publicada:** a migração desta etapa não foi aplicada no Supabase remoto. O controlo
+do Chrome deixou de estar disponível antes da execução; a integração Supabase foi sugerida
+como alternativa e aguarda ligação. Aplicar e confirmar a migração antes de publicar o
+frontend, porque os novos formulários dependem dessas funções. A Preview continua na etapa 5.
+Os avisos por email e tarefas agendadas pertencem à etapa 7.
+
 ## Estrutura
 
 ```
@@ -88,17 +118,18 @@ docs/plano.md          Plano técnico aprovado
 | Área | Caminho | Conteúdo | Etapa |
 |---|---|---|---|
 | Cliente | `/` | Início: o que falta da parte do cliente, percurso por fases, pagamento, próximos prazos e contacto | 4 |
-| Cliente | `/percurso`, `/prazos` | Percurso por fases (documento "Criar empresa no Dubai, passo a passo") e prazos | 4 |
+| Cliente | `/percurso`, `/prazos` | Percurso por fases, datas e notas; prazos ativos, renovações e documento de origem | 4 + 6 |
 | Cliente | `/documentos` | Pedidos por pessoa, filtros, upload/reenvio, estados e documentos emitidos | 5 |
 | Cliente | `/mais` → `/proposta`, `/pagamento`, `/dados`, `/contacto` | Proposta (PDF, plano, aceitação), pagamento (dados bancários libertados), os meus dados (contacto, pessoas, nomes da empresa), contacto | 4 |
 | Equipa | `/equipa/processos` | Processos com filtros por estado, pesquisa e alertas | 3 |
 | Equipa | `/equipa/processos/novo` (`?cliente=id` para um cliente existente) | Novo cliente ou novo processo, com pessoas e convite | 3 |
 | Equipa | `/equipa/processos/:id` | Ficha: Resumo · Pessoas e dados · Proposta · Pagamentos · Interno · Atividade | 3 |
-| Equipa | `/equipa/processos/:id/percurso` | Passos por fase: estado, datas e nota para o cliente | 4 |
+| Equipa | `/equipa/processos/:id/percurso` | Passos por fase: criação/edição/remoção manual, estado, datas e nota para o cliente | 6 |
 | Equipa | `/equipa/processos/:id/documentos` | Pedidos, revisão, histórico de versões, emitidos e visibilidade para o cliente | 5 |
-| Equipa | `/equipa/processos/:id/prazos` | Prazos da ficha | 6 (em preparação) |
+| Equipa | `/equipa/processos/:id/prazos` | Prazos manuais e documentais, renovação e histórico | 6 |
 | Equipa | `/equipa/clientes` | Clientes, convite e novo processo para um cliente existente | 3 |
-| Equipa | `/equipa/calendario`, `/equipa/definicoes` | Calendário de prazos, definições da organização | 6 e seguintes |
+| Equipa | `/equipa/calendario` | Calendário mensal, próximos 90 dias por semana e prazos vencidos | 6 |
+| Equipa | `/equipa/definicoes` | Definições da organização | Etapa posterior |
 
 No telemóvel, o menu do cliente fica numa barra em baixo (Início · Documentos · Percurso · Prazos ·
 Mais). Se o cliente tiver mais de um processo, aparece um seletor no topo. O PDF da proposta é

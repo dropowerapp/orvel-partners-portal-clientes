@@ -115,7 +115,7 @@ export interface PhaseProgress {
 
 /** Passos agrupados por fase, com a fase atual (a primeira que ainda não terminou). */
 export function phaseProgress(steps: ClientStep[]): { phases: PhaseProgress[]; current: ClientStep | null; percent: number } {
-  const sorted = [...steps].sort((a, b) => a.position - b.position);
+  const sorted = [...steps].sort((a, b) => PHASES.indexOf(a.phase ?? "incorporation") - PHASES.indexOf(b.phase ?? "incorporation") || a.position - b.position);
   const groups = PHASES.map((phase) => ({ phase, steps: sorted.filter((s) => (s.phase ?? "incorporation") === phase) }))
     .filter((g) => g.steps.length > 0);
   let currentFound = false;

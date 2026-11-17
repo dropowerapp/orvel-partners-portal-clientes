@@ -208,7 +208,9 @@ function columnKey(column: string): { key: string; embedded: boolean } {
 class DemoQuery implements PromiseLike<{ data: unknown; error: unknown }> {
   private columns: string[] | null = null;
   private filters: [string, unknown][] = [];
-  private orderBy: string | null = null;
+  private orderBy: { column: string; ascending: boolean }[] = [];
+  private predicates: ((row: Row) => boolean)[] = [];
+  private bounds: [number, number] | null = null;
   private one = false;
   private maybeOne = false;
   /** Na demonstração, as escritas diretas em tabelas (painel da equipa) não gravam nada. */
@@ -224,27 +226,15 @@ class DemoQuery implements PromiseLike<{ data: unknown; error: unknown }> {
     this.filters.push([column, value]);
     return this;
   }
-  // Filtros que o portal usa noutras tabelas: na demonstração essas tabelas estão vazias.
-  neq() {
-    return this;
-  }
-  in() {
-    return this;
-  }
-  is() {
-    return this;
-  }
-  gte() {
-    return this;
-  }
-  lte() {
-    return this;
-  }
-  limit() {
-    return this;
-  }
-  order(column: string) {
-    this.orderBy = column;
+  neq(column: string, value: unknown) { this.predicates.push((row) => row[column] !== value); return this; }
+  in(column: string, values: unknown[]) { this.predicates.push((row) => values.includes(row[column])); return this; }
+  is(column: string, value: unknown) { this.predicates.push((row) => (row[column] ?? null) === value); return this; }
+  gte(column: string, value: string) { this.predicates.push((row) => String(row[column]) >= value); return this; }
+  lte(column: string, value: string) { this.predicates.push((row) => String(row[column]) <= value); return this; }
+  limit(value: number) { this.bounds = [0, value - 1]; return this; }
+  range(from: number, to: number) { this.bounds = [from, to]; return this; }
+  order(column: string, options?: { ascending?: boolean }) {
+    this.orderBy.push({ column, ascending: options?.ascending !== false });
     return this;
   }
   single() {
@@ -276,16 +266,22 @@ class DemoQuery implements PromiseLike<{ data: unknown; error: unknown }> {
     await wait(150);
     if (this.write) return { data: null, error: { code: "P0001", message: "demo_read_only" } };
     let rows = visibleRows(this.table, load()).filter((row) => this.filters.every(([c, v]) => row[c] === v));
-    if (this.orderBy) {
-      const key = this.orderBy;
-      rows = [...rows].sort((a, b) => String(a[key]).localeCompare(String(b[key]), "pt"));
-    }
+    rows = rows.filter((row) => this.predicates.every((predicate) => predicate(row)));
+    rows = [...rows].sort((a, b) => {
+      for (const { column, ascending } of this.orderBy) {
+        const x = a[column], y = b[column];
+        const diff = typeof x === "number" && typeof y === "number" ? x - y : String(x).localeCompare(String(y), "pt");
+        if (diff) return ascending ? diff : -diff;
+      }
+      return 0;
+    });
+    if (this.bounds) rows = rows.slice(this.bounds[0], this.bounds[1] + 1);
     const pick = (row: Row) =>
       this.columns
         ? Object.fromEntries(
           this.columns.map((c) => {
             const { key, embedded } = columnKey(c);
-            return [key, row[key] ?? (embedded ? [] : null)];
+            return [key, Object.hasOwn(row, key) ? row[key] : (embedded ? [] : null)];
           }),
         )
         : row;

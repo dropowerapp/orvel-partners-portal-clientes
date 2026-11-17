@@ -23,7 +23,7 @@ export default function ClientTimeline() {
       {phases.length > 0 && <p className="mb-6 text-sm font-semibold text-primary">{t("client_timeline.percent", { percent })}</p>}
       <ol className="flex flex-col gap-6">
         {phases.map((phase, index) => (
-          <li key={phase.phase} className="rounded-lg border border-line bg-white">
+          <li key={phase.phase} className="portal-card">
             <div className="flex flex-wrap items-start justify-between gap-3 border-b border-line px-5 py-4">
               <div className="flex items-start gap-4">
                 <span
@@ -32,7 +32,7 @@ export default function ClientTimeline() {
                   }`}
                   aria-hidden="true"
                 >
-                  {String(index).padStart(2, "0")}
+                  {String(index + 1).padStart(2, "0")}
                 </span>
                 <div>
                   <h2 className="text-lg font-light text-primary">{t(`phases.${phase.phase}.title`)}</h2>
@@ -58,13 +58,12 @@ export default function ClientTimeline() {
                       <span className="sr-only"> · {t(`step_status.${step.status}`)}</span>
                     </p>
                     <p className="text-xs text-muted">
-                      {step.status === "done"
-                        ? step.done_on ? t("client_timeline.done_on", { date: format.date(step.done_on) }) : t("step_status.done")
-                        : step.planned_on
-                        ? t("client_timeline.planned_on", { date: format.date(step.planned_on) })
-                        : t(`step_status.${step.status}`)}
+                      {[
+                        step.planned_on ? t("client_timeline.planned_on", { date: format.date(step.planned_on) }) : null,
+                        step.done_on ? t("client_timeline.done_on", { date: format.date(step.done_on) }) : null,
+                      ].filter(Boolean).join(" · ") || t(`step_status.${step.status}`)}
                     </p>
-                    {step.client_note && <p className="mt-1 text-sm text-primary">{step.client_note}</p>}
+                    {step.client_note && <p className="mt-2 border-l-2 border-line pl-3 text-sm leading-relaxed whitespace-pre-wrap text-muted">{step.client_note}</p>}
                   </div>
                 </li>
               ))}

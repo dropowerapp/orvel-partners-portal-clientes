@@ -40,7 +40,7 @@ export function portalRows(table: string, client: DemoClientRow): Row[] {
     ["documents", "Proposta aceite", "done"], ["documents", "Pagamento inicial recebido", "done"],
     ["documents", "Reunir e validar documentos", "in_progress"], ["incorporation", "Constituição da empresa", "todo"],
     ["residence", "Visto de residência e Emirates ID", "todo"], ["bank", "Abertura de conta bancária", "todo"],
-  ].map(([phase, title, status], i) => ({ id: processId + "-step-" + i, organization_id: org, process_id: processId, position: i + 1, phase, title: label(title), status, planned_on: day(i * 5), done_on: i < 2 ? day(-8) : null, client_note: i === 2 ? "Assim que todos os documentos estiverem aprovados, avançamos para a constituição." : null }));
+  ].map(([phase, title, status], i) => ({ id: processId + "-step-" + i, organization_id: org, process_id: processId, position: i + 1, phase, title: label(title), status, planned_on: day(i * 5), done_on: i < 2 ? day(-8) : null, auto_event: i === 0 ? "proposal_accepted" : i === 1 ? "payment_confirmed" : null, updated_at: stamp(-1), client_note: i === 2 ? "Assim que todos os documentos estiverem aprovados, avançamos para a constituição." : null }));
   const fullClient = { ...client, phone: "+351 900 000 000", country: "Portugal", address_line: "", city: "", postal_code: "", address_country: "Portugal", locale: "pt-PT" };
   const process = {
     id: processId, organization_id: org, client_id: client.id, client: fullClient, status: "awaiting_documents", plan_name: "Business Setup",
@@ -48,9 +48,20 @@ export function portalRows(table: string, client: DemoClientRow): Row[] {
     bank_account_id: null, bank_details_released_at: null, completed_at: null, cancelled_at: null, created_at: stamp(-12),
     payments, document_requests: requests, deadlines: [],
   };
+  const deadlines = [
+    ["licence", -5, "renewing", null], ["establishment_card", 3, "open", null],
+    ["residence_visa", 12, "open", person], ["emirates_id", 24, "renewing", companion],
+    ["office_contract", 45, "open", null], ["other", 85, "open", null], ["licence", -370, "renewed", null],
+  ].map(([kind, offset, status, who], i) => ({
+    id: processId + "-deadline-" + i, organization_id: org, process_id: processId,
+    deadline_type: kind, due_on: day(Number(offset)), status, title: kind === "other" ? "Revisão anual dos documentos" : null,
+    person_id: who && typeof who === "object" ? who.id : null, person: who, document_id: null, document: null,
+    process: { id: processId, client: fullClient }, updated_at: stamp(-1),
+  }));
+  process.deadlines = deadlines as never[];
   const tables: Record<string, Row[]> = {
     processes: [process], people: [person, companion], document_requests: requests, documents: [...documents, issued],
-    document_types: types, payments, timeline_steps: steps, deadlines: [],
+    document_types: types, payments, timeline_steps: steps, deadlines,
     proposals: [{ id: processId + "-proposal", process_id: processId, reference: "ORV-2026-024", pdf_path: null, plans: [{ name: "Business Setup", price_aed: 24500, includes_bank_account: true }], chosen_plan: "Business Setup", status: "accepted", valid_until: day(15), sent_at: stamp(-12), accepted_at: stamp(-10), accepted_text: "Exemplo de aceitação de proposta." }],
     organizations: [{ id: org, timezone: "Asia/Dubai", proposal_ref_prefix: "ORV", default_locale: "pt-PT" }],
   };

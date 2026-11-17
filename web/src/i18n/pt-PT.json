@@ -340,7 +340,7 @@
       "internal": "Interno",
       "activity": "Atividade"
     },
-    "closed_notice": "Este processo está fechado (concluído ou cancelado). Os dados ficam só para consulta.",
+    "closed_notice": "Este processo está fechado (concluído ou cancelado). Pode continuar a acompanhar e gerir os prazos de renovação; os restantes dados ficam para consulta.",
     "coming_soon": {
       "timeline": "A cronologia do processo (passos, datas e notas para o cliente) chega na etapa 6.",
       "deadlines": "Os prazos e renovações chegam na etapa 6."
@@ -554,7 +554,12 @@
       "document_downloaded": "Ficheiro sensível descarregado",
       "document_request_created": "Pedido de documento criado",
       "document_request_removed": "Pedido de documento removido",
-      "document_visibility_changed": "Visibilidade do documento alterada"
+      "document_visibility_changed": "Visibilidade do documento alterada",
+      "timeline_created": "Passo acrescentado: {{title}}",
+      "timeline_updated": "Passo atualizado: {{title}}",
+      "timeline_removed": "Passo removido: {{title}}",
+      "deadline_created": "Prazo criado: {{title}}",
+      "deadline_updated": "Prazo atualizado: {{title}}"
     }
   },
   "client_status": {
@@ -618,7 +623,7 @@
   },
   "client_deadlines": {
     "title": "Prazos e renovações",
-    "intro": "O que expira e quando, para preparar as renovações com tempo. Avisamos por email antes de cada prazo.",
+    "intro": "As validades da sua empresa e da sua residência, com o estado de cada renovação. Consulte aqui as datas e os documentos associados.",
     "load_error": "Não foi possível carregar os prazos.",
     "empty": "Ainda não há prazos. Aparecem aqui quando os documentos da empresa e do visto forem emitidos.",
     "due_on": "Expira a {{date}}",
@@ -693,7 +698,15 @@
     "done_on": "Data de conclusão",
     "client_note": "Nota para o cliente (opcional)",
     "client_note_placeholder": "Ex.: O exame médico está marcado para as 9h00.",
-    "client_note_hint": "O cliente vê esta nota no percurso. Não escreva aqui nomes da equipa, custos nem informação interna."
+    "client_note_hint": "O cliente vê esta nota no percurso. Não escreva aqui nomes da equipa, custos nem informação interna.",
+    "add": "Adicionar passo",
+    "edit": "Editar passo",
+    "title_label": "Título do passo",
+    "phase": "Fase",
+    "progress": "Progresso do processo",
+    "saved_generic": "Passo guardado.",
+    "removed": "Passo removido do percurso.",
+    "remove_question": "Remover o passo «{{title}}» do percurso? A ação fica registada na atividade."
   },
   "validation": {
     "email": "Indique um email válido.",
@@ -757,7 +770,11 @@
     "document_metadata_invalid": "Não foi possível validar o ficheiro enviado.",
     "document_path_invalid": "O ficheiro não pertence a este processo.",
     "upload_not_found": "O ficheiro não foi encontrado. Volte a tentar.",
-    "request_not_open": "Este pedido já não aceita novos envios."
+    "request_not_open": "Este pedido já não aceita novos envios.",
+    "timeline_automatic_locked": "Este passo é atualizado automaticamente pelo processo.",
+    "timeline_future_completion": "A data de conclusão não pode estar no futuro.",
+    "schedule_conflict": "Este registo foi alterado entretanto. Feche o formulário, atualize a página e volte a editar.",
+    "deadline_document_locked": "Este prazo é controlado pelo documento emitido. A renovação é confirmada ao emitir o novo documento."
   },
   "demo": {
     "title": "Modo de demonstração",
@@ -860,5 +877,68 @@
     "previous_versions": "{{count}} versões anteriores",
     "make_visible": "Disponibilizar ao cliente",
     "make_internal": "Guardar só para a equipa"
+  },
+  "schedule": {
+    "process_intro": "Acompanhe as validades e prepare as renovações. Os documentos com validade criam os respetivos prazos automaticamente.",
+    "add": "Adicionar prazo",
+    "edit": "Editar prazo",
+    "saved": "Prazo guardado.",
+    "filter": "Filtrar prazos",
+    "history": "Histórico",
+    "active": "Prazos ativos",
+    "renewed_history": "Renovações concluídas",
+    "no_history": "Ainda não há prazos no histórico.",
+    "empty": "Sem prazos ativos.",
+    "empty_body": "Acrescente um prazo ou carregue um documento emitido com validade.",
+    "view_calendar": "Ver calendário da equipa",
+    "company": "Empresa / processo",
+    "from_document": "Do documento",
+    "manual": "Prazo manual",
+    "type": "Tipo de prazo",
+    "due_on": "Data do prazo",
+    "title_label": "Título do prazo",
+    "person": "A quem se aplica",
+    "status": "Estado",
+    "people_error": "Não foi possível carregar as pessoas deste processo.",
+    "linked_hint": "A data, o tipo e a pessoa vêm do documento emitido. Pode acompanhar a renovação ou dispensar o prazo. Ao emitir o novo documento, o prazo anterior passa automaticamente a renovado.",
+    "client_visible_hint": "O cliente vê os prazos ativos e as renovações concluídas. Um prazo dispensado fica apenas no histórico da equipa.",
+    "today": "Hoje",
+    "overdue_days_one": "Vencido há {{count}} dia",
+    "overdue_days_other": "Vencido há {{count}} dias",
+    "open_process": "Abrir processo",
+    "open_document": "Abrir documento",
+    "stats": {
+      "overdue": "Vencidos",
+      "soon": "Nos próximos 30 dias",
+      "renewing": "Em renovação",
+      "active": "Ativos"
+    }
+  },
+  "deadline_status": {
+    "open": "Por tratar",
+    "renewing": "Em renovação",
+    "renewed": "Renovado",
+    "dismissed": "Dispensado"
+  },
+  "calendar": {
+    "title": "Calendário de prazos",
+    "intro": "As próximas renovações, num só lugar. Consulte cada mês ou organize os próximos 90 dias por semana.",
+    "view": "Vista do calendário",
+    "month": "Mês",
+    "weeks": "Próximos 90 dias",
+    "search": "Pesquisar cliente ou prazo",
+    "previous": "Mês anterior",
+    "next": "Mês seguinte",
+    "day_label_one": "{{date}}: {{count}} prazo",
+    "day_label_other": "{{date}}: {{count}} prazos",
+    "deadlines": "prazos",
+    "selected": "Prazos de {{date}}",
+    "no_day": "Sem prazos neste dia.",
+    "select_hint": "Selecione um dia no calendário para consultar os prazos.",
+    "range": "De {{start}} a {{end}}",
+    "no_upcoming": "Sem prazos nos próximos 90 dias.",
+    "week_label": "{{start}} — {{end}}",
+    "overdue_title": "Prazos vencidos por tratar",
+    "footer": "As datas seguem o calendário do processo. Os prazos vencidos permanecem visíveis até serem tratados."
   }
 }

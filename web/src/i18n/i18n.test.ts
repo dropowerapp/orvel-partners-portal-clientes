@@ -15,13 +15,17 @@ function files(dir: string): string[] {
   });
 }
 
-function has(key: string): boolean {
+function hasExact(key: string): boolean {
   let node: unknown = ptPT;
   for (const part of key.split(".")) {
     if (typeof node !== "object" || node === null || !(part in node)) return false;
     node = (node as Record<string, unknown>)[part];
   }
   return typeof node === "string";
+}
+
+function has(key: string): boolean {
+  return hasExact(key) || (hasExact(`${key}_one`) && hasExact(`${key}_other`));
 }
 
 describe("traduções", () => {

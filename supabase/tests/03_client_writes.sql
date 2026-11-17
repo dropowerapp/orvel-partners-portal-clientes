@@ -18,7 +18,7 @@ select is(tests.affected($$ update public.proposals set status = 'accepted' wher
   'não aceita a proposta por escrita direta');
 select is(tests.affected($$ delete from public.documents where process_id = tests.id('proc_a') $$), 0,
   'não apaga documentos');
-select is(tests.affected($$ delete from public.deadlines $$), 0, 'não apaga prazos');
+select throws_ok($$ delete from public.deadlines $$, '42501', null, 'não apaga prazos: escrita só por funções validadas');
 select throws_ok($$ insert into public.payments (organization_id, process_id, amount_aed)
                     values (tests.id('org_x'), tests.id('proc_a'), 1) $$, '42501', null, 'não cria pagamentos');
 select throws_ok($$ insert into public.people (organization_id, process_id, relationship, full_name)
