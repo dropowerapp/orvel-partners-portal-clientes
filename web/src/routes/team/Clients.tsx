@@ -1,14 +1,14 @@
-// Painel da equipa (provisório): lista de clientes com envio e reenvio do convite.
-// A lista de processos, filtros e ficha completa chegam na etapa 3.
+// Equipa · Clientes: todos os clientes da organização, com envio e reenvio do convite e atalho para
+// abrir um processo novo (por exemplo, um segundo processo do mesmo cliente).
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AppShell } from "../../components/AppShell";
+import { Link } from "react-router";
 import { Alert, Button, PageTitle, Spinner } from "../../components/ui";
-import { ROUTES } from "../../lib/access";
 import { functionErrorCode } from "../../lib/errors";
 import { useOrg } from "../../lib/OrgProvider";
 import { supabase } from "../../lib/supabase";
+import { TEAM_PATHS } from "../../lib/teamData";
 
 interface ClientRow {
   id: string;
@@ -16,9 +16,10 @@ interface ClientRow {
   email: string;
   invited_at: string | null;
   last_invite_sent_at: string | null;
+  processes: { id: string }[];
 }
 
-export default function TeamHome() {
+export default function Clients() {
   const { t, i18n } = useTranslation();
   const org = useOrg();
   const queryClient = useQueryClient();
@@ -29,7 +30,7 @@ export default function TeamHome() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("clients")
-        .select("id, full_name, email, invited_at, last_invite_sent_at")
+        .select("id, full_name, email, invited_at, last_invite_sent_at, processes(id)")
         .eq("organization_id", org.id)
         .order("full_name");
       if (error) throw error;
@@ -53,7 +54,7 @@ export default function TeamHome() {
   const dateFormat = new Intl.DateTimeFormat(i18n.language, { dateStyle: "medium", timeStyle: "short" });
 
   return (
-    <AppShell afterSignOut={ROUTES.teamLogin}>
+    <>
       <PageTitle eyebrow={t("auth_layout.eyebrow_team")} title={t("team_home.title")}>
         {t("team_home.intro")}
       </PageTitle>
@@ -68,6 +69,7 @@ export default function TeamHome() {
               <tr>
                 <th className="px-4 py-3">{t("team_home.col_name")}</th>
                 <th className="px-4 py-3">{t("team_home.col_email")}</th>
+                <th className="px-4 py-3">{t("team_home.col_processes")}</th>
                 <th className="px-4 py-3">{t("team_home.col_invite")}</th>
                 <th className="px-4 py-3" />
               </tr>
@@ -79,6 +81,12 @@ export default function TeamHome() {
                   <tr key={client.id} className="border-b border-line last:border-0">
                     <td className="px-4 py-3 font-semibold text-primary">{client.full_name}</td>
                     <td className="px-4 py-3">{client.email}</td>
+                    <td className="px-4 py-3">
+                      <span className="mr-2">{client.processes.length}</span>
+                      <Link to={`${TEAM_PATHS.newProcess}?cliente=${client.id}`} className="text-sm font-semibold text-action hover:underline">
+                        {t("team_home.new_process")}
+                      </Link>
+                    </td>
                     <td className="px-4 py-3 text-muted">
                       {client.last_invite_sent_at
                         ? t("team_home.invited_on", { date: dateFormat.format(new Date(client.last_invite_sent_at)) })
@@ -104,6 +112,6 @@ export default function TeamHome() {
           </table>
         </div>
       )}
-    </AppShell>
+    </>
   );
 }

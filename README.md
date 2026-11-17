@@ -15,7 +15,7 @@ base de dados), sem o construir já.
 |---|---|---|
 | 1 | Esquema, RLS, funções do cliente, Storage, dados fictícios, testes de RLS | ✅ |
 | 2 | Autenticação (MFA equipa, link mágico, convite), consentimento, tema, i18n | ✅ (validada no Supabase de dev a 17/11/2026) |
-| 3 | Painel da equipa: processos, ficha, pessoas, proposta, pagamentos | — |
+| 3 | Painel da equipa: processos, ficha, pessoas, proposta, pagamentos | 🚧 em curso (ramo `etapa-3-painel-equipa`) |
 | 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | — |
 | 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | — |
 | 6 | Cronologia, prazos e calendário | — |
@@ -28,7 +28,8 @@ base de dados), sem o construir já.
 web/                   Portal (Vite + React + TypeScript + Tailwind); textos em web/src/i18n/pt-PT.json
 supabase/
   config.toml          Configuração local (registo público desligado, MFA TOTP, buckets, hook de email)
-  migrations/          Esquema, lógica, RLS, funções do cliente, Storage, organização Orvel, autenticação
+  migrations/          Esquema, lógica, RLS, funções do cliente, Storage, organização Orvel, autenticação,
+                       funções do painel da equipa (create_client_process, next_proposal_reference)
   functions/           Edge Functions (Deno): invite-client, auth-send-email; textos dos emails em _shared/i18n
   templates/           Modelos de email de reserva (só quando o hook está desligado, como em local)
   seed.sql             Dados fictícios para desenvolvimento local
@@ -37,6 +38,24 @@ scripts/local/         Alternativa sem Docker: Postgres simples + réplica míni
 branding/<slug>/       Ficheiros da marca de cada organização (logótipo e símbolo, sem alterações)
 docs/plano.md          Plano técnico aprovado
 ```
+
+## Páginas do portal
+
+| Área | Caminho | Conteúdo | Etapa |
+|---|---|---|---|
+| Cliente | `/` | Início | 4 (hoje: boas-vindas) |
+| Cliente | `/documentos`, `/percurso`, `/prazos` | Documentos, percurso, prazos e renovações | 5 e 6 (hoje: "em breve") |
+| Cliente | `/mais` → `/proposta`, `/pagamento`, `/dados`, `/contacto` | Proposta, pagamento, os meus dados, contacto | 4 (contacto já pronto) |
+| Equipa | `/equipa/processos` | Processos com filtros por estado, pesquisa e alertas | 3 |
+| Equipa | `/equipa/processos/novo` (`?cliente=id` para um cliente existente) | Novo cliente ou novo processo, com pessoas e convite | 3 |
+| Equipa | `/equipa/processos/:id` | Ficha: Resumo · Pessoas e dados · Proposta · Pagamentos · Interno · Atividade | 3 |
+| Equipa | `/equipa/processos/:id/documentos`, `…/percurso`, `…/prazos` | Separadores da ficha | 5 e 6 (hoje: "em preparação") |
+| Equipa | `/equipa/clientes` | Clientes, convite e novo processo para um cliente existente | 3 |
+| Equipa | `/equipa/calendario`, `/equipa/definicoes` | Calendário de prazos, definições da organização | 6 e seguintes |
+
+No telemóvel, o menu do cliente fica numa barra em baixo (Início · Documentos · Percurso · Prazos ·
+Mais). O PDF da proposta é carregado pela equipa para o bucket `documents`; vê-lo no portal chega
+com a função `sign-download` (etapa 5).
 
 ## Base de dados em desenvolvimento
 
@@ -96,6 +115,8 @@ Para ver os ecrãs sem projeto Supabase (por exemplo, para rever o aspeto), com 
 guardados só no browser. Nenhum email é enviado. Uma faixa amarela no topo tem atalhos para entrar
 como cliente novo, cliente com acesso ou equipa (qualquer password; código MFA: quaisquer 6
 dígitos), abrir o "email" do link mágico ou do convite e ver outra organização.
+O painel da equipa da etapa 3 (processos, ficha, propostas, pagamentos) aparece vazio na
+demonstração e não grava alterações: para o experimentar, usar o Supabase de desenvolvimento.
 
 Num build, a demonstração só entra com a variável `VITE_DEMO_MODE=true` definida no momento do
 build. Na Vercel, essa variável fica **só no ambiente Preview** (nunca em Production). Desde

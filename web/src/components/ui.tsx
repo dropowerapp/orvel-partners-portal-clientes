@@ -1,4 +1,12 @@
-import { type ButtonHTMLAttributes, forwardRef, type InputHTMLAttributes, type ReactNode, useId } from "react";
+import {
+  type ButtonHTMLAttributes,
+  forwardRef,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type SelectHTMLAttributes,
+  type TextareaHTMLAttributes,
+  useId,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 export function Spinner({ fullScreen = false }: { fullScreen?: boolean }) {
@@ -94,5 +102,154 @@ export function PageTitle({ eyebrow, title, children }: { eyebrow: string; title
       <span className="my-5 block h-px w-10 bg-silver" />
       {children && <div className="max-w-prose text-base leading-relaxed text-muted">{children}</div>}
     </div>
+  );
+}
+
+const CONTROL =
+  "rounded-md border border-line bg-white px-3 py-2.5 text-base text-primary placeholder:text-silver focus:border-action focus:outline-2 focus:outline-action/30 aria-[invalid]:border-red-600 disabled:bg-background disabled:text-muted";
+
+type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
+  label: string;
+  error?: string;
+  options: { value: string; label: string }[];
+};
+
+export const SelectField = forwardRef<HTMLSelectElement, SelectProps>(function SelectField(
+  { label, error, options, className = "", ...props },
+  ref,
+) {
+  const id = useId();
+  return (
+    <div className={`flex flex-col gap-1.5 ${className}`}>
+      <label htmlFor={id} className="text-sm font-semibold text-primary">
+        {label}
+      </label>
+      <select
+        ref={ref}
+        id={id}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className={CONTROL}
+        {...props}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      {error && (
+        <p id={`${id}-error`} className="text-sm text-red-700">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+});
+
+type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & { label: string; error?: string };
+
+export const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaProps>(function TextAreaField(
+  { label, error, className = "", ...props },
+  ref,
+) {
+  const id = useId();
+  return (
+    <div className={`flex flex-col gap-1.5 ${className}`}>
+      <label htmlFor={id} className="text-sm font-semibold text-primary">
+        {label}
+      </label>
+      <textarea
+        ref={ref}
+        id={id}
+        rows={3}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className={CONTROL}
+        {...props}
+      />
+      {error && (
+        <p id={`${id}-error`} className="text-sm text-red-700">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+});
+
+type CheckboxProps = InputHTMLAttributes<HTMLInputElement> & { label: ReactNode; hint?: ReactNode };
+
+export const CheckboxField = forwardRef<HTMLInputElement, CheckboxProps>(function CheckboxField(
+  { label, hint, className = "", ...props },
+  ref,
+) {
+  const id = useId();
+  return (
+    <div className={`flex items-start gap-3 ${className}`}>
+      <input
+        ref={ref}
+        id={id}
+        type="checkbox"
+        aria-describedby={hint ? `${id}-hint` : undefined}
+        className="mt-1 size-4 shrink-0 accent-action"
+        {...props}
+      />
+      <div>
+        <label htmlFor={id} className="text-sm font-semibold text-primary">
+          {label}
+        </label>
+        {hint && (
+          <p id={`${id}-hint`} className="text-sm text-muted">
+            {hint}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+});
+
+export type BadgeTone = "neutral" | "info" | "warning" | "success" | "danger";
+
+export function Badge({ tone = "neutral", children }: { tone?: BadgeTone; children: ReactNode }) {
+  const styles = {
+    neutral: "bg-background text-primary-deep border-line",
+    info: "bg-blue-50 text-blue-800 border-blue-200",
+    warning: "bg-amber-50 text-amber-900 border-amber-200",
+    success: "bg-green-50 text-green-800 border-green-200",
+    danger: "bg-red-50 text-red-800 border-red-200",
+  }[tone];
+  return (
+    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap ${styles}`}>
+      {children}
+    </span>
+  );
+}
+
+/** Bloco branco com título, para as secções da ficha do processo. */
+export function Card({ title, actions, children }: { title?: ReactNode; actions?: ReactNode; children: ReactNode }) {
+  return (
+    <section className="rounded-lg border border-line bg-white">
+      {(title || actions) && (
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
+          {title && <h2 className="text-base font-semibold text-primary">{title}</h2>}
+          {actions}
+        </div>
+      )}
+      <div className="px-5 py-4">{children}</div>
+    </section>
+  );
+}
+
+/** Lista de pares rótulo/valor (dados só para leitura). */
+export function DataList({ items }: { items: { label: string; value: ReactNode }[] }) {
+  return (
+    <dl className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
+      {items.map((item) => (
+        <div key={item.label}>
+          <dt className="text-xs font-semibold tracking-wide text-muted uppercase">{item.label}</dt>
+          <dd className="mt-0.5 text-sm text-primary">{item.value}</dd>
+        </div>
+      ))}
+    </dl>
   );
 }

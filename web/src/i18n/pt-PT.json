@@ -5,7 +5,8 @@
     "sign_out": "Sair",
     "back_to_login": "Voltar ao início de sessão",
     "contact_line": "Precisa de ajuda? Escreva para {{email}}.",
-    "skip_to_content": "Saltar para o conteúdo"
+    "skip_to_content": "Saltar para o conteúdo",
+    "main_menu": "Menu principal"
   },
   "org": {
     "not_found_title": "Portal não encontrado",
@@ -106,7 +107,7 @@
   },
   "team_home": {
     "title": "Clientes",
-    "intro": "Por agora, esta página serve para enviar e reenviar convites. A ficha completa de cada processo chega na próxima etapa.",
+    "intro": "Todos os clientes da organização. Daqui pode enviar ou reenviar o convite e abrir um processo novo para um cliente que já existe.",
     "empty": "Ainda não há clientes.",
     "col_name": "Nome",
     "col_email": "Email",
@@ -117,14 +118,419 @@
     "resend": "Reenviar",
     "sending": "A enviar…",
     "sent": "Convite enviado para {{email}}.",
-    "load_error": "Não foi possível carregar os clientes."
+    "load_error": "Não foi possível carregar os clientes.",
+    "col_processes": "Processos",
+    "new_process": "Novo processo"
+  },
+  "coming_soon": {
+    "title": "Em preparação"
+  },
+  "client_nav": {
+    "home": "Início",
+    "documents": "Documentos",
+    "timeline": "Percurso",
+    "deadlines": "Prazos",
+    "more": "Mais"
+  },
+  "client_pages": {
+    "documents": {
+      "title": "Documentos",
+      "body": "Em breve vai poder enviar aqui os documentos que lhe pedirmos, acompanhar a validação e descarregar os documentos emitidos."
+    },
+    "timeline": {
+      "title": "Percurso",
+      "body": "Em breve vai poder acompanhar aqui cada passo do seu processo, com as datas previstas e as já concluídas."
+    },
+    "deadlines": {
+      "title": "Prazos e renovações",
+      "body": "Em breve vai poder consultar aqui o que expira e quando, para preparar as renovações com tempo."
+    },
+    "proposal": {
+      "title": "Proposta",
+      "body": "Em breve vai poder ver aqui a sua proposta, escolher o plano e aceitá-la."
+    },
+    "payment": {
+      "title": "Pagamento",
+      "body": "Em breve vai poder consultar aqui o estado do pagamento, o valor e a fatura."
+    },
+    "details": {
+      "title": "Os meus dados",
+      "body": "Em breve vai poder rever aqui os seus dados, os dos seus dependentes e os nomes pretendidos para a empresa."
+    },
+    "more": {
+      "title": "Mais",
+      "proposal_hint": "A proposta e a aceitação",
+      "payment_hint": "Estado, valor e fatura",
+      "details_hint": "Dados pessoais e dependentes",
+      "contact_hint": "Fale com a equipa"
+    },
+    "contact": {
+      "title": "Contacto",
+      "body": "Tem alguma dúvida sobre o seu processo? Fale com a equipa {{org}}.",
+      "whatsapp": "Escrever no WhatsApp",
+      "email": "Escrever para {{email}}",
+      "none": "Ainda não há contactos disponíveis. Responda ao email que recebeu da equipa."
+    }
+  },
+  "team_nav": {
+    "processes": "Processos",
+    "clients": "Clientes",
+    "calendar": "Calendário",
+    "settings": "Definições"
+  },
+  "team_pages": {
+    "calendar": {
+      "title": "Calendário de prazos",
+      "body": "Os prazos dos próximos 90 dias de todos os clientes, por semana e por mês, chegam na etapa 6."
+    },
+    "settings": {
+      "title": "Definições",
+      "body": "Contactos, dados bancários, email da equipa, dias de aviso, conservação de ficheiros e aviso de privacidade. Chega numa etapa seguinte; até lá, estes dados mudam-se no Supabase."
+    }
+  },
+  "process_status": {
+    "new": "Novo",
+    "proposal_sent": "Proposta enviada",
+    "awaiting_payment": "Por pagar",
+    "awaiting_documents": "À espera de documentos",
+    "in_progress": "Em curso",
+    "completed": "Concluído",
+    "cancelled": "Cancelado"
+  },
+  "proposal_status": {
+    "draft": "Rascunho",
+    "sent": "Enviada",
+    "accepted": "Aceite",
+    "expired": "Expirada",
+    "declined": "Recusada"
+  },
+  "payment_status": {
+    "pending": "Por pagar",
+    "partial": "Pago em parte",
+    "paid": "Pago"
+  },
+  "relationship": {
+    "holder": "Titular",
+    "spouse": "Cônjuge",
+    "child": "Filho/a",
+    "other": "Outro"
+  },
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "edit": "Editar",
+    "remove": "Remover",
+    "yes": "Sim",
+    "no": "Não"
+  },
+  "fields": {
+    "full_name": "Nome completo",
+    "email": "Email",
+    "phone": "Telefone",
+    "country": "País de residência",
+    "holder_name": "Nome do titular",
+    "nationality": "Nacionalidade",
+    "date_of_birth": "Data de nascimento",
+    "relationship": "Relação",
+    "plan_name": "Plano",
+    "free_zone": "Zona franca",
+    "visa_count": "N.º de vistos",
+    "includes_bank_account": "Inclui abertura de conta bancária",
+    "company_names": "Nomes pretendidos para a empresa",
+    "address_line": "Morada",
+    "city": "Cidade",
+    "postal_code": "Código postal",
+    "address_country": "País da morada"
+  },
+  "processes": {
+    "title": "Processos",
+    "intro": "Todos os processos da organização. Os que têm alertas aparecem primeiro.",
+    "new": "Novo cliente",
+    "filter_label": "Filtrar por estado",
+    "filter": {
+      "open": "Em aberto",
+      "new": "Novo",
+      "proposal_sent": "Proposta enviada",
+      "awaiting_payment": "Por pagar",
+      "awaiting_documents": "À espera de documentos",
+      "in_progress": "Em curso",
+      "completed": "Concluído",
+      "cancelled": "Cancelado",
+      "all": "Todos"
+    },
+    "search": "Pesquisar",
+    "search_placeholder": "Nome, email ou plano",
+    "load_error": "Não foi possível carregar os processos.",
+    "empty": "Ainda não há processos. Comece por criar um cliente novo.",
+    "no_match": "Nenhum processo corresponde a este filtro.",
+    "col_client": "Cliente",
+    "col_status": "Estado",
+    "col_plan": "Plano",
+    "col_alerts": "Alertas",
+    "col_created": "Criado",
+    "no_client": "Cliente sem nome",
+    "alert_documents": "Documentos por validar: {{count}}",
+    "alert_payments": "Pagamentos em atraso: {{count}}",
+    "alert_deadlines": "Prazos nos próximos {{days}} dias: {{count}}"
+  },
+  "new_process": {
+    "title": "Novo cliente",
+    "title_existing": "Novo processo",
+    "intro": "Cria o cliente, o processo e as pessoas. Os pedidos de documentos e a cronologia são criados a partir dos modelos da organização.",
+    "section_client": "Cliente",
+    "section_holder": "Titular do processo",
+    "holder_hint": "Por omissão, o titular é o próprio cliente. Preencha o nome só se for outra pessoa.",
+    "holder_placeholder": "O nome do cliente",
+    "section_people": "Outras pessoas (cônjuge, filhos)",
+    "add_person": "Acrescentar pessoa",
+    "no_people": "Pode acrescentar pessoas agora ou mais tarde, na ficha do processo.",
+    "section_process": "Processo",
+    "plan_hint": "Opcional. Fica com o plano escolhido quando o cliente aceitar a proposta.",
+    "send_invite": "Enviar já o convite de acesso ao portal",
+    "send_invite_hint": "O cliente recebe um email com o link para entrar. Também pode enviar mais tarde, no resumo do processo.",
+    "submit": "Criar processo",
+    "creating": "A criar…",
+    "created": "Processo criado.",
+    "created_invited": "Processo criado e convite enviado.",
+    "created_invite_failed": "Processo criado, mas o convite não foi enviado: {{reason}} Pode tentar outra vez no resumo."
+  },
+  "process": {
+    "eyebrow": "Processo",
+    "back_to_list": "← Voltar aos processos",
+    "no_plan": "Sem plano",
+    "created_on": "Criado a {{date}}",
+    "tabs_label": "Secções do processo",
+    "tabs": {
+      "summary": "Resumo",
+      "people": "Pessoas e dados",
+      "proposal": "Proposta",
+      "payments": "Pagamentos",
+      "documents": "Documentos",
+      "timeline": "Percurso",
+      "deadlines": "Prazos",
+      "internal": "Interno",
+      "activity": "Atividade"
+    },
+    "closed_notice": "Este processo está fechado (concluído ou cancelado). Os dados ficam só para consulta.",
+    "coming_soon": {
+      "documents": "Pedidos, documentos recebidos e emitidos, validação e downloads chegam na etapa 5.",
+      "timeline": "A cronologia do processo (passos, datas e notas para o cliente) chega na etapa 6.",
+      "deadlines": "Os prazos e renovações chegam na etapa 6."
+    }
+  },
+  "summary": {
+    "next_step": "Próximo passo:",
+    "next": {
+      "new": "preparar a proposta e enviá-la ao cliente (separador Proposta).",
+      "proposal_sent": "aguardar que o cliente aceite a proposta no portal.",
+      "awaiting_payment": "registar os pagamentos e marcá-los quando forem recebidos (separador Pagamentos).",
+      "awaiting_documents": "receber e validar os documentos pedidos (chega na etapa 5).",
+      "in_progress": "acompanhar o processo até à conclusão.",
+      "completed": "nenhum. O processo está concluído.",
+      "cancelled": "nenhum. O processo foi cancelado."
+    },
+    "client_title": "Cliente",
+    "access_title": "Acesso ao portal",
+    "process_title": "Processo",
+    "not_invited": "O convite ainda não foi enviado.",
+    "email_locked": "Depois do convite, o email é o da conta de acesso e não se altera aqui.",
+    "plan_hint": "Muda automaticamente quando o cliente aceita a proposta.",
+    "bank_hint": "Acrescenta ou retira o passo da conta bancária na cronologia.",
+    "name_option": "Opção {{n}}",
+    "saved": "Alterações guardadas."
+  },
+  "people": {
+    "title": "Pessoas e dados",
+    "intro": "Cada pessoa nova recebe automaticamente os pedidos de documentos do modelo da organização.",
+    "add": "Acrescentar pessoa",
+    "new_hint": "Ao guardar, são criados os pedidos de documentos para esta pessoa.",
+    "load_error": "Não foi possível carregar as pessoas.",
+    "born_on": "nascido/a a {{date}}",
+    "requests": "{{pending}} de {{total}} documentos por validar",
+    "added": "{{name}} acrescentado/a ao processo.",
+    "updated": "Dados de {{name}} guardados.",
+    "removed": "{{name}} removido/a do processo.",
+    "remove_question": "Remover esta pessoa e os pedidos de documentos dela?",
+    "remove_confirm": "Sim, remover"
+  },
+  "proposals": {
+    "intro": "Prepare a proposta com os planos e o PDF para o cliente. Só depois de enviada o cliente a vê no portal e pode aceitá-la.",
+    "new": "Nova proposta",
+    "new_title": "Nova proposta {{reference}}",
+    "edit_title": "Editar {{reference}}",
+    "load_error": "Não foi possível carregar as propostas.",
+    "reference_error": "Não foi possível obter a referência da proposta. Tente novamente.",
+    "empty": "Ainda não há propostas para este processo.",
+    "plans": "Planos apresentados",
+    "plan": "Plano",
+    "price": "Preço",
+    "price_aed": "Preço (AED)",
+    "bank_account": "Conta bancária",
+    "add_plan": "Acrescentar plano",
+    "chosen": "Escolhido",
+    "no_plans": "Sem planos.",
+    "valid_until": "Válida até",
+    "pdf": "PDF da proposta",
+    "no_pdf": "Ainda sem PDF",
+    "replace_pdf": "Substituir o PDF",
+    "current_pdf": "Ficheiro atual: {{name}}",
+    "confirm_client_version": "Confirmo que este PDF é a versão para o cliente",
+    "confirm_client_version_hint": "Sem margens, custos internos nem o nome do parceiro.",
+    "save_draft": "Guardar rascunho",
+    "created": "Proposta {{reference}} guardada como rascunho.",
+    "saved": "Proposta {{reference}} guardada.",
+    "sent_at": "Enviada a",
+    "accepted_at": "Aceite a",
+    "declined_at": "Recusada a",
+    "accepted_text": "Texto aceite pelo cliente",
+    "send": "Enviar ao cliente",
+    "send_question": "O cliente passa a ver esta proposta no portal. Enviar?",
+    "send_confirm": "Sim, enviar",
+    "send_requirements": "Para enviar, a proposta precisa do PDF e de pelo menos um plano.",
+    "mark_declined": "Marcar como recusada",
+    "mark_expired": "Marcar como expirada",
+    "mark_question": "O cliente deixa de poder aceitar esta proposta. Continuar?",
+    "back_to_draft": "Voltar a rascunho",
+    "back_to_draft_question": "O cliente deixa de ver esta proposta até a voltar a enviar. Continuar?",
+    "remove_question": "Apagar esta proposta?",
+    "remove_confirm": "Sim, apagar",
+    "removed": "Proposta {{reference}} apagada.",
+    "status_changed": {
+      "draft": "A proposta {{reference}} voltou a rascunho.",
+      "sent": "Proposta {{reference}} enviada. O cliente já a pode ver no portal.",
+      "accepted": "Proposta {{reference}} aceite.",
+      "expired": "Proposta {{reference}} marcada como expirada.",
+      "declined": "Proposta {{reference}} marcada como recusada."
+    },
+    "errors": {
+      "plans_empty": "Acrescente pelo menos um plano.",
+      "plan_name": "Indique o nome de cada plano.",
+      "plan_price": "Indique um preço maior do que zero para cada plano.",
+      "plan_duplicate": "Há planos com o mesmo nome.",
+      "pdf_type": "O ficheiro tem de ser um PDF.",
+      "pdf_size": "O PDF tem mais de 10 MB.",
+      "confirm_required": "Confirme que o PDF é a versão para o cliente.",
+      "pdf_upload": "Não foi possível carregar o PDF. A proposta ficou guardada; tente carregar o ficheiro outra vez."
+    }
+  },
+  "payments": {
+    "title": "Pagamentos",
+    "add": "Acrescentar pagamento",
+    "total": "Total",
+    "paid": "Recebido",
+    "outstanding": "Por receber",
+    "load_error": "Não foi possível carregar os pagamentos.",
+    "empty": "Ainda não há pagamentos registados. O processo fica \"Por pagar\" até haver pagamentos e estarem todos pagos.",
+    "no_description": "Pagamento",
+    "overdue": "Em atraso",
+    "paid_amount": "recebido {{amount}}",
+    "due_on": "até {{date}}",
+    "paid_on": "pago a {{date}}",
+    "description": "Descrição",
+    "description_placeholder": "Ex.: Pagamento único, 1.ª prestação",
+    "amount_aed": "Valor (AED)",
+    "amount_paid_aed": "Valor recebido (AED)",
+    "due_date": "Data limite",
+    "status": "Estado",
+    "paid_date": "Data do pagamento",
+    "paid_date_hint": "Se ficar vazia, conta o dia de hoje.",
+    "added": "Pagamento acrescentado.",
+    "saved": "Pagamento guardado.",
+    "removed": "Pagamento removido.",
+    "remove_question": "Remover este pagamento?",
+    "remove_confirm": "Sim, remover",
+    "errors": {
+      "amount": "Indique um valor maior do que zero.",
+      "partial": "Num pagamento em parte, o valor recebido tem de ser maior do que zero e menor do que o total."
+    },
+    "bank_title": "Dados bancários para o cliente",
+    "bank_intro": "Escolha a conta para onde o cliente deve transferir. O cliente só vê os dados depois de os libertar, e isso só é possível com a proposta aceite.",
+    "bank_account": "Conta bancária",
+    "bank_account_none": "Nenhuma",
+    "bank_account_saved": "Conta bancária guardada.",
+    "bank_release": "Libertar os dados bancários ao cliente",
+    "bank_release_question": "O cliente passa a ver os dados desta conta no portal. Libertar?",
+    "bank_released": "Dados bancários libertados. O cliente já os vê no portal.",
+    "bank_released_on": "Libertados a {{date}}",
+    "bank_hide": "Deixar de mostrar ao cliente",
+    "bank_hide_question": "O cliente deixa de ver os dados bancários. Continuar?",
+    "bank_hidden": "O cliente deixou de ver os dados bancários."
+  },
+  "internal": {
+    "private_notice": "Só a equipa vê esta secção. O cliente e o parceiro nunca têm acesso a custos, margens, notas nem à entidade que emite a fatura.",
+    "title": "Custos e margem",
+    "load_error": "Não foi possível carregar os dados internos.",
+    "manager": "Responsável",
+    "partner": "Parceiro",
+    "partner_cost": "Custo do parceiro (AED)",
+    "sale_price": "Preço de venda (AED)",
+    "invoice_issuer": "Entidade que emite a fatura",
+    "other_costs": "Outros custos",
+    "cost_label": "Descrição",
+    "cost_amount": "Valor (AED)",
+    "add_cost": "Acrescentar custo",
+    "margin": "Margem (com os valores do formulário)",
+    "margin_saved": "Margem guardada",
+    "none": "Nenhum",
+    "unnamed": "Equipa",
+    "saved": "Dados internos guardados.",
+    "errors": {
+      "amount": "Os valores não podem ser negativos."
+    },
+    "notes_title": "Notas internas",
+    "new_note": "Nova nota",
+    "add_note": "Acrescentar nota",
+    "no_notes": "Ainda não há notas.",
+    "note_removed": "Nota removida.",
+    "note_remove_question": "Remover esta nota?",
+    "note_remove_confirm": "Sim, remover"
+  },
+  "activity": {
+    "title": "Atividade",
+    "load_error": "Não foi possível carregar a atividade.",
+    "empty": "Ainda não há atividade registada.",
+    "roles": {
+      "admin": "Equipa",
+      "client": "Cliente",
+      "partner": "Parceiro",
+      "system": "Automático",
+      "unknown": "Desconhecido"
+    },
+    "actions": {
+      "process_created": "Processo criado",
+      "process_status_changed": "Estado: {{from}} → {{to}}",
+      "process_completed": "Processo concluído",
+      "process_cancelled": "Processo cancelado",
+      "process_reopened": "Processo reaberto",
+      "process_company_names_updated": "Nomes pretendidos para a empresa atualizados",
+      "bank_details_released": "Dados bancários libertados ao cliente",
+      "client_details_updated": "Dados do cliente atualizados pelo cliente",
+      "client_invited": "Convite de acesso enviado",
+      "consent_given": "Aviso de privacidade aceite",
+      "person_created": "Pessoa acrescentada pelo cliente",
+      "person_updated": "Pessoa atualizada pelo cliente",
+      "person_deleted": "Pessoa removida pelo cliente",
+      "proposal_draft": "Proposta {{reference}} em rascunho",
+      "proposal_sent": "Proposta {{reference}} enviada",
+      "proposal_accepted": "Proposta {{reference}} aceite",
+      "proposal_expired": "Proposta {{reference}} expirada",
+      "proposal_declined": "Proposta {{reference}} recusada",
+      "payment_updated": "Pagamento atualizado",
+      "document_request_pending": "Pedido de documento reaberto",
+      "document_request_submitted": "Documento enviado pelo cliente",
+      "document_request_approved": "Documento validado",
+      "document_request_rejected": "Documento rejeitado: {{reason}}",
+      "document_uploaded": "Documento carregado",
+      "document_issued": "Documento emitido carregado"
+    }
   },
   "validation": {
     "email": "Indique um email válido.",
     "required": "Campo obrigatório.",
     "code": "O código tem 6 dígitos.",
     "password_rules": "Pelo menos 12 caracteres, com maiúsculas, minúsculas e números.",
-    "password_match": "As passwords não coincidem."
+    "password_match": "As passwords não coincidem.",
+    "number_range": "Indique um número entre 0 e 50."
   },
   "errors": {
     "generic": "Ocorreu um erro. Tente novamente; se o problema continuar, contacte a equipa.",
@@ -146,7 +552,16 @@
     "client_linked_to_other_user": "Este cliente já está ligado a outra conta.",
     "membership_conflict": "Este email já pertence a uma conta da equipa nesta organização.",
     "email_send_failed": "Não foi possível enviar o email. Tente novamente daqui a pouco.",
-    "insufficient_aal": "Confirme primeiro o código da aplicação de autenticação."
+    "insufficient_aal": "Confirme primeiro o código da aplicação de autenticação.",
+    "client_email_taken": "Já existe um cliente com este email. Abra um processo novo a partir da página Clientes.",
+    "invalid_input": "Há dados em falta ou inválidos. Reveja o formulário.",
+    "bank_details_require_accepted_proposal": "Só é possível libertar os dados bancários depois de o cliente aceitar a proposta.",
+    "bank_details_require_account": "Escolha e guarde primeiro a conta bancária.",
+    "proposal_requires_pdf_and_plans": "Para enviar, a proposta precisa do PDF e de pelo menos um plano.",
+    "proposal_accepted_is_locked": "Uma proposta aceite não pode ser alterada nem apagada.",
+    "proposal_accept_only_by_client": "Só o cliente pode aceitar a proposta, no portal.",
+    "proposal_reference_invalid": "A referência da proposta não tem o formato esperado.",
+    "demo_read_only": "Na demonstração esta parte do painel só mostra os ecrãs: não grava alterações."
   },
   "demo": {
     "title": "Modo de demonstração",

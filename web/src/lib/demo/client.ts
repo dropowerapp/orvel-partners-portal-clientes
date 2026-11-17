@@ -177,20 +177,68 @@ function visibleRows(table: string, state: DemoState): Row[] {
   return state.consents.includes(user.id) ? asRows(state.clients.filter((c) => c.id === user.clientId)) : [];
 }
 
+/** Divide uma lista de colunas do PostgREST pelas vírgulas de topo (ignora as dos recursos embutidos). */
+function topLevelColumns(columns: string): string[] {
+  const out: string[] = [];
+  let depth = 0;
+  let current = "";
+  for (const ch of columns) {
+    if (ch === "(") depth++;
+    if (ch === ")") depth--;
+    if (ch === "," && depth === 0) {
+      out.push(current.trim());
+      current = "";
+    } else {
+      current += ch;
+    }
+  }
+  if (current.trim()) out.push(current.trim());
+  return out;
+}
+
+/** "alias:tabela(colunas)" → nome do campo no resultado e se é um recurso embutido. */
+function columnKey(column: string): { key: string; embedded: boolean } {
+  const embedded = column.includes("(");
+  const head = embedded ? column.slice(0, column.indexOf("(")) : column;
+  return { key: head.includes(":") ? head.split(":")[0].trim() : head.trim(), embedded };
+}
+
 class DemoQuery implements PromiseLike<{ data: unknown; error: unknown }> {
   private columns: string[] | null = null;
   private filters: [string, unknown][] = [];
   private orderBy: string | null = null;
   private one = false;
+  private maybeOne = false;
+  /** Na demonstração, as escritas diretas em tabelas (painel da equipa) não gravam nada. */
+  private write = false;
 
   constructor(private readonly table: string) {}
 
   select(columns = "*") {
-    this.columns = columns === "*" ? null : columns.split(",").map((c) => c.trim());
+    this.columns = columns === "*" ? null : topLevelColumns(columns);
     return this;
   }
   eq(column: string, value: unknown) {
     this.filters.push([column, value]);
+    return this;
+  }
+  // Filtros que o portal usa noutras tabelas: na demonstração essas tabelas estão vazias.
+  neq() {
+    return this;
+  }
+  in() {
+    return this;
+  }
+  is() {
+    return this;
+  }
+  gte() {
+    return this;
+  }
+  lte() {
+    return this;
+  }
+  limit() {
     return this;
   }
   order(column: string) {
@@ -201,15 +249,45 @@ class DemoQuery implements PromiseLike<{ data: unknown; error: unknown }> {
     this.one = true;
     return this;
   }
+  maybeSingle() {
+    this.maybeOne = true;
+    return this;
+  }
+  insert() {
+    this.write = true;
+    return this;
+  }
+  update() {
+    this.write = true;
+    return this;
+  }
+  upsert() {
+    this.write = true;
+    return this;
+  }
+  delete() {
+    this.write = true;
+    return this;
+  }
 
   private async run() {
     await wait(150);
+    if (this.write) return { data: null, error: { code: "P0001", message: "demo_read_only" } };
     let rows = visibleRows(this.table, load()).filter((row) => this.filters.every(([c, v]) => row[c] === v));
     if (this.orderBy) {
       const key = this.orderBy;
       rows = [...rows].sort((a, b) => String(a[key]).localeCompare(String(b[key]), "pt"));
     }
-    const pick = (row: Row) => (this.columns ? Object.fromEntries(this.columns.map((c) => [c, row[c] ?? null])) : row);
+    const pick = (row: Row) =>
+      this.columns
+        ? Object.fromEntries(
+          this.columns.map((c) => {
+            const { key, embedded } = columnKey(c);
+            return [key, row[key] ?? (embedded ? [] : null)];
+          }),
+        )
+        : row;
+    if (this.maybeOne) return { data: rows.length === 1 ? pick(rows[0]) : null, error: null };
     if (this.one) {
       return rows.length === 1
         ? { data: pick(rows[0]), error: null }
@@ -265,6 +343,9 @@ async function rpc(name: string, args: Record<string, unknown> = {}) {
       });
       return { data: null, error: null };
     }
+    case "create_client_process":
+    case "next_proposal_reference":
+      return { data: null, error: { code: "P0001", message: "demo_read_only" } };
     default:
       return { data: null, error: { code: "PGRST202", message: "not_found" } };
   }
@@ -424,6 +505,9 @@ export function createDemoClient() {
     rpc,
     from: (table: string) => new DemoQuery(table),
     functions: { invoke },
+    storage: {
+      from: () => ({ upload: async () => ({ data: null, error: { message: "demo_read_only" } }) }),
+    },
   };
 }
 

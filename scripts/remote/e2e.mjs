@@ -3,7 +3,8 @@
 //
 // Cobre: registo público desligado, link mágico do cliente (hook auth-send-email em modo log),
 // consentimento exigido pela base de dados, login da equipa com password e MFA (TOTP), convite
-// (invite-client), políticas do Storage e a regra "o cliente nunca vê nomes da equipa".
+// (invite-client), políticas do Storage, a regra "o cliente nunca vê nomes da equipa" e as
+// operações do painel da equipa da etapa 3 (as mesmas consultas que o portal faz).
 // No fim desfaz o que alterou (exceto o cliente de teste do convite, que fica como dado fictício).
 import { createHash, createHmac } from "node:crypto";
 import { createRequire } from "node:module";
@@ -143,7 +144,7 @@ const ids = {
   userRui: seedId("seed:rui.ficticio@exemplo.test"),
   userTeam: seedId("seed:equipa@exemplo.test"),
 };
-const cleanup = { objects: [], documents: [], requestsToReset: [], factors: [] };
+const cleanup = { objects: [], documents: [], requestsToReset: [], factors: [], processes: [], clients: [] };
 
 console.log(`Projeto: ${URL_}\nPortal: ${SITE_URL}\n`);
 
@@ -433,8 +434,141 @@ await check("o link do convite inicia sessão e pede o consentimento", async () 
 });
 
 // ------------------------------------------------------------------------------------------------
+console.log("\n— Painel da equipa (etapa 3)");
+// Consultas iguais às do portal (web/src/routes/team/ProcessList.tsx e process/ProcessLayout.tsx).
+const PROCESS_LIST_SELECT =
+  "id, status, plan_name, created_at, client:clients(id, full_name, email), payments(status, due_on), " +
+  "document_requests(status), deadlines(due_on, status)";
+const PROCESS_SELECT =
+  "id, organization_id, client_id, status, plan_name, includes_bank_account, free_zone, visa_count, company_name_options, " +
+  "bank_account_id, bank_details_released_at, completed_at, cancelled_at, created_at, " +
+  "client:clients(id, full_name, email, phone, country, address_line, city, postal_code, address_country, locale, invited_at, last_invite_sent_at)";
+const panelEmail = `painel.e2e.${Date.now()}@exemplo.test`;
+const panelProcess = await check("novo cliente com processo, titular e cônjuge numa só operação", async () => {
+  const id = noError(
+    await team.rpc("create_client_process", {
+      p_org: ids.orvel,
+      p_client: { full_name: "Cliente Painel (teste)", email: panelEmail.toUpperCase(), country: "Portugal", nationality: "Portuguesa" },
+      p_process: { plan_name: "Essencial", includes_bank_account: true, free_zone: "Zona Exemplo", visa_count: "2" },
+      p_people: [{ relationship: "spouse", full_name: "Cônjuge Painel (teste)" }],
+    }),
+    "create_client_process",
+  );
+  cleanup.processes.push(id);
+  const proc = noError(await admin.from("processes").select("client_id, status").eq("id", id).single(), "processo criado");
+  cleanup.clients.push(proc.client_id);
+  assert(proc.status === "new", `estado ${proc.status}`);
+  return id;
+});
+await check("email repetido recusado (client_email_taken)", async () => {
+  const res = await team.rpc("create_client_process", { p_org: ids.orvel, p_client: { full_name: "Repetido", email: panelEmail } });
+  assert(res.error?.message === "client_email_taken", JSON.stringify(res.error));
+});
+await check("lista de processos: cliente, pedidos e pagamentos embutidos", async () => {
+  const rows = noError(await team.from("processes").select(PROCESS_LIST_SELECT).eq("organization_id", ids.orvel), "lista");
+  const row = rows.find((r) => r.id === panelProcess);
+  assert(row, "o processo novo não aparece");
+  assert(row.client?.email === panelEmail, `cliente ${JSON.stringify(row.client)}`);
+  assert(row.document_requests.length > 0, "sem pedidos de documentos");
+  assert(Array.isArray(row.payments) && Array.isArray(row.deadlines), "sem pagamentos/prazos embutidos");
+});
+await check("ficha do processo e pessoas com os pedidos de documentos", async () => {
+  const proc = noError(await team.from("processes").select(PROCESS_SELECT).eq("id", panelProcess).single(), "ficha");
+  assert(proc.client.full_name === "Cliente Painel (teste)" && proc.visa_count === 2 && proc.includes_bank_account, JSON.stringify(proc));
+  const people = noError(
+    await team.from("people").select("id, relationship, full_name, document_requests(status)").eq("process_id", panelProcess).order("position"),
+    "pessoas",
+  );
+  assert(people.map((p) => p.relationship).join(",") === "holder,spouse", people.map((p) => p.relationship).join(","));
+  assert(people[0].full_name === "Cliente Painel (teste)", "titular sem o nome do cliente");
+  assert(people.every((p) => p.document_requests.length > 0), "pessoa sem pedidos");
+  const clients = noError(await team.from("clients").select("id, processes(id)").eq("organization_id", ids.orvel), "clientes");
+  assert(clients.find((c) => c.id === cleanup.clients[0])?.processes.length === 1, "clientes sem processos embutidos");
+});
+let panelProposal = null;
+await check("proposta: referência seguinte, rascunho, PDF e envio", async () => {
+  const reference = noError(await team.rpc("next_proposal_reference", { p_org: ids.orvel }), "next_proposal_reference");
+  assert(/^ORV-\d{4}-\d{3,}$/.test(reference), `referência ${reference}`);
+  panelProposal = noError(
+    await team.from("proposals").insert({
+      organization_id: ids.orvel,
+      process_id: panelProcess,
+      reference,
+      status: "draft",
+      plans: [{ name: "Essencial", price_aed: 12000, includes_bank_account: false }, { name: "Completo", price_aed: 15000, includes_bank_account: true }],
+    }).select("id").single(),
+    "insert proposta",
+  ).id;
+  const early = await team.from("proposals").update({ status: "sent" }).eq("id", panelProposal);
+  assert(early.error?.message === "proposal_requires_pdf_and_plans", `enviada sem PDF: ${JSON.stringify(early.error)}`);
+  const path = `${ids.orvel}/${panelProcess}/proposals/${panelProposal}/proposta-teste.pdf`;
+  noError(await team.storage.from("documents").upload(path, pdf("proposta"), { contentType: "application/pdf" }), "upload do PDF");
+  cleanup.objects.push(path);
+  noError(await team.from("proposals").update({ pdf_path: path }).eq("id", panelProposal), "pdf_path");
+  noError(await team.from("proposals").update({ status: "sent" }).eq("id", panelProposal), "enviar");
+  const proc = noError(await team.from("processes").select("status").eq("id", panelProcess).single(), "estado");
+  assert(proc.status === "proposal_sent", `estado ${proc.status}`);
+});
+await check("a equipa não aceita propostas (só o cliente)", async () => {
+  const res = await team.from("proposals").update({ status: "accepted", chosen_plan: "Essencial", accepted_at: new Date().toISOString(), accepted_text: "x" }).eq("id", panelProposal);
+  assert(res.error?.message === "proposal_accept_only_by_client", JSON.stringify(res.error));
+});
+await check("pagamentos: registar, marcar pago (valor e data automáticos)", async () => {
+  const payment = noError(
+    await team.from("payments").insert({ organization_id: ids.orvel, process_id: panelProcess, description: "Pagamento único", amount_aed: 12000 })
+      .select("id, status").single(),
+    "insert pagamento",
+  );
+  const partial = await team.from("payments").update({ status: "partial", amount_paid_aed: 12000 }).eq("id", payment.id);
+  assert(partial.error, "parcial com o valor total aceite");
+  noError(await team.from("payments").update({ status: "paid" }).eq("id", payment.id), "marcar pago");
+  const paid = noError(await team.from("payments").select("amount_paid_aed, paid_on").eq("id", payment.id).single(), "pagamento");
+  assert(Number(paid.amount_paid_aed) === 12000 && paid.paid_on, JSON.stringify(paid));
+});
+await check("dados bancários só depois da proposta aceite", async () => {
+  const account = noError(await team.from("bank_accounts").select("id").eq("organization_id", ids.orvel).limit(1).single(), "conta");
+  noError(await team.from("processes").update({ bank_account_id: account.id }).eq("id", panelProcess), "escolher conta");
+  const res = await team.from("processes").update({ bank_details_released_at: new Date().toISOString() }).eq("id", panelProcess);
+  assert(res.error?.message === "bank_details_require_accepted_proposal", JSON.stringify(res.error));
+});
+await check("interno: custos, margem calculada e notas", async () => {
+  noError(
+    await team.from("process_internal").update({
+      sale_price_aed: 10000,
+      partner_cost_aed: 6000,
+      other_costs: [{ label: "Taxas (teste)", amount_aed: 500 }],
+      invoice_issuer: "Entidade Fictícia",
+    }).eq("process_id", panelProcess),
+    "process_internal",
+  );
+  const internal = noError(await team.from("process_internal").select("margin_aed").eq("process_id", panelProcess).single(), "margem");
+  assert(Number(internal.margin_aed) === 3500, `margem ${internal.margin_aed}`);
+  noError(await team.from("internal_notes").insert({ organization_id: ids.orvel, process_id: panelProcess, body: "Nota de teste e2e." }), "nota");
+  const notes = noError(await team.from("internal_notes").select("author_id").eq("process_id", panelProcess), "notas");
+  assert(notes.length === 1 && notes[0].author_id === ids.userTeam, JSON.stringify(notes));
+});
+await check("atividade do processo registada", async () => {
+  const rows = noError(await team.from("activity_log").select("action").eq("process_id", panelProcess), "atividade");
+  const actions = rows.map((r) => r.action);
+  for (const a of ["process.created", "proposal.sent", "payment.updated"]) assert(actions.includes(a), `falta ${a}: ${actions.join(", ")}`);
+});
+await check("pessoas: editar e remover (os pedidos dela saem também)", async () => {
+  const spouse = noError(await team.from("people").select("id").eq("process_id", panelProcess).eq("relationship", "spouse").single(), "cônjuge");
+  noError(await team.from("people").update({ full_name: "Cônjuge Editado (teste)" }).eq("id", spouse.id), "editar");
+  noError(await team.from("people").delete().eq("id", spouse.id), "remover");
+  const requests = noError(await team.from("document_requests").select("id").eq("person_id", spouse.id), "pedidos");
+  assert(requests.length === 0, `${requests.length} pedidos ficaram`);
+});
+await check("o cliente não vê processos de outros clientes", async () => {
+  const res = await rui.from("processes").select("id").eq("id", panelProcess);
+  assert(!res.error && res.data.length === 0, "o Rui vê o processo novo");
+  const internal = await rui.from("process_internal").select("process_id");
+  assert(!internal.error && internal.data.length === 0, "o Rui vê dados internos");
+});
+
+// ------------------------------------------------------------------------------------------------
 console.log("\n— Limpeza");
-await check("remove ficheiros, documento e fator MFA de teste; repõe o estado do Rui", async () => {
+await check("remove ficheiros, documento, fator MFA, processo e cliente de teste; repõe o estado do Rui", async () => {
   if (cleanup.objects.length) noError(await admin.storage.from("documents").remove(cleanup.objects), "remover ficheiros");
   for (const id of cleanup.documents) noError(await admin.from("documents").delete().eq("id", id), "apagar documento");
   for (const id of cleanup.requestsToReset) {
@@ -442,6 +576,9 @@ await check("remove ficheiros, documento e fator MFA de teste; repõe o estado d
   }
   noError(await admin.from("privacy_consents").delete().eq("user_id", ids.userRui), "repor consentimento");
   for (const id of cleanup.factors) noError(await admin.auth.admin.mfa.deleteFactor({ userId: ids.userTeam, id }), "remover fator");
+  // Processo e cliente do painel (as pessoas, pedidos, propostas e pagamentos saem em cascata).
+  for (const id of cleanup.processes) noError(await admin.from("processes").delete().eq("id", id), "apagar processo");
+  for (const id of cleanup.clients) noError(await admin.from("clients").delete().eq("id", id), "apagar cliente");
 });
 
 const failed = results.filter((r) => !r.ok);
