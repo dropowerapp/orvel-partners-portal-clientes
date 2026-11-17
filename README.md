@@ -424,7 +424,51 @@ where u.email = 'email-do-administrador' and o.slug = 'orvel';
 
 ## Antes de abrir aos clientes
 
-- Publicar o aviso de privacidade validado pelo advogado (a versão 1 criada pelas migrações é
-  provisória e está por publicar; sem um aviso publicado, a área de cliente não abre).
+- **Revisão de 17/11/2026: ainda não aprovado para dados reais.** A versão publicada é uma
+  Preview de teste; a etapa 6 e a correção de isolamento de sessões descrita abaixo continuam locais.
+- Confirmar no projeto remoto as políticas RLS, bucket privado, permissões, MFA da equipa e dos
+  administradores das plataformas, origens/callbacks e configuração final de autenticação.
+- Separar os ambientes de testes e de clientes reais. Desativar no ambiente de clientes reais
+  as contas fictícias, sobretudo a conta da equipa com credenciais documentadas no seed.
+  Não basta apagar os processos fictícios: o acesso administrativo dessa conta abrange a organização.
+- Confirmar backups e testar a recuperação da base de dados **e dos ficheiros**. Os backups
+  de PostgreSQL do Supabase não incluem os objetos do Storage:
+  [documentação oficial](https://supabase.com/docs/guides/platform/backups).
+- Implementar e validar a limpeza dos documentos sensíveis conforme o prazo de conservação
+  aprovado. O esquema calcula `sensitive_purge_on`, mas a tarefa que apaga os ficheiros ainda
+  pertence à etapa 7 e não está implementada.
+- Publicar o aviso de privacidade final validado pelo advogado. O texto criado pelas migrações
+  é provisório; a sua utilização nos testes não demonstra revisão jurídica. Sem um aviso
+  publicado, a área de cliente não abre.
 - Rever com o advogado o texto de aceitação da proposta (`organizations.proposal_acceptance_text`).
 - Configurar dados bancários e WhatsApp no ecrã de definições.
+- Aplicar as alterações pendentes, configurar domínio/HTTPS e testar o fluxo autenticado
+  completo no ambiente final, incluindo entrega real de emails, isolamento entre clientes,
+  expiração dos downloads e mudança de conta em várias janelas.
+
+### Revisão do código e dependências (17/11/2026)
+
+Confirmados no código: isolamento por organização/cliente através de RLS, MFA da equipa
+verificado na base de dados, documentos em bucket privado, downloads autorizados por RLS com
+URL de 60 segundos e auditoria dos pedidos de download sensíveis. A configuração Vercel inclui
+CSP, HSTS, bloqueio de enquadramento e `nosniff`. A configuração remota atual não foi novamente
+inspecionada nesta revisão, por indisponibilidade de acesso autenticado às plataformas.
+
+Encontrado e corrigido **localmente** um problema de isolamento no browser: o logout noutra
+janela, a troca de utilizador ou a redução do nível MFA não limpavam as consultas em memória.
+Agora limpam consultas/mutações privadas e a seleção de processo e reiniciam os formulários.
+Uma resposta inicial atrasada já não repõe uma sessão terminada. Leituras pendentes também
+não repõem a cache depois do logout. Os testes reproduziram as falhas antes da correção.
+Não há evidência nesta revisão de exploração ou de acesso indevido na base de dados.
+Validação da correção: **94 testes de frontend aprovados**, incluindo cinco regressões de
+sessão, e build concluído. A última execução SQL permanece em 351 verificações aprovadas;
+esta correção não altera a base de dados.
+
+`npm audit --omit=dev` no frontend concluiu com **0 vulnerabilidades conhecidas**. Uma procura
+limitada por padrões de chaves privadas/PAT/Resend/Supabase secret nos ficheiros versionados
+atuais não encontrou correspondências; não foi uma análise exaustiva de segredos nem do
+histórico Git. O fornecedor, as Edge Functions, as definições remotas, backups e permissões
+das contas administrativas não ficam certificados por estes resultados.
+
+Esta revisão é uma avaliação de preparação para publicação, não uma auditoria independente
+nem uma garantia de ausência de vulnerabilidades.

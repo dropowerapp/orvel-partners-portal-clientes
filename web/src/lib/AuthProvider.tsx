@@ -1,7 +1,7 @@
 // Sessão do Supabase Auth, nível de autenticação (aal1/aal2) e contexto da organização atual.
 import type { Session } from "@supabase/supabase-js";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { type QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createContext, Fragment, type ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { SessionContext } from "./access";
 import { useOrg } from "./OrgProvider";
 import { supabase } from "./supabase";
@@ -19,6 +19,14 @@ interface AuthState {
 }
 
 const AuthContext = createContext<AuthState | null>(null);
+
+function clearSessionData(client: QueryClient) {
+  // A marca é pública; todos os outros resultados pertencem à sessão anterior.
+  // removeQueries também cancela leituras pendentes, impedindo que reponham a cache.
+  client.removeQueries({ predicate: (query) => query.queryKey[0] !== "org" });
+  client.getMutationCache().clear();
+  try { sessionStorage.removeItem("portal.process"); } catch { /* armazenamento indisponível */ }
+}
 
 export function useAuth(): AuthState {
   const value = useContext(AuthContext);
@@ -42,24 +50,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [ready, setReady] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
+  const identity = useRef<string | null | undefined>(undefined);
 
   useEffect(() => {
     let active = true;
-    void supabase.auth.getSession().then(({ data }) => {
+    let receivedAuthEvent = false;
+    const applySession = (next: Session | null) => {
       if (!active) return;
-      setSession(data.session);
-      setReady(true);
-    });
-    // Não chamar outras funções do Supabase dentro deste callback (recomendação do supabase-js).
-    const { data } = supabase.auth.onAuthStateChange((_event, next) => {
+      const nextIdentity = next ? `${next.user.id}:${aalFromToken(next.access_token)}` : null;
+      if (identity.current !== nextIdentity) {
+        clearSessionData(queryClient);
+        identity.current = nextIdentity;
+      }
       setSession(next);
       setReady(true);
+    };
+    // Não chamar outras funções do Supabase dentro deste callback (recomendação do supabase-js).
+    const { data } = supabase.auth.onAuthStateChange((_event, next) => {
+      receivedAuthEvent = true;
+      applySession(next);
+    });
+    void supabase.auth.getSession().then(({ data }) => {
+      // Um evento mais recente (incluindo logout noutra janela) prevalece sobre esta leitura.
+      if (!receivedAuthEvent) applySession(data.session);
     });
     return () => {
       active = false;
       data.subscription.unsubscribe();
     };
-  }, []);
+  }, [queryClient]);
 
   const userId = session?.user.id ?? null;
   const aal = aalFromToken(session?.access_token);
@@ -76,14 +95,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const refresh = useCallback(async () => {
-    const { data } = await supabase.auth.refreshSession();
-    setSession(data.session);
+    // A subscrição aplica também esta sessão, com a mesma limpeza e ordem dos eventos.
+    await supabase.auth.refreshSession();
     await queryClient.invalidateQueries({ queryKey: ["session-context"] });
   }, [queryClient]);
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
-    queryClient.clear();
+    clearSessionData(queryClient);
   }, [queryClient]);
 
   const value = useMemo<AuthState>(
@@ -100,5 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [ready, session, aal, userId, contextQuery.data, contextQuery.isPending, contextQuery.error, refresh, signOut],
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>
+    <Fragment key={`${userId ?? "anonymous"}:${aal ?? "none"}`}>{children}</Fragment>
+  </AuthContext.Provider>;
 }
