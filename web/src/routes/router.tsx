@@ -7,7 +7,12 @@ import Confirm from "./auth/Confirm";
 import ClientHome from "./client/ClientHome";
 import ClientLayout, { CLIENT_PATHS } from "./client/ClientLayout";
 import ClientLogin from "./client/ClientLogin";
+import ClientDeadlines from "./client/ClientDeadlines";
+import ClientDetails from "./client/ClientDetails";
 import { ClientComingSoon, ClientContact, ClientMore } from "./client/ClientPages";
+import ClientPayment from "./client/ClientPayment";
+import ClientProposal from "./client/ClientProposal";
+import ClientTimeline from "./client/ClientTimeline";
 import Privacy from "./client/Privacy";
 import NoAccess from "./NoAccess";
 import NotFound from "./NotFound";
@@ -23,12 +28,13 @@ import ProcessPayments from "./team/process/ProcessPayments";
 import ProcessPeople from "./team/process/ProcessPeople";
 import ProcessProposals from "./team/process/ProcessProposals";
 import ProcessSummary from "./team/process/ProcessSummary";
+import ProcessTimeline from "./team/process/ProcessTimeline";
 import ProcessList from "./team/ProcessList";
 import TeamLayout, { TeamComingSoon } from "./team/TeamLayout";
 import TeamLogin from "./team/TeamLogin";
 
-/** Separadores da ficha que chegam nas etapas seguintes (documentos, percurso, prazos). */
-function ProcessTabComingSoon({ tab }: { tab: "documents" | "timeline" | "deadlines" }) {
+/** Separadores da ficha que chegam nas etapas seguintes (documentos, prazos). */
+function ProcessTabComingSoon({ tab }: { tab: "documents" | "deadlines" }) {
   const { t } = useTranslation();
   return <ComingSoonPanel body={t(`process.coming_soon.${tab}`)} />;
 }
@@ -53,12 +59,12 @@ export const routes: RouteObject[] = [
         children: [
           { path: CLIENT_PATHS.home, element: <ClientHome /> },
           { path: CLIENT_PATHS.documents, element: <ClientComingSoon section="documents" /> },
-          { path: CLIENT_PATHS.timeline, element: <ClientComingSoon section="timeline" /> },
-          { path: CLIENT_PATHS.deadlines, element: <ClientComingSoon section="deadlines" /> },
+          { path: CLIENT_PATHS.timeline, element: <ClientTimeline /> },
+          { path: CLIENT_PATHS.deadlines, element: <ClientDeadlines /> },
           { path: CLIENT_PATHS.more, element: <ClientMore /> },
-          { path: CLIENT_PATHS.proposal, element: <ClientComingSoon section="proposal" /> },
-          { path: CLIENT_PATHS.payment, element: <ClientComingSoon section="payment" /> },
-          { path: CLIENT_PATHS.details, element: <ClientComingSoon section="details" /> },
+          { path: CLIENT_PATHS.proposal, element: <ClientProposal /> },
+          { path: CLIENT_PATHS.payment, element: <ClientPayment /> },
+          { path: CLIENT_PATHS.details, element: <ClientDetails /> },
           { path: CLIENT_PATHS.contact, element: <ClientContact /> },
         ],
       },
@@ -85,7 +91,7 @@ export const routes: RouteObject[] = [
               { path: "proposta", element: <ProcessProposals /> },
               { path: "pagamentos", element: <ProcessPayments /> },
               { path: "documentos", element: <ProcessTabComingSoon tab="documents" /> },
-              { path: "percurso", element: <ProcessTabComingSoon tab="timeline" /> },
+              { path: "percurso", element: <ProcessTimeline /> },
               { path: "prazos", element: <ProcessTabComingSoon tab="deadlines" /> },
               { path: "interno", element: <ProcessInternal /> },
               { path: "atividade", element: <ProcessActivity /> },

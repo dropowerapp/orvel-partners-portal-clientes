@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router";
 import { AppShell } from "../../components/AppShell";
 import { ROUTES } from "../../lib/access";
+import { useClientProcesses } from "../../lib/clientData";
+import { useFormat } from "../../lib/teamData";
 
 export const CLIENT_PATHS = {
   home: "/",
@@ -30,7 +32,32 @@ export default function ClientLayout() {
         { to: CLIENT_PATHS.more, label: t("client_nav.more") },
       ]}
     >
+      <ProcessPicker />
       <Outlet />
     </AppShell>
+  );
+}
+
+/** Seletor de processo no topo, só quando o cliente tem mais de um. */
+function ProcessPicker() {
+  const { t } = useTranslation();
+  const format = useFormat();
+  const { list, current, choose } = useClientProcesses();
+  if (list.length < 2 || !current) return null;
+  return (
+    <label className="mb-6 flex flex-col gap-1 text-sm font-semibold text-primary sm:max-w-sm">
+      {t("client_nav.process_picker")}
+      <select
+        value={current.id}
+        onChange={(e) => choose(e.target.value)}
+        className="rounded-md border border-line bg-white px-3 py-2 text-base font-normal"
+      >
+        {list.map((p) => (
+          <option key={p.id} value={p.id}>
+            {[p.plan_name ?? t("process.no_plan"), t("process.created_on", { date: format.date(p.created_at) })].join(" · ")}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }

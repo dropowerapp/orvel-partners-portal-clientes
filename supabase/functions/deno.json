@@ -2,7 +2,7 @@
   "nodeModulesDir": "none",
   "tasks": {
     "test": "deno test --allow-env tests/",
-    "check": "deno check invite-client/index.ts auth-send-email/index.ts"
+    "check": "deno check invite-client/index.ts auth-send-email/index.ts sign-download/index.ts"
   },
   "lint": {
     "rules": {

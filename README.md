@@ -16,7 +16,7 @@ base de dados), sem o construir já.
 | 1 | Esquema, RLS, funções do cliente, Storage, dados fictícios, testes de RLS | ✅ |
 | 2 | Autenticação (MFA equipa, link mágico, convite), consentimento, tema, i18n | ✅ (validada no Supabase de dev a 17/11/2026) |
 | 3 | Painel da equipa: processos, ficha, pessoas, proposta, pagamentos | ✅ no ramo `etapa-3-painel-equipa` (testada no Supabase de dev a 17/11/2026; falta a revisão no browser) |
-| 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | — |
+| 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | 🚧 ramo `etapa-4-area-cliente` (também percurso por fases e prazos do cliente) |
 | 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | — |
 | 6 | Cronologia, prazos e calendário | — |
 | 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | — |
@@ -30,7 +30,7 @@ supabase/
   config.toml          Configuração local (registo público desligado, MFA TOTP, buckets, hook de email)
   migrations/          Esquema, lógica, RLS, funções do cliente, Storage, organização Orvel, autenticação,
                        funções do painel da equipa (create_client_process, next_proposal_reference)
-  functions/           Edge Functions (Deno): invite-client, auth-send-email; textos dos emails em _shared/i18n
+  functions/           Edge Functions (Deno): invite-client, auth-send-email, sign-download; textos dos emails em _shared/i18n
   templates/           Modelos de email de reserva (só quando o hook está desligado, como em local)
   seed.sql             Dados fictícios para desenvolvimento local
   tests/               Testes pgTAP (RLS e lógica de negócio)
@@ -43,19 +43,23 @@ docs/plano.md          Plano técnico aprovado
 
 | Área | Caminho | Conteúdo | Etapa |
 |---|---|---|---|
-| Cliente | `/` | Início | 4 (hoje: boas-vindas) |
-| Cliente | `/documentos`, `/percurso`, `/prazos` | Documentos, percurso, prazos e renovações | 5 e 6 (hoje: "em breve") |
-| Cliente | `/mais` → `/proposta`, `/pagamento`, `/dados`, `/contacto` | Proposta, pagamento, os meus dados, contacto | 4 (contacto já pronto) |
+| Cliente | `/` | Início: o que falta da parte do cliente, percurso por fases, pagamento, próximos prazos e contacto | 4 |
+| Cliente | `/percurso`, `/prazos` | Percurso por fases (documento "Criar empresa no Dubai, passo a passo") e prazos | 4 |
+| Cliente | `/documentos` | Envio e validação de documentos | 5 (hoje: "em breve", com o email para envio) |
+| Cliente | `/mais` → `/proposta`, `/pagamento`, `/dados`, `/contacto` | Proposta (PDF, plano, aceitação), pagamento (dados bancários libertados), os meus dados (contacto, pessoas, nomes da empresa), contacto | 4 |
 | Equipa | `/equipa/processos` | Processos com filtros por estado, pesquisa e alertas | 3 |
 | Equipa | `/equipa/processos/novo` (`?cliente=id` para um cliente existente) | Novo cliente ou novo processo, com pessoas e convite | 3 |
 | Equipa | `/equipa/processos/:id` | Ficha: Resumo · Pessoas e dados · Proposta · Pagamentos · Interno · Atividade | 3 |
-| Equipa | `/equipa/processos/:id/documentos`, `…/percurso`, `…/prazos` | Separadores da ficha | 5 e 6 (hoje: "em preparação") |
+| Equipa | `/equipa/processos/:id/percurso` | Passos por fase: estado, datas e nota para o cliente | 4 |
+| Equipa | `/equipa/processos/:id/documentos`, `…/prazos` | Separadores da ficha | 5 e 6 (hoje: "em preparação") |
 | Equipa | `/equipa/clientes` | Clientes, convite e novo processo para um cliente existente | 3 |
 | Equipa | `/equipa/calendario`, `/equipa/definicoes` | Calendário de prazos, definições da organização | 6 e seguintes |
 
 No telemóvel, o menu do cliente fica numa barra em baixo (Início · Documentos · Percurso · Prazos ·
-Mais). O PDF da proposta é carregado pela equipa para o bucket `documents`; vê-lo no portal chega
-com a função `sign-download` (etapa 5).
+Mais). Se o cliente tiver mais de um processo, aparece um seletor no topo. O PDF da proposta é
+carregado pela equipa para o bucket `documents` e aberto (equipa e cliente) pela função
+`sign-download`. Os contactos da Orvel (WhatsApp +971 50 364 2510 e hello@orvelpartners.com) e o
+modelo do percurso por fases estão na migração `20261118100000_orvel_percurso.sql`.
 
 ## Base de dados em desenvolvimento
 
@@ -144,6 +148,7 @@ já aceitou). Os emails de login aparecem no Inbucket/Mailpit (`http://127.0.0.1
 |---|---|---|
 | `invite-client` | Envia ou reenvia o convite a um cliente (cria a conta, liga-a ao cliente, email com a marca) | Token da sessão; exige equipa com MFA |
 | `auth-send-email` | Hook do Supabase Auth: link mágico e recuperação de password pela Resend, com a marca da organização | Assinatura `SEND_EMAIL_HOOK_SECRET` |
+| `sign-download` | URL assinado de 60 s para o PDF da proposta ou um documento; a RLS decide (lido com o token do utilizador) e os downloads de ficheiros sensíveis ficam na atividade | Token da sessão |
 
 Segredos: ver `supabase/functions/.env.example`. Localmente, copiar para `supabase/functions/.env`
 (com `EMAIL_MODE=log`, os emails do convite são escritos no log da função em vez de enviados;

@@ -57,7 +57,30 @@
   "client_home": {
     "title": "Olá, {{name}}",
     "title_anonymous": "Olá",
-    "body": "A sua área de cliente está a ser preparada. Em breve vai poder acompanhar aqui o seu processo, enviar documentos e consultar prazos."
+    "body": "A sua área de cliente está a ser preparada. Em breve vai poder acompanhar aqui o seu processo, enviar documentos e consultar prazos.",
+    "no_process": "A equipa ainda está a preparar o seu processo. Avisamos por email quando houver novidades.",
+    "load_error": "Não foi possível carregar o seu processo. Tente novamente.",
+    "pending_title": "O que falta da sua parte",
+    "pending_none": "Não há nada pendente da sua parte. A equipa avisa por email quando precisar de si.",
+    "pending_done": "O seu processo está concluído.",
+    "pending": {
+      "accept_proposal": "Rever e aceitar a proposta",
+      "pay": "Fazer o pagamento",
+      "fix_documents": "Corrigir documentos rejeitados: {{count}}",
+      "send_documents": "Enviar documentos: {{count}}",
+      "company_names": "Indicar 2 ou 3 nomes para a empresa"
+    },
+    "timeline_title": "O seu percurso",
+    "see_all": "Ver tudo",
+    "progress": "Progresso",
+    "phase_done": "Concluída",
+    "current_step": "Agora:",
+    "payment_title": "Pagamento",
+    "see_payment": "Ver pagamento",
+    "payment_outstanding": "Por pagar. Já pagou {{paid}} de {{total}}.",
+    "deadlines_title": "Próximos prazos",
+    "contact_title": "Fale connosco",
+    "contact_body": "Um só contacto do início ao fim, em português, com a equipa {{org}}."
   },
   "team_login": {
     "title": "Entrar como equipa",
@@ -130,12 +153,13 @@
     "documents": "Documentos",
     "timeline": "Percurso",
     "deadlines": "Prazos",
-    "more": "Mais"
+    "more": "Mais",
+    "process_picker": "Processo"
   },
   "client_pages": {
     "documents": {
       "title": "Documentos",
-      "body": "Em breve vai poder enviar aqui os documentos que lhe pedirmos, acompanhar a validação e descarregar os documentos emitidos."
+      "body": "Em breve vai poder enviar aqui os documentos pedidos e acompanhar a validação. Até lá, envie-os para {{email}}."
     },
     "timeline": {
       "title": "Percurso",
@@ -411,7 +435,8 @@
       "pdf_size": "O PDF tem mais de 10 MB.",
       "confirm_required": "Confirme que o PDF é a versão para o cliente.",
       "pdf_upload": "Não foi possível carregar o PDF. A proposta ficou guardada; tente carregar o ficheiro outra vez."
-    }
+    },
+    "open_pdf": "Abrir o PDF"
   },
   "payments": {
     "title": "Pagamentos",
@@ -521,8 +546,147 @@
       "document_request_approved": "Documento validado",
       "document_request_rejected": "Documento rejeitado: {{reason}}",
       "document_uploaded": "Documento carregado",
-      "document_issued": "Documento emitido carregado"
+      "document_issued": "Documento emitido carregado",
+      "document_downloaded": "Ficheiro sensível descarregado"
     }
+  },
+  "client_status": {
+    "new": "Em preparação",
+    "proposal_sent": "Proposta à sua espera",
+    "awaiting_payment": "À espera do pagamento",
+    "awaiting_documents": "À espera de documentos",
+    "in_progress": "Em curso",
+    "completed": "Concluído",
+    "cancelled": "Cancelado"
+  },
+  "phases": {
+    "documents": {
+      "title": "Documentos e proposta",
+      "hint": "À distância · antes de começar"
+    },
+    "incorporation": {
+      "title": "Constituição da empresa",
+      "hint": "Sem presença física · 5 a 7 dias úteis"
+    },
+    "residence": {
+      "title": "Visto de residência",
+      "hint": "Presença no Dubai · 2 a 4 dias úteis (VIP) ou 8 a 10 dias úteis (standard)"
+    },
+    "bank": {
+      "title": "Conta bancária",
+      "hint": "Com visto e Emirates ID · varia consoante o banco"
+    },
+    "done": {
+      "title": "Conclusão",
+      "hint": "Empresa, residência e conta prontas"
+    }
+  },
+  "step_status": {
+    "todo": "Por fazer",
+    "in_progress": "Em curso",
+    "done": "Concluído"
+  },
+  "deadline_type": {
+    "licence": "Licença comercial",
+    "office_contract": "Contrato de escritório",
+    "establishment_card": "Establishment Card",
+    "residence_visa": "Visto de residência",
+    "emirates_id": "Emirates ID",
+    "other": "Outro prazo"
+  },
+  "client_timeline": {
+    "title": "O seu percurso",
+    "intro": "Do primeiro documento à conta bancária. Acompanhamo-lo em cada etapa e atualizamos aqui o que já está feito.",
+    "load_error": "Não foi possível carregar o percurso.",
+    "empty": "O percurso do seu processo ainda está a ser preparado.",
+    "percent": "{{percent}}% concluído",
+    "state": {
+      "done": "Concluída",
+      "current": "Em curso",
+      "upcoming": "A seguir"
+    },
+    "done_on": "Concluído a {{date}}",
+    "planned_on": "Previsto para {{date}}",
+    "disclaimer": "Prazos indicativos. Podem variar consoante a entidade licenciadora, as autoridades e o banco. Confirmamos o calendário do seu caso na proposta."
+  },
+  "client_deadlines": {
+    "title": "Prazos e renovações",
+    "intro": "O que expira e quando, para preparar as renovações com tempo. Avisamos por email antes de cada prazo.",
+    "load_error": "Não foi possível carregar os prazos.",
+    "empty": "Ainda não há prazos. Aparecem aqui quando os documentos da empresa e do visto forem emitidos.",
+    "due_on": "Expira a {{date}}",
+    "in_days": "Faltam {{days}} dias",
+    "expired": "Expirado",
+    "renewing": "Em renovação",
+    "renewed": "Renovado",
+    "disclaimer": "Isto é um lembrete, não é aconselhamento legal. Os valores de cada renovação são confirmados consigo antes de avançar."
+  },
+  "client_payment": {
+    "title": "Pagamento",
+    "intro": "O estado do pagamento e os valores em AED. Os dados para a transferência aparecem aqui quando a equipa os disponibilizar.",
+    "before_acceptance": "O pagamento fica disponível depois de aceitar a proposta.",
+    "load_error": "Não foi possível carregar o pagamento.",
+    "summary": "Resumo",
+    "paid": "Pago",
+    "outstanding": "Por pagar",
+    "no_payments": "A equipa está a preparar o pedido de pagamento. Avisamos por email.",
+    "bank_title": "Dados para a transferência",
+    "bank_pending": "Os dados bancários aparecem aqui assim que a equipa os disponibilizar.",
+    "beneficiary": "Beneficiário",
+    "bank": "Banco",
+    "account_number": "Número de conta",
+    "currency": "Moeda",
+    "bank_hint": "Indique o seu nome na descrição da transferência. Confirmamos por email quando recebermos o pagamento."
+  },
+  "client_payment_status": {
+    "pending": "Por pagar",
+    "partial": "Pago em parte",
+    "paid": "Pago"
+  },
+  "client_proposal": {
+    "title": "Proposta",
+    "intro_open": "Reveja a proposta, escolha o plano e aceite-a aqui. Fica com o comprovativo da aceitação.",
+    "intro_accepted": "A sua proposta foi aceite. Pode consultá-la sempre que precisar.",
+    "intro_none": "A equipa está a preparar a sua proposta. Avisamos por email quando estiver disponível.",
+    "load_error": "Não foi possível carregar a proposta.",
+    "history": "Propostas anteriores",
+    "open_pdf": "Abrir a proposta (PDF)",
+    "sent_at": "Enviada a",
+    "expired": "Esta proposta já não está válida. Fale connosco para receber uma proposta atualizada.",
+    "choose_plan": "Escolha o plano",
+    "includes_bank": "Inclui abertura de conta bancária",
+    "text_error": "Não foi possível carregar o texto de aceitação. Tente novamente.",
+    "agree": "Li a proposta e aceito este texto",
+    "accept": "Aceitar a proposta",
+    "chosen_plan": "Plano escolhido",
+    "accepted_at": "Aceite a",
+    "receipt": "Comprovativo da aceitação"
+  },
+  "client_details": {
+    "title": "Os meus dados",
+    "intro": "Os seus dados de contacto, as pessoas incluídas no processo e os nomes pretendidos para a empresa.",
+    "load_error": "Não foi possível carregar os seus dados.",
+    "personal_title": "Dados pessoais e de contacto",
+    "email_hint": "É o email com que entra no portal. Para o alterar, fale connosco.",
+    "saved": "Dados guardados.",
+    "names_title": "Nomes pretendidos para a empresa",
+    "names_intro": "Indique duas ou três alternativas, por ordem de preferência, caso o primeiro nome não esteja disponível.",
+    "names_saved": "Nomes guardados.",
+    "people_title": "Pessoas no processo",
+    "people_intro": "O titular e os dependentes (cônjuge, filhos). Para cada pessoa pedimos os documentos necessários.",
+    "person_incomplete": "Falta a nacionalidade e a data de nascimento",
+    "remove_question": "Remover esta pessoa do processo?"
+  },
+  "team_timeline": {
+    "intro": "Percurso do cliente ({{percent}}% concluído). O cliente vê os passos, as datas e as notas no portal. Os passos automáticos avançam sozinhos.",
+    "automatic": "Automático",
+    "has_note": "com nota para o cliente",
+    "saved": "Passo \"{{step}}\" guardado.",
+    "planned_on": "Data prevista",
+    "done_on": "Data de conclusão",
+    "client_note": "Nota para o cliente (opcional)",
+    "client_note_placeholder": "Ex.: O exame médico está marcado para as 9h00.",
+    "client_note_hint": "O cliente vê esta nota no percurso. Não escreva aqui nomes da equipa, custos nem informação interna."
   },
   "validation": {
     "email": "Indique um email válido.",
@@ -561,7 +725,18 @@
     "proposal_accepted_is_locked": "Uma proposta aceite não pode ser alterada nem apagada.",
     "proposal_accept_only_by_client": "Só o cliente pode aceitar a proposta, no portal.",
     "proposal_reference_invalid": "A referência da proposta não tem o formato esperado.",
-    "demo_read_only": "Na demonstração esta parte do painel só mostra os ecrãs: não grava alterações."
+    "demo_read_only": "Na demonstração esta parte do painel só mostra os ecrãs: não grava alterações.",
+    "proposal_not_open": "Esta proposta já não pode ser aceite.",
+    "proposal_expired": "Esta proposta já não está válida. Fale connosco para receber uma proposta atualizada.",
+    "full_name_required": "Indique o nome completo.",
+    "date_of_birth_invalid": "A data de nascimento não é válida.",
+    "holder_already_exists": "O processo já tem um titular.",
+    "holder_relationship_locked": "O titular do processo não muda.",
+    "holder_cannot_be_deleted": "O titular do processo não pode ser removido.",
+    "person_has_documents": "Esta pessoa já tem documentos enviados e não pode ser removida. Fale connosco.",
+    "company_names_count": "Indique entre um e três nomes.",
+    "invalid_request": "Pedido inválido. Atualize a página e tente novamente.",
+    "server_error": "Ocorreu um erro no servidor. Tente novamente daqui a pouco."
   },
   "demo": {
     "title": "Modo de demonstração",

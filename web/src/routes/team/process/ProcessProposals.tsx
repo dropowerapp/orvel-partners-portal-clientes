@@ -7,6 +7,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { ConfirmButton } from "../../../components/ConfirmButton";
 import { Alert, Badge, type BadgeTone, Button, Card, CheckboxField, DataList, Spinner, TextField } from "../../../components/ui";
+import { openDownload } from "../../../lib/download";
 import { errorKey } from "../../../lib/errors";
 import { useOrg } from "../../../lib/OrgProvider";
 import { supabase } from "../../../lib/supabase";
@@ -207,6 +208,7 @@ function ProposalCard({ proposal, actions }: { proposal: ProposalRow; actions: R
         ) : (
           <p className="text-sm text-muted">{t("proposals.no_plans")}</p>
         )}
+        {proposal.pdf_path && <OpenPdf proposalId={proposal.id} />}
         {proposal.accepted_text && (
           <div className="rounded-md bg-background px-4 py-3 text-sm">
             <p className="mb-1 text-xs font-semibold tracking-wide text-muted uppercase">{t("proposals.accepted_text")}</p>
@@ -216,6 +218,29 @@ function ProposalCard({ proposal, actions }: { proposal: ProposalRow; actions: R
         {actions}
       </div>
     </Card>
+  );
+}
+
+function OpenPdf({ proposalId }: { proposalId: string }) {
+  const { t } = useTranslation();
+  const [error, setError] = useState<string | null>(null);
+  return (
+    <div className="flex flex-col gap-2">
+      <div>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={async () => {
+            setError(null);
+            const code = await openDownload("proposal", proposalId);
+            if (code) setError(t(`errors.${code}`, { defaultValue: t("errors.generic") }));
+          }}
+        >
+          {t("proposals.open_pdf")}
+        </Button>
+      </div>
+      {error && <Alert>{error}</Alert>}
+    </div>
   );
 }
 

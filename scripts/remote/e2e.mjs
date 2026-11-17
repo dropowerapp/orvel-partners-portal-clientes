@@ -509,6 +509,23 @@ await check("proposta: referência seguinte, rascunho, PDF e envio", async () =>
   const proc = noError(await team.from("processes").select("status").eq("id", panelProcess).single(), "estado");
   assert(proc.status === "proposal_sent", `estado ${proc.status}`);
 });
+await check("PDF da proposta: URL assinado de 60 s para a equipa; recusado a outro cliente", async () => {
+  const teamToken = (await team.auth.getSession()).data.session.access_token;
+  const ok = await callFunction("sign-download", { token: teamToken, body: { kind: "proposal", id: panelProposal } });
+  assert(ok.status === 200 && ok.json?.url && ok.json?.expires_in === 60, `HTTP ${ok.status} ${JSON.stringify(ok.json)}`);
+  const file = await fetch(ok.json.url);
+  assert(file.ok && (await file.text()).startsWith("%PDF"), `download HTTP ${file.status}`);
+  const ruiToken = (await rui.auth.getSession()).data.session?.access_token;
+  const denied = await callFunction("sign-download", { token: ruiToken, body: { kind: "proposal", id: panelProposal } });
+  assert(denied.status === 404, `o Rui recebeu HTTP ${denied.status}`);
+  const anonymous = await callFunction("sign-download", { body: { kind: "proposal", id: panelProposal } });
+  assert(anonymous.status === 401, `sem sessão: HTTP ${anonymous.status}`);
+});
+await check("percurso do processo novo com as fases do documento da Orvel", async () => {
+  const steps = noError(await team.from("timeline_steps").select("phase, position").eq("process_id", panelProcess).order("position"), "passos");
+  const phases = [...new Set(steps.map((s) => s.phase))];
+  assert(phases.join(",") === "documents,incorporation,residence,bank,done", phases.join(","));
+});
 await check("a equipa não aceita propostas (só o cliente)", async () => {
   const res = await team.from("proposals").update({ status: "accepted", chosen_plan: "Essencial", accepted_at: new Date().toISOString(), accepted_text: "x" }).eq("id", panelProposal);
   assert(res.error?.message === "proposal_accept_only_by_client", JSON.stringify(res.error));
@@ -558,6 +575,17 @@ await check("pessoas: editar e remover (os pedidos dela saem também)", async ()
   noError(await team.from("people").delete().eq("id", spouse.id), "remover");
   const requests = noError(await team.from("document_requests").select("id").eq("person_id", spouse.id), "pedidos");
   assert(requests.length === 0, `${requests.length} pedidos ficaram`);
+});
+await check("área de cliente: o Rui lê o percurso por fases, os pedidos e os contactos da organização", async () => {
+  const steps = noError(await rui.from("timeline_steps").select("phase, title, status, client_note").eq("process_id", ids.procRui), "passos");
+  assert(steps.length > 0 && steps.every((s) => s.phase), "passos sem fase");
+  const requests = noError(
+    await rui.from("document_requests").select("status, person:people(full_name), document_type:document_types(label)").eq("process_id", ids.procRui),
+    "pedidos",
+  );
+  assert(requests.length > 0 && requests.every((r) => r.person?.full_name && r.document_type?.label), JSON.stringify(requests[0]));
+  const org = noError(await anon.rpc("get_org_public", { p_host: "localhost" }), "get_org_public");
+  assert(org.contact_whatsapp === "+971503642510" && org.contact_email === "hello@orvelpartners.com", `${org.contact_whatsapp} ${org.contact_email}`);
 });
 await check("o cliente não vê processos de outros clientes", async () => {
   const res = await rui.from("processes").select("id").eq("id", panelProcess);

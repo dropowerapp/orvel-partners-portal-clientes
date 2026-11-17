@@ -441,3 +441,6 @@ verify_jwt = true
 # Hook do Supabase Auth: autenticado pela assinatura (SEND_EMAIL_HOOK_SECRET), não por JWT.
 [functions.auth-send-email]
 verify_jwt = false
+
+[functions.sign-download]
+verify_jwt = true

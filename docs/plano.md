@@ -323,6 +323,11 @@ O editor de modelos no ecrã de definições ficaria para a fase 2. Dias de avis
   (`RESEND_API_KEY`), com o domínio da organização confirmado na Resend por DNS. Novo segredo
   `EMAIL_LOG_DOMAINS`: os emails para esses domínios ficam só no log (no projeto de desenvolvimento,
   `exemplo.test`, para o e2e continuar a ler os links) e os restantes saem a sério.
+- **Etapa 4 (18/11/2026)**: o percurso segue o documento da Orvel "Criar empresa no Dubai, passo a
+  passo", em fases (documentos e proposta, constituição, visto de residência, conta bancária),
+  com prazos indicativos; coluna `phase` nos passos. O início do cliente é um painel-resumo
+  (o que falta, percurso, pagamento, prazos, contacto). O `sign-download` chegou nesta etapa para
+  o PDF da proposta; a equipa marca os passos do percurso na ficha.
 
 ## 13. Identidade visual (15/11/2026)
 

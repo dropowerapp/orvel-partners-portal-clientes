@@ -6,15 +6,16 @@ import { PageTitle } from "../../components/ui";
 import { useOrg } from "../../lib/OrgProvider";
 import { CLIENT_PATHS } from "./ClientLayout";
 
-type Section = "documents" | "timeline" | "deadlines" | "proposal" | "payment" | "details";
+type Section = "documents";
 
 export function ClientComingSoon({ section }: { section: Section }) {
   const { t } = useTranslation();
+  const org = useOrg();
   return (
     <ComingSoonPage
       eyebrow={t("auth_layout.eyebrow_client")}
       title={t(`client_pages.${section}.title`)}
-      body={t(`client_pages.${section}.body`)}
+      body={t(`client_pages.${section}.body`, { email: org.contact_email ?? "" })}
     />
   );
 }
@@ -47,36 +48,45 @@ export function ClientMore() {
   );
 }
 
-export function ClientContact() {
+/** Botões de WhatsApp e email da organização. */
+export function ContactButtons() {
   const { t } = useTranslation();
   const org = useOrg();
   const whatsapp = org.contact_whatsapp?.replace(/[^\d]/g, "");
+  return (
+    <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+      {whatsapp && (
+        <a
+          href={`https://wa.me/${whatsapp}`}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center justify-center rounded-md bg-action px-4 py-2.5 font-semibold text-white hover:bg-primary"
+        >
+          {t("client_pages.contact.whatsapp")}
+        </a>
+      )}
+      {org.contact_email && (
+        <a
+          href={`mailto:${org.contact_email}`}
+          className="inline-flex items-center justify-center rounded-md border border-line bg-white px-4 py-2.5 font-semibold text-primary hover:bg-background"
+        >
+          {t("client_pages.contact.email", { email: org.contact_email })}
+        </a>
+      )}
+      {!whatsapp && !org.contact_email && <p className="text-muted">{t("client_pages.contact.none")}</p>}
+    </div>
+  );
+}
+
+export function ClientContact() {
+  const { t } = useTranslation();
+  const org = useOrg();
   return (
     <>
       <PageTitle eyebrow={t("auth_layout.eyebrow_client")} title={t("client_pages.contact.title")}>
         {t("client_pages.contact.body", { org: org.name })}
       </PageTitle>
-      <div className="flex flex-col gap-3 sm:flex-row">
-        {whatsapp && (
-          <a
-            href={`https://wa.me/${whatsapp}`}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center justify-center rounded-md bg-action px-4 py-2.5 font-semibold text-white hover:bg-primary"
-          >
-            {t("client_pages.contact.whatsapp")}
-          </a>
-        )}
-        {org.contact_email && (
-          <a
-            href={`mailto:${org.contact_email}`}
-            className="inline-flex items-center justify-center rounded-md border border-line bg-white px-4 py-2.5 font-semibold text-primary hover:bg-background"
-          >
-            {t("client_pages.contact.email", { email: org.contact_email })}
-          </a>
-        )}
-        {!whatsapp && !org.contact_email && <p className="text-muted">{t("client_pages.contact.none")}</p>}
-      </div>
+      <ContactButtons />
     </>
   );
 }
