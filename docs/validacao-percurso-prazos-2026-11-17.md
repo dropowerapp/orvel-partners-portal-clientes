@@ -1,8 +1,9 @@
 # Validação local do percurso, prazos e calendário — 17/11/2026
 
 Resultado: etapa 6 implementada e validada localmente no ramo `codex/documentos-design`.
-A migração remota, a publicação da nova Preview e os testes autenticados online desta etapa
-continuam pendentes. A Preview existente mantém o código da etapa 5.
+A migração remota foi posteriormente aplicada no projeto de testes. A publicação da nova
+Preview e os testes autenticados online desta etapa continuam pendentes. A Preview existente
+mantém o código da etapa 5.
 
 ## Funcionalidade e design
 
@@ -41,22 +42,21 @@ restrições dos prazos documentais e continuidade das renovações após conclu
 
 ## Publicação pendente
 
-Migração preparada: `supabase/migrations/20261118120000_timeline_deadlines.sql`.
+Migração aplicada em 17/11/2026: `supabase/migrations/20261118120000_timeline_deadlines.sql`.
 Alvo usado pelas Previews: projeto `xdakbbvnpoojhyapznkf`, ramo `main / PRODUCTION`.
-A aprovação anterior para este alvo dizia respeito à migração dos documentos; nenhuma migração
-desta etapa foi executada remotamente durante esta validação.
+O projeto conserva os dados fictícios e será separado do novo ambiente de produção.
+A aplicação foi autorizada pelo pedido posterior de preparação para publicação e efetuada
+pela integração Supabase, depois de confirmar o esquema e as migrações existentes.
 
-O acesso de controlo ao Chrome deixou de estar disponível antes de criar/executar o SQL novo.
-Não existe token de gestão Supabase disponível no ambiente de execução. Foi sugerida a
-integração Supabase como alternativa; a ligação ainda não foi confirmada.
+O acesso Supabase foi recuperado. A integração Vercel ainda devolve 403 por falta de autorização
+da equipa `dropower-s-projects`; a nova versão do frontend não foi publicada.
+[Estado da preparação de produção](preparacao-producao-2026-11-17.md).
 
 Ordem de conclusão:
 
-1. Recuperar acesso autenticado ao projeto e confirmar as migrações instaladas.
-2. Aplicar a migração nova numa transação, registando a versão no histórico de migrações.
-3. Confirmar as três funções, as permissões e a política de visibilidade dos prazos.
-4. Publicar o frontend na Preview do ramo existente.
-5. Com contas fictícias, criar e editar um passo e um prazo, consultar calendário e atividade,
+1. Autorizar o acesso da integração Vercel à equipa do projeto.
+2. Publicar o frontend na Preview do ramo existente e confirmar o commit e o build.
+3. Com contas fictícias, criar e editar um passo e um prazo, consultar calendário e atividade,
    entrar como cliente e confirmar datas, notas, renovação e acesso ao documento associado.
 
 O frontend novo exige a migração antes da publicação. Os avisos automáticos por email e as

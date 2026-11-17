@@ -2,7 +2,7 @@
 -- Não devolve emails, documentos, tokens, passwords ou segredos. Não certifica backups
 -- nem as definições Auth/Vercel: esses pontos exigem inspeção separada das plataformas.
 with target as (select * from public.organizations where slug = 'orvel'),
-expected(version) as (values ('20261118110000'), ('20261118120000'), ('20261118130000'))
+expected(version) as (values ('20261118110000'), ('20261118120000'), ('20261118130000'), ('20261118140000'))
 select jsonb_build_object(
   'organization_found', (select count(*) = 1 from target),
   'public_tables_without_rls', (select coalesce(jsonb_agg(c.relname), '[]')

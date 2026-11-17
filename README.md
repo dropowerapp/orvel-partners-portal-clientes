@@ -18,8 +18,8 @@ base de dados), sem o construir já.
 | 3 | Painel da equipa: processos, ficha, pessoas, proposta, pagamentos | ✅ no ramo `etapa-3-painel-equipa` (testada no Supabase de dev a 17/11/2026; falta a revisão no browser) |
 | 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | ✅ ramo `etapa-4-area-cliente` (também percurso por fases e prazos; testada no Supabase de dev a 18/11/2026: db-test 268/268, e2e 66/66) |
 | 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | ✅ `codex/documentos-design`, publicada como Vercel Preview; migração e fluxo autenticado online de envio, revisão e download validados em 17/11/2026. Ver relatório e âmbito abaixo. |
-| 6 | Cronologia, prazos e calendário | Implementada e validada localmente em `codex/documentos-design`; migração remota e publicação pendentes de acesso ao Supabase. |
-| 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | Limpeza preparada e testada localmente, desativada. Avisos e resumo semanal por implementar. |
+| 6 | Cronologia, prazos e calendário | Implementada e validada localmente em `codex/documentos-design`; migração aplicada ao Supabase de testes. Publicação do frontend e validação autenticada online pendentes. |
+| 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | Conservação preparada e migração instalada nos testes. Eliminação desativada, sem worker publicado nem agendamento. Avisos e resumo semanal por implementar. |
 | 8 | Teste do fluxo completo, deploy | — |
 
 ## Etapa 5 e design (17/11/2026)
@@ -90,10 +90,11 @@ Validação local: **89 testes de frontend e 351 verificações SQL aprovados**,
 gerado e revisão da demonstração no Chrome em computador e telemóvel. O build conserva o aviso
 de tamanho do bundle. [Âmbito e publicação pendente](docs/validacao-percurso-prazos-2026-11-17.md).
 
-**Ainda não publicada:** a migração desta etapa não foi aplicada no Supabase remoto. O controlo
-do Chrome deixou de estar disponível antes da execução; a integração Supabase foi sugerida
-como alternativa e aguarda ligação. Aplicar e confirmar a migração antes de publicar o
-frontend, porque os novos formulários dependem dessas funções. A Preview continua na etapa 5.
+**Backend atualizado em 17/11/2026:** a migração desta etapa foi aplicada e confirmada no
+Supabase existente (`xdakbbvnpoojhyapznkf`), que conserva os dados fictícios. O frontend ainda
+aguarda publicação: a integração Vercel devolve 403 por falta de autorização da equipa
+`dropower-s-projects`. A Preview continua na etapa 5; a validação autenticada da etapa 6
+continua pendente. [Estado dos acessos e preparação de produção](docs/preparacao-producao-2026-11-17.md).
 Os avisos por email e tarefas agendadas pertencem à etapa 7.
 
 ## Estrutura
@@ -476,10 +477,18 @@ nem uma garantia de ausência de vulnerabilidades.
 
 ### Preparação da produção e conservação (17/11/2026)
 
-Ainda sem alterações remotas. As ligações Supabase/Vercel estão em preparação e as ferramentas
-dos projetos ainda não estão disponíveis no chat. A responsável confirmou
-que o aviso e o prazo de conservação ainda não estão aprovados: **não ativar a eliminação**.
-É necessário inventariar os projetos antes de escolher ou criar o ambiente de produção.
+A integração Supabase está operacional. Foi encontrado apenas o projeto existente com dados
+fictícios, `xdakbbvnpoojhyapznkf`, na organização **Orvel Partners**. A responsável escolheu esta
+organização para um novo projeto `orvel-portal-producao`, mas a criação foi recusada pelo limite
+de projetos gratuitos da conta. Escolheu **manter o plano gratuito e libertar uma vaga noutro
+projeto**. Não foi criado um projeto de produção, contratado um plano ou pausado outro projeto.
+A integração Vercel ainda exige autorização de acesso à equipa; não houve novo deploy.
+
+No Supabase de testes foram aplicadas as migrações de cronologia/prazos, conservação e
+permissões de infraestrutura. `sign-download` foi atualizada para a versão 4, com validação do
+caminho antes da assinatura. A função de eliminação **não foi publicada** e não existe
+agendamento de limpeza. A responsável confirmou que o aviso e o prazo de conservação ainda
+não estão aprovados: **não ativar a eliminação**.
 
 - `20261118130000_retention.sql` instala uma fila privada e quatro funções exclusivas do
   servidor. A seleção limita-se à organização configurada, a processos fechados e a documentos
@@ -499,6 +508,9 @@ que o aviso e o prazo de conservação ainda não estão aprovados: **não ativa
   além do estado do cron. Uma ativação futura exige aprovação da política e ensaio remoto.
 - Os caminhos dos documentos e PDFs de propostas são validados também na alteração e antes
   de gerar downloads, impedindo que um registo visível aponte para outra organização/processo.
+- `20261118140000_platform_privileges.sql` retira a execução de `rls_auto_enable()` aos papéis
+  da API, quando a função existe. O event trigger continua ativo e conserva a proteção das
+  tabelas novas; não se altera o seu corpo.
 
 `scripts/remote/production-readiness.sql` prepara uma inspeção de leitura, com contagens e
 resultados sem emails, caminhos de documentos ou segredos. Distingue os controlos que pode
@@ -516,4 +528,9 @@ Validação local desta preparação: **94 testes de frontend, 381 verificaçõe
 de Edge Functions aprovados**, build de produção e `deno check` concluídos. A consulta de
 preparação de produção também foi executada numa transação de leitura numa réplica local;
 detetou corretamente a ausência de administrador e de aviso publicado numa instalação nova.
-Não substitui a inspeção dos projetos reais, a execução do Storage nem um ensaio de recuperação.
+Depois da migração de permissões, as **381 verificações SQL** voltaram a passar. A consulta de
+preparação foi também executada no projeto remoto: nenhuma migração em falta, tabelas públicas
+com RLS, bucket privado e zero permissões de leitura de tabelas para anónimos. Os testes HTTP
+recusaram leitura e download anónimos (401) e confirmaram o CORS da Preview (200).
+Continuam pendentes a criação do ambiente isolado, definições finais de Auth/Vercel, recuperação
+de backups e aprovação jurídica. [Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).
