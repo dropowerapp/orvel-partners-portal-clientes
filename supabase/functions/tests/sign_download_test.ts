@@ -93,6 +93,14 @@ Deno.test("download: documento sensível fica registado; se o registo falhar, n�
   }
 });
 
+Deno.test("download: registo visível não permite assinar um caminho de outro processo", async () => {
+  for (const path of ["outra/proc/documento.pdf", "org/outro/documento.pdf", "org/proc/../documento.pdf", "org/proc//documento.pdf"]) {
+    const { d, calls } = deps({ findTarget: () => Promise.resolve({ ...TARGET, path }) });
+    assertEquals((await handleSignDownload(request({ kind: "document", id: ID }), d)).status, 404);
+    assertEquals(calls.sign, []);
+  }
+});
+
 Deno.test("download: OPTIONS responde ao preflight", async () => {
   const { d } = deps();
   const res = await handleSignDownload(

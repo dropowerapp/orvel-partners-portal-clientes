@@ -551,6 +551,7 @@
       "document_request_rejected": "Documento rejeitado: {{reason}}",
       "document_uploaded": "Documento carregado",
       "document_issued": "Documento emitido carregado",
+      "document_purged": "Documento eliminado no fim do prazo de conservação",
       "document_downloaded": "Ficheiro sensível descarregado",
       "document_request_created": "Pedido de documento criado",
       "document_request_removed": "Pedido de documento removido",
@@ -774,7 +775,9 @@
     "timeline_automatic_locked": "Este passo é atualizado automaticamente pelo processo.",
     "timeline_future_completion": "A data de conclusão não pode estar no futuro.",
     "schedule_conflict": "Este registo foi alterado entretanto. Feche o formulário, atualize a página e volte a editar.",
-    "deadline_document_locked": "Este prazo é controlado pelo documento emitido. A renovação é confirmada ao emitir o novo documento."
+    "deadline_document_locked": "Este prazo é controlado pelo documento emitido. A renovação é confirmada ao emitir o novo documento.",
+    "retention_started": "A eliminação dos documentos deste processo já começou. O processo não pode ser reaberto nem os ficheiros substituídos.",
+    "retention_managed": "A eliminação de documentos é gerida pelo serviço de conservação."
   },
   "demo": {
     "title": "Modo de demonstração",

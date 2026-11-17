@@ -444,3 +444,8 @@ verify_jwt = false
 
 [functions.sign-download]
 verify_jwt = true
+
+# Tarefa interna: autenticação por segredo dedicado, nunca por token de um cliente.
+# Desligada por omissão através de RETENTION_ENABLED=false. Não cria um agendamento.
+[functions.purge-documents]
+verify_jwt = false

@@ -6,6 +6,7 @@
 // 2. Só depois cria o URL assinado com a chave de serviço (que nunca sai do servidor).
 // 3. Downloads de documentos sensíveis ficam registados na atividade do processo.
 import { corsHeaders, errorResponse, isUuid, json } from "../_shared/http.ts";
+import { isProcessStoragePath } from "../_shared/storage-path.ts";
 
 export const SIGNED_URL_SECONDS = 60;
 
@@ -51,7 +52,9 @@ export async function handleSignDownload(req: Request, deps: SignDeps): Promise<
   if ((kind !== "proposal" && kind !== "document") || !isUuid(body.id)) return errorResponse("invalid_request", 400, cors);
 
   const target = await deps.findTarget(authorization, kind, body.id);
-  if (!target || !target.path) return errorResponse("not_found", 404, cors);
+  if (!target || !target.path || !isProcessStoragePath(target.path, target.organization_id, target.process_id)) {
+    return errorResponse("not_found", 404, cors);
+  }
 
   const url = await deps.sign(target.path, SIGNED_URL_SECONDS);
   if (!url) return errorResponse("not_found", 404, cors);

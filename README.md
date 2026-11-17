@@ -19,7 +19,7 @@ base de dados), sem o construir já.
 | 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | ✅ ramo `etapa-4-area-cliente` (também percurso por fases e prazos; testada no Supabase de dev a 18/11/2026: db-test 268/268, e2e 66/66) |
 | 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | ✅ `codex/documentos-design`, publicada como Vercel Preview; migração e fluxo autenticado online de envio, revisão e download validados em 17/11/2026. Ver relatório e âmbito abaixo. |
 | 6 | Cronologia, prazos e calendário | Implementada e validada localmente em `codex/documentos-design`; migração remota e publicação pendentes de acesso ao Supabase. |
-| 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | — |
+| 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | Limpeza preparada e testada localmente, desativada. Avisos e resumo semanal por implementar. |
 | 8 | Teste do fluxo completo, deploy | — |
 
 ## Etapa 5 e design (17/11/2026)
@@ -229,6 +229,7 @@ já aceitou). Os emails de login aparecem no Inbucket/Mailpit (`http://127.0.0.1
 | `invite-client` | Envia ou reenvia o convite a um cliente (cria a conta, liga-a ao cliente, email com a marca) | Token da sessão; exige equipa com MFA |
 | `auth-send-email` | Hook do Supabase Auth: link mágico e recuperação de password pela Resend, com a marca da organização | Assinatura `SEND_EMAIL_HOOK_SECRET` |
 | `sign-download` | URL assinado de 60 s para o PDF da proposta ou um documento; a RLS decide (lido com o token do utilizador) e os downloads de ficheiros sensíveis ficam na atividade | Token da sessão |
+| `purge-documents` | Simula ou processa a conservação dos documentos sensíveis registados de uma organização; desativada por omissão | Segredo dedicado `RETENTION_JOB_SECRET`; nunca o token de um cliente |
 
 Segredos: ver `supabase/functions/.env.example`. Localmente, copiar para `supabase/functions/.env`
 (com `EMAIL_MODE=log`, os emails do convite são escritos no log da função em vez de enviados;
@@ -434,9 +435,9 @@ where u.email = 'email-do-administrador' and o.slug = 'orvel';
 - Confirmar backups e testar a recuperação da base de dados **e dos ficheiros**. Os backups
   de PostgreSQL do Supabase não incluem os objetos do Storage:
   [documentação oficial](https://supabase.com/docs/guides/platform/backups).
-- Implementar e validar a limpeza dos documentos sensíveis conforme o prazo de conservação
-  aprovado. O esquema calcula `sensitive_purge_on`, mas a tarefa que apaga os ficheiros ainda
-  pertence à etapa 7 e não está implementada.
+- Validar remotamente a limpeza dos documentos sensíveis conforme o prazo de conservação
+  aprovado. A implementação local está preparada, mas a eliminação e o agendamento continuam
+  desativados a pedido da responsável, enquanto o texto e o prazo não forem aprovados.
 - Publicar o aviso de privacidade final validado pelo advogado. O texto criado pelas migrações
   é provisório; a sua utilização nos testes não demonstra revisão jurídica. Sem um aviso
   publicado, a área de cliente não abre.
@@ -472,3 +473,47 @@ das contas administrativas não ficam certificados por estes resultados.
 
 Esta revisão é uma avaliação de preparação para publicação, não uma auditoria independente
 nem uma garantia de ausência de vulnerabilidades.
+
+### Preparação da produção e conservação (17/11/2026)
+
+Ainda sem alterações remotas. As ligações Supabase/Vercel estão em preparação e as ferramentas
+dos projetos ainda não estão disponíveis no chat. A responsável confirmou
+que o aviso e o prazo de conservação ainda não estão aprovados: **não ativar a eliminação**.
+É necessário inventariar os projetos antes de escolher ou criar o ambiente de produção.
+
+- `20261118130000_retention.sql` instala uma fila privada e quatro funções exclusivas do
+  servidor. A seleção limita-se à organização configurada, a processos fechados e a documentos
+  sensíveis cujo prazo terminou. Lotes de 25, reservas de cinco minutos e novas tentativas
+  evitam processar o mesmo ficheiro em simultâneo.
+- O serviço apaga pela API de Storage e só depois confirma a ausência, marca `purged_at` e
+  regista `document.purged`. Não apaga os metadados do processo, nem documentos não sensíveis.
+  Uma falha não é comunicada como eliminação concluída. A confirmação é idempotente.
+- Depois de começar uma reserva, o processo não pode ser reaberto e o caminho do documento
+  não pode ser trocado. Se houver falhas persistentes, resolver a causa e repetir a tarefa;
+  não remover reservas manualmente sem verificar se o Storage já foi alterado.
+- `purge-documents` simula por omissão. Exige segredo dedicado de pelo menos 32 caracteres
+  e `RETENTION_ORGANIZATION_ID`; só aceita eliminação quando o corpo pede `dry_run:false`
+  **e** `RETENTION_ENABLED=true`. A migração e o deploy não ativam qualquer tarefa.
+- O agendamento opcional em `scripts/remote/retention-schedule-dry-run.sql` usa Vault e faz
+  apenas simulação diária. O ficheiro não foi executado. É preciso monitorizar a resposta HTTP,
+  além do estado do cron. Uma ativação futura exige aprovação da política e ensaio remoto.
+- Os caminhos dos documentos e PDFs de propostas são validados também na alteração e antes
+  de gerar downloads, impedindo que um registo visível aponte para outra organização/processo.
+
+`scripts/remote/production-readiness.sql` prepara uma inspeção de leitura, com contagens e
+resultados sem emails, caminhos de documentos ou segredos. Distingue os controlos que pode
+verificar dos pontos que continuam a exigir acesso às plataformas ou decisão da responsável.
+
+Para backups, a escolha do destino e a configuração continuam pendentes. O ensaio deve restaurar
+uma base e ficheiros fictícios num projeto isolado, confirmar hashes e permissões e documentar
+o tempo e a perda máxima de dados possíveis. A política de conservação deve abranger também
+as cópias: uma restauração não deve voltar a disponibilizar ficheiros já eliminados pela política.
+Esta implementação de limpeza cobre documentos registados; ficheiros órfãos de uploads
+interrompidos e a conservação de backups ainda precisam de tratamento antes de prometer
+eliminação completa de todas as cópias.
+
+Validação local desta preparação: **94 testes de frontend, 381 verificações SQL e 39 testes
+de Edge Functions aprovados**, build de produção e `deno check` concluídos. A consulta de
+preparação de produção também foi executada numa transação de leitura numa réplica local;
+detetou corretamente a ausência de administrador e de aviso publicado numa instalação nova.
+Não substitui a inspeção dos projetos reais, a execução do Storage nem um ensaio de recuperação.
