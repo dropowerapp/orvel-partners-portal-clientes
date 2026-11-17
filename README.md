@@ -15,7 +15,7 @@ base de dados), sem o construir já.
 |---|---|---|
 | 1 | Esquema, RLS, funções do cliente, Storage, dados fictícios, testes de RLS | ✅ |
 | 2 | Autenticação (MFA equipa, link mágico, convite), consentimento, tema, i18n | ✅ (validada no Supabase de dev a 17/11/2026) |
-| 3 | Painel da equipa: processos, ficha, pessoas, proposta, pagamentos | 🚧 em curso (ramo `etapa-3-painel-equipa`) |
+| 3 | Painel da equipa: processos, ficha, pessoas, proposta, pagamentos | ✅ no ramo `etapa-3-painel-equipa` (testada no Supabase de dev a 17/11/2026; falta a revisão no browser) |
 | 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | — |
 | 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | — |
 | 6 | Cronologia, prazos e calendário | — |
@@ -279,14 +279,19 @@ scripts/remote/db-test.sh && scripts/remote/e2e.sh
 
 ### Pré-visualização da Vercel ligada ao Supabase
 
-A pré-visualização do ramo (`https://orvel-partners-portal-clientes-git-e-38d300-dropower-s-projects.vercel.app`)
-usa o projeto de desenvolvimento, com os dados fictícios. Para isso:
+As pré-visualizações dos ramos usam o projeto de desenvolvimento, com os dados fictícios:
+
+- `etapa-2-autenticacao`: `https://orvel-partners-portal-clientes-git-e-38d300-dropower-s-projects.vercel.app`
+- `etapa-3-painel-equipa`: `https://orvel-partners-portal-clientes-git-e-c4363f-dropower-s-projects.vercel.app` (desde 17/11/2026, é para esta que apontam os convites)
+
+Para isso:
 
 - Vercel, só no ambiente Preview: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (a chave pública
   `sb_publishable_…`) e `VITE_DEMO_MODE=false`. Depois de mudar variáveis, fazer Redeploy.
-- Supabase: o endereço da pré-visualização está nas Redirect URLs (`…vercel.app/**`), em
-  `ALLOWED_ORIGINS` e em `PUBLIC_SITE_URL` (os convites apontam para a pré-visualização) e em
-  `organizations.hostnames` da Orvel (é pelo hostname que o portal escolhe a organização).
+- Supabase: os dois endereços estão nas Redirect URLs (`…vercel.app/**`), em `ALLOWED_ORIGINS` e
+  em `organizations.hostnames` da Orvel (é pelo hostname que o portal escolhe a organização);
+  `PUBLIC_SITE_URL` (o endereço dos links dos convites) é o da etapa 3. Um ramo novo tem um
+  endereço novo, que é preciso acrescentar da mesma forma.
 - Emails (desde 17/11/2026): saem pela Resend (`RESEND_API_KEY`, chave "portal-supabase-dev",
   só envio e só `orvelpartners.com`), com `EMAIL_LOG_DOMAINS=exemplo.test`: os emails para os
   endereços fictícios continuam só no log da função (Edge Functions → `auth-send-email` → Logs; os
@@ -294,15 +299,15 @@ usa o projeto de desenvolvimento, com os dados fictícios. Para isso:
 - Conta de cliente de teste com email real: `hello@orvelpartners.com` ("Teste Orvel", sem
   processos), criada a pedido para experimentar o link mágico. Por causa dela, o `db-seed.sh`
   recusa voltar a correr (há um utilizador fora de `@exemplo.test`).
-- Com esta configuração, o e2e corre com o endereço da pré-visualização, e o `auth-config.sh`
-  tem de manter o endereço nas Redirect URLs:
+- Com esta configuração, o e2e corre com o endereço de `PUBLIC_SITE_URL`, e o `auth-config.sh`
+  tem de manter os endereços nas Redirect URLs:
 
 ```bash
-SITE_URL=https://orvel-partners-portal-clientes-git-e-38d300-dropower-s-projects.vercel.app scripts/remote/e2e.sh
+SITE_URL=https://orvel-partners-portal-clientes-git-e-c4363f-dropower-s-projects.vercel.app scripts/remote/e2e.sh
 ```
 
 ```bash
-REDIRECT_URLS='http://localhost:5173/**,http://127.0.0.1:5173/**,https://orvel-partners-portal-clientes-git-e-38d300-dropower-s-projects.vercel.app/**' scripts/remote/auth-config.sh
+REDIRECT_URLS='http://localhost:5173/**,http://127.0.0.1:5173/**,https://orvel-partners-portal-clientes-git-e-38d300-dropower-s-projects.vercel.app/**,https://orvel-partners-portal-clientes-git-e-c4363f-dropower-s-projects.vercel.app/**' scripts/remote/auth-config.sh
 ```
 
 Membro da equipa que perdeu a aplicação de autenticação: em Authentication → Users, abrir o
