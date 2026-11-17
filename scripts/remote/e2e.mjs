@@ -74,10 +74,14 @@ function totp(secret, offset = 0) {
   return String((hmac.readUInt32BE(o) & 0x7fffffff) % 1_000_000).padStart(6, "0");
 }
 
-/** Lê os emails escritos no log (EMAIL_MODE=log) pela Management API, à espera até 120 s. */
+/**
+ * Lê os emails escritos no log (EMAIL_MODE=log) pela Management API, à espera até 120 s.
+ * Endpoint analytics/endpoints/logs (o antigo logs.all foi removido em 09/2026): SQL em dialeto
+ * ClickHouse, numa tabela única "logs" com todas as fontes (intervalo máximo de 24 h).
+ */
 async function waitForEmail(to, since) {
-  const sql = "select timestamp, event_message from function_logs " +
-    "where regexp_contains(event_message, 'email:log') order by timestamp desc limit 50";
+  const sql = "select timestamp, event_message from logs " +
+    "where event_message like '%[email:log]%' order by timestamp desc limit 50";
   const deadline = Date.now() + 120_000;
   while (Date.now() < deadline) {
     const qs = new URLSearchParams({
@@ -86,9 +90,10 @@ async function waitForEmail(to, since) {
       iso_timestamp_end: new Date(Date.now() + 60_000).toISOString(),
     });
     const headers = env.SUPABASE_ACCESS_TOKEN ? { Authorization: `Bearer ${env.SUPABASE_ACCESS_TOKEN}` } : {};
-    const res = await fetch(`${MGMT}/v1/projects/${REF}/analytics/endpoints/logs.all?${qs}`, { headers });
+    const res = await fetch(`${MGMT}/v1/projects/${REF}/analytics/endpoints/logs?${qs}`, { headers });
     if (res.ok) {
       const body = await res.json();
+      if (body.error) throw new Error(`logs: ${JSON.stringify(body.error).slice(0, 300)}`);
       const hit = (body.result ?? []).find((r) => String(r.event_message).includes(`[email:log] to=${to} `));
       if (hit) return String(hit.event_message);
     } else if (res.status !== 429) {
@@ -328,7 +333,7 @@ await check("password errada recusada", async () => {
 });
 await check("sem MFA, a equipa não vê nada", async () => {
   for (const table of ["processes", "clients", "process_internal", "activity_log"]) {
-    const res = await team.from(table).select("id");
+    const res = await team.from(table).select(table === "process_internal" ? "process_id" : "id");
     assert(!res.error && res.data.length === 0, `${table}: ${res.error?.message ?? `${res.data.length} linhas`}`);
   }
   const ctx = noError(await team.rpc("get_session_context", { p_org: ids.orvel }), "get_session_context");

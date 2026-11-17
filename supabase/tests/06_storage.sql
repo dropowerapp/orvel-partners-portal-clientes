@@ -21,7 +21,7 @@ select throws_ok($$ insert into storage.objects (bucket_id, name) select 'docume
 select throws_ok($$ insert into storage.objects (bucket_id, name) select 'branding', 'x/logo.png' $$,
   '42501', null, 'cliente não carrega logótipos');
 select is_empty($$ select 1 from storage.objects $$, 'cliente não lê objetos diretamente (nem os seus)');
-select is(tests.affected($$ delete from storage.objects $$), 0, 'cliente não apaga objetos');
+select ok(tests.deletes_nothing($$ delete from storage.objects $$), 'cliente não apaga objetos');
 
 -- Pedido já aprovado: deixa de aceitar uploads
 select tests.login('staff_x', 'aal2');

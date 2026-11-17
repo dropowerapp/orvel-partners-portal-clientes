@@ -50,6 +50,22 @@ begin
 end
 $$;
 
+-- Verdadeiro se o comando não apagar nada com o papel atual: ou não afeta linhas (RLS), ou é
+-- recusado por falta de permissão (42501). As versões recentes do Supabase recusam qualquer
+-- "delete" direto em storage.objects (storage.protect_delete); em local pode não existir.
+create function tests.deletes_nothing(p_sql text) returns boolean
+language plpgsql as $$
+declare
+  n int;
+begin
+  execute p_sql;
+  get diagnostics n = row_count;
+  return n = 0;
+exception when insufficient_privilege then
+  return true;
+end
+$$;
+
 create function tests.create_user(p_name text) returns uuid
 language sql as $$
   insert into auth.users (id, aud, role, email, raw_app_meta_data, raw_user_meta_data, email_confirmed_at)
