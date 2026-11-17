@@ -4,11 +4,15 @@
 # Envia o index.ts e os restantes ficheiros da função e de _shared/ (o Supabase faz o bundle).
 #
 # Uso: SUPABASE_PROJECT_REF=<ref> scripts/remote/functions-deploy.sh [função ...]
-#      (sem argumentos: invite-client e auth-send-email)
+#      (sem argumentos: todas as pastas de supabase/functions com index.ts)
 source "$(dirname "$0")/_lib.sh"
 
 FUNCTIONS_DIR="supabase/functions"
-[[ $# -gt 0 ]] || set -- invite-client auth-send-email
+if [[ $# -eq 0 ]]; then
+  for dir in "$ROOT/$FUNCTIONS_DIR"/*/; do
+    if [[ -f "$dir/index.ts" ]]; then set -- "$@" "$(basename "$dir")"; fi
+  done
+fi
 
 # verify_jwt da função em config.toml (por omissão true, como no Supabase).
 verify_jwt() {
