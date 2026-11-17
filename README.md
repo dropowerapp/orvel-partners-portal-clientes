@@ -287,7 +287,8 @@ scripts/remote/db-test.sh && scripts/remote/e2e.sh
 As pré-visualizações dos ramos usam o projeto de desenvolvimento, com os dados fictícios:
 
 - `etapa-2-autenticacao`: `https://orvel-partners-portal-clientes-git-e-38d300-dropower-s-projects.vercel.app`
-- `etapa-3-painel-equipa`: `https://orvel-partners-portal-clientes-git-e-c4363f-dropower-s-projects.vercel.app` (desde 17/11/2026, é para esta que apontam os convites)
+- `etapa-3-painel-equipa`: `https://orvel-partners-portal-clientes-git-e-c4363f-dropower-s-projects.vercel.app`
+- `etapa-4-area-cliente`: `https://orvel-partners-portal-clientes-git-e-3e7ea0-dropower-s-projects.vercel.app` (desde 18/11/2026, é para esta que apontam os convites)
 
 Para isso:
 
@@ -295,7 +296,7 @@ Para isso:
   `sb_publishable_…`) e `VITE_DEMO_MODE=false`. Depois de mudar variáveis, fazer Redeploy.
 - Supabase: os dois endereços estão nas Redirect URLs (`…vercel.app/**`), em `ALLOWED_ORIGINS` e
   em `organizations.hostnames` da Orvel (é pelo hostname que o portal escolhe a organização);
-  `PUBLIC_SITE_URL` (o endereço dos links dos convites) é o da etapa 3. Um ramo novo tem um
+  `PUBLIC_SITE_URL` (o endereço dos links dos convites) é o da etapa 4. Um ramo novo tem um
   endereço novo, que é preciso acrescentar da mesma forma.
 - Emails (desde 17/11/2026): saem pela Resend (`RESEND_API_KEY`, chave "portal-supabase-dev",
   só envio e só `orvelpartners.com`), com `EMAIL_LOG_DOMAINS=exemplo.test`: os emails para os
@@ -304,15 +305,19 @@ Para isso:
 - Conta de cliente de teste com email real: `hello@orvelpartners.com` ("Teste Orvel", sem
   processos), criada a pedido para experimentar o link mágico. Por causa dela, o `db-seed.sh`
   recusa voltar a correr (há um utilizador fora de `@exemplo.test`).
+- O Supabase limita os emails de autenticação por hora: depois de várias corridas do e2e (ou
+  vários links pedidos), o pedido do link do Rui pode falhar com "email rate limit exceeded" e as
+  verificações do cliente falham em cadeia. Esperar uma hora ou subir o limite em
+  Authentication → Rate Limits.
 - Com esta configuração, o e2e corre com o endereço de `PUBLIC_SITE_URL`, e o `auth-config.sh`
   tem de manter os endereços nas Redirect URLs:
 
 ```bash
-SITE_URL=https://orvel-partners-portal-clientes-git-e-c4363f-dropower-s-projects.vercel.app scripts/remote/e2e.sh
+SITE_URL=https://orvel-partners-portal-clientes-git-e-3e7ea0-dropower-s-projects.vercel.app scripts/remote/e2e.sh
 ```
 
 ```bash
-REDIRECT_URLS='http://localhost:5173/**,http://127.0.0.1:5173/**,https://orvel-partners-portal-clientes-git-e-38d300-dropower-s-projects.vercel.app/**,https://orvel-partners-portal-clientes-git-e-c4363f-dropower-s-projects.vercel.app/**' scripts/remote/auth-config.sh
+REDIRECT_URLS='http://localhost:5173/**,http://127.0.0.1:5173/**,https://orvel-partners-portal-clientes-git-e-38d300-dropower-s-projects.vercel.app/**,https://orvel-partners-portal-clientes-git-e-c4363f-dropower-s-projects.vercel.app/**,https://orvel-partners-portal-clientes-git-e-3e7ea0-dropower-s-projects.vercel.app/**' scripts/remote/auth-config.sh
 ```
 
 Membro da equipa que perdeu a aplicação de autenticação: em Authentication → Users, abrir o
