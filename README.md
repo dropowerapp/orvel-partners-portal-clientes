@@ -58,8 +58,10 @@ Publicação concluída em 17/11/2026:
 
 Validação online concluída em 17/11/2026 com sessão real e PDFs fictícios:
 envio → revisão → rejeição → reenvio → aprovação; emitido interno → disponibilizar → download.
-Revisão, emissão e abertura de PDFs na interface publicada; envio/reenvio do cliente pela API
-pública autenticada. Downloads comparados byte a byte por SHA-256; acesso anónimo e aprovação
+Revisão, emissão e abertura de PDFs na interface publicada. Envio/reenvio inicialmente pela API
+pública autenticada e depois repetidos pelos botões e seletores de ficheiros da área do cliente
+no Chrome, incluindo motivo de correção, histórico, aprovação e abertura da versão final.
+Downloads da primeira passagem comparados byte a byte por SHA-256; acesso anónimo e aprovação
 pelo próprio cliente recusados. [Relatório, evidências e limites](docs/validacao-documentos-2026-11-17.md).
 Não foi executado reset/seed remoto nem foram enviados emails reais. Os 78 testes de frontend
 e 308 testes SQL referidos acima foram executados localmente.
