@@ -17,7 +17,7 @@ base de dados), sem o construir já.
 | 2 | Autenticação (MFA equipa, link mágico, convite), consentimento, tema, i18n | ✅ (validada no Supabase de dev a 17/11/2026) |
 | 3 | Painel da equipa: processos, ficha, pessoas, proposta, pagamentos | ✅ no ramo `etapa-3-painel-equipa` (testada no Supabase de dev a 17/11/2026; falta a revisão no browser) |
 | 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | ✅ ramo `etapa-4-area-cliente` (também percurso por fases e prazos; testada no Supabase de dev a 18/11/2026: db-test 268/268, e2e 66/66) |
-| 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | Implementada em `codex/documentos-design`; validação local. Publicação e teste no Supabase de dev pendentes. |
+| 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | ✅ `codex/documentos-design`, publicada como Vercel Preview em 17/11/2026; migração aplicada no Supabase. Teste completo autenticado de Storage/Auth remoto ainda pendente. |
 | 6 | Cronologia, prazos e calendário | — |
 | 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | — |
 | 8 | Teste do fluxo completo, deploy | — |
@@ -43,15 +43,23 @@ Comandos: `npm run web:test`, `npm run web:build` e `npm run db:test:memory`.
 O último usa PostgreSQL em memória com pgTAP, o esquema de teste local e todas as migrações;
 não contacta o Supabase nem envia emails. Não substitui o teste do Storage/Auth real.
 
-Para publicar a etapa 5:
-1. Aplicar a migração nova no **Supabase de desenvolvimento**, através do fluxo habitual
-   (`supabase db push` ou `scripts/remote/db-push.sh`).
-2. Publicar o ramo na Vercel como Preview, com as variáveis públicas do projeto de dev e
-   `VITE_DEMO_MODE=false`.
-3. Se o endereço Preview for novo, acrescentá-lo aos hostnames da organização, Redirect URLs
-   e `ALLOWED_ORIGINS`, como descrito abaixo.
-4. Validar com ficheiros fictícios: envio → revisão → rejeição → reenvio → aprovação,
-   emitido interno → disponibilizar → download, isolamento entre clientes e bloqueio sem MFA.
+Publicação concluída em 17/11/2026:
+- Preview: <https://orvel-partners-portal-clientes-git-c-7a9f04-dropower-s-projects.vercel.app>.
+- Código publicado a partir de `a475596`; build Vercel concluído com sucesso.
+- Migração aplicada e registada em `supabase_migrations.schema_migrations`, no projeto
+  `xdakbbvnpoojhyapznkf`, ramo `main`. **O painel Supabase identifica este ramo como PRODUCTION**;
+  o alvo foi confirmado expressamente pela responsável. As referências históricas abaixo a
+  "Supabase de dev" não significam que exista um ambiente isolado de produção.
+- Novo hostname associado à Orvel; callback exato `/auth/confirmar` adicionado às Redirect URLs;
+  `Site URL` e `PUBLIC_SITE_URL` apontam para a nova Preview. `ALLOWED_ORIGINS` conserva as cinco
+  origens anteriores e acrescenta o novo endereço (a lista anterior foi confirmada pelo seu digest).
+- Verificações remotas: página de entrada com marca Orvel; seis funções instaladas com execução
+  negada a `anon`; preflight CORS de `sign-download` e `invite-client` devolve o novo endereço.
+
+Ainda por validar com uma sessão autenticada e ficheiros fictícios no serviço remoto:
+envio → revisão → rejeição → reenvio → aprovação; emitido interno → disponibilizar → download.
+Os testes automatizados referidos acima foram executados localmente. Esta publicação não
+executou reset/seed remoto nem enviou emails reais.
 
 ## Estrutura
 
@@ -320,19 +328,22 @@ scripts/remote/db-test.sh && scripts/remote/e2e.sh
 
 ### Pré-visualização da Vercel ligada ao Supabase
 
-As pré-visualizações dos ramos usam o projeto de desenvolvimento, com os dados fictícios:
+As pré-visualizações dos ramos usam o projeto `xdakbbvnpoojhyapznkf`, com dados fictícios e uma
+conta de teste real. Este projeto é identificado como `main / PRODUCTION` no painel Supabase:
 
 - `etapa-2-autenticacao`: `https://orvel-partners-portal-clientes-git-e-38d300-dropower-s-projects.vercel.app`
 - `etapa-3-painel-equipa`: `https://orvel-partners-portal-clientes-git-e-c4363f-dropower-s-projects.vercel.app`
-- `etapa-4-area-cliente`: `https://orvel-partners-portal-clientes-git-e-3e7ea0-dropower-s-projects.vercel.app` (desde 18/11/2026, é para esta que apontam os convites)
+- `etapa-4-area-cliente`: `https://orvel-partners-portal-clientes-git-e-3e7ea0-dropower-s-projects.vercel.app`
+- `codex/documentos-design`: `https://orvel-partners-portal-clientes-git-c-7a9f04-dropower-s-projects.vercel.app` (atual destino dos convites)
 
 Para isso:
 
 - Vercel, só no ambiente Preview: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (a chave pública
   `sb_publishable_…`) e `VITE_DEMO_MODE=false`. Depois de mudar variáveis, fazer Redeploy.
-- Supabase: os dois endereços estão nas Redirect URLs (`…vercel.app/**`), em `ALLOWED_ORIGINS` e
+- Supabase: os endereços estão nas Redirect URLs (etapas anteriores: `…vercel.app/**`;
+  novo ramo: apenas `/auth/confirmar`), em `ALLOWED_ORIGINS` e
   em `organizations.hostnames` da Orvel (é pelo hostname que o portal escolhe a organização);
-  `PUBLIC_SITE_URL` (o endereço dos links dos convites) é o da etapa 4. Um ramo novo tem um
+  `PUBLIC_SITE_URL` (o endereço dos links dos convites) é o de `codex/documentos-design`. Um ramo novo tem um
   endereço novo, que é preciso acrescentar da mesma forma.
 - Emails (desde 17/11/2026): saem pela Resend (`RESEND_API_KEY`, chave "portal-supabase-dev",
   só envio e só `orvelpartners.com`), com `EMAIL_LOG_DOMAINS=exemplo.test`: os emails para os
@@ -349,7 +360,7 @@ Para isso:
   tem de manter os endereços nas Redirect URLs:
 
 ```bash
-SITE_URL=https://orvel-partners-portal-clientes-git-e-3e7ea0-dropower-s-projects.vercel.app scripts/remote/e2e.sh
+SITE_URL=https://orvel-partners-portal-clientes-git-c-7a9f04-dropower-s-projects.vercel.app scripts/remote/e2e.sh
 ```
 
 ```bash
