@@ -17,10 +17,41 @@ base de dados), sem o construir já.
 | 2 | Autenticação (MFA equipa, link mágico, convite), consentimento, tema, i18n | ✅ (validada no Supabase de dev a 17/11/2026) |
 | 3 | Painel da equipa: processos, ficha, pessoas, proposta, pagamentos | ✅ no ramo `etapa-3-painel-equipa` (testada no Supabase de dev a 17/11/2026; falta a revisão no browser) |
 | 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | ✅ ramo `etapa-4-area-cliente` (também percurso por fases e prazos; testada no Supabase de dev a 18/11/2026: db-test 268/268, e2e 66/66) |
-| 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | — |
+| 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | Implementada em `codex/documentos-design`; validação local. Publicação e teste no Supabase de dev pendentes. |
 | 6 | Cronologia, prazos e calendário | — |
 | 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | — |
 | 8 | Teste do fluxo completo, deploy | — |
+
+## Etapa 5 e design (17/11/2026)
+
+Implementação no ramo `codex/documentos-design`:
+- Navegação lateral no computador, barra inferior no telemóvel, cartões e tipografia com mais
+  espaço, mantendo o logótipo, a Source Sans 3 e o azul-marinho da organização.
+- Cliente: pedidos agrupados por pessoa, filtros, PDF/JPG/PNG até 10 MB, reenvio após rejeição,
+  indicação do motivo, documentos emitidos e acesso por URL assinado.
+- Equipa: criar/remover pedidos vazios, aprovar ou pedir correção, ver versões anteriores,
+  carregar emitidos com validade e disponibilizá-los ao cliente ou mantê-los internos.
+- A migração `20261118110000_documents.sql` valida MFA, organização, processo aberto, pessoa,
+  tipo, caminho e metadados do objeto. A revisão exige a versão atual do ficheiro.
+- Se o upload terminar mas o registo falhar, o ecrã permite repetir só o registo enquanto permanece
+  aberto. Os registos de upload e emitidos são idempotentes. Não são apagados ficheiros existentes.
+- Os emails de eventos e a limpeza automática continuam reservados à etapa 7.
+
+Validação local concluída em 17/11/2026: **78 testes de frontend e 308 verificações SQL aprovados**,
+build de produção gerado e revisão visual no Chrome em computador e telemóvel (375 px).
+Comandos: `npm run web:test`, `npm run web:build` e `npm run db:test:memory`.
+O último usa PostgreSQL em memória com pgTAP, o esquema de teste local e todas as migrações;
+não contacta o Supabase nem envia emails. Não substitui o teste do Storage/Auth real.
+
+Para publicar a etapa 5:
+1. Aplicar a migração nova no **Supabase de desenvolvimento**, através do fluxo habitual
+   (`supabase db push` ou `scripts/remote/db-push.sh`).
+2. Publicar o ramo na Vercel como Preview, com as variáveis públicas do projeto de dev e
+   `VITE_DEMO_MODE=false`.
+3. Se o endereço Preview for novo, acrescentá-lo aos hostnames da organização, Redirect URLs
+   e `ALLOWED_ORIGINS`, como descrito abaixo.
+4. Validar com ficheiros fictícios: envio → revisão → rejeição → reenvio → aprovação,
+   emitido interno → disponibilizar → download, isolamento entre clientes e bloqueio sem MFA.
 
 ## Estrutura
 
@@ -45,13 +76,14 @@ docs/plano.md          Plano técnico aprovado
 |---|---|---|---|
 | Cliente | `/` | Início: o que falta da parte do cliente, percurso por fases, pagamento, próximos prazos e contacto | 4 |
 | Cliente | `/percurso`, `/prazos` | Percurso por fases (documento "Criar empresa no Dubai, passo a passo") e prazos | 4 |
-| Cliente | `/documentos` | Envio e validação de documentos | 5 (hoje: "em breve", com o email para envio) |
+| Cliente | `/documentos` | Pedidos por pessoa, filtros, upload/reenvio, estados e documentos emitidos | 5 |
 | Cliente | `/mais` → `/proposta`, `/pagamento`, `/dados`, `/contacto` | Proposta (PDF, plano, aceitação), pagamento (dados bancários libertados), os meus dados (contacto, pessoas, nomes da empresa), contacto | 4 |
 | Equipa | `/equipa/processos` | Processos com filtros por estado, pesquisa e alertas | 3 |
 | Equipa | `/equipa/processos/novo` (`?cliente=id` para um cliente existente) | Novo cliente ou novo processo, com pessoas e convite | 3 |
 | Equipa | `/equipa/processos/:id` | Ficha: Resumo · Pessoas e dados · Proposta · Pagamentos · Interno · Atividade | 3 |
 | Equipa | `/equipa/processos/:id/percurso` | Passos por fase: estado, datas e nota para o cliente | 4 |
-| Equipa | `/equipa/processos/:id/documentos`, `…/prazos` | Separadores da ficha | 5 e 6 (hoje: "em preparação") |
+| Equipa | `/equipa/processos/:id/documentos` | Pedidos, revisão, histórico de versões, emitidos e visibilidade para o cliente | 5 |
+| Equipa | `/equipa/processos/:id/prazos` | Prazos da ficha | 6 (em preparação) |
 | Equipa | `/equipa/clientes` | Clientes, convite e novo processo para um cliente existente | 3 |
 | Equipa | `/equipa/calendario`, `/equipa/definicoes` | Calendário de prazos, definições da organização | 6 e seguintes |
 
@@ -97,6 +129,9 @@ PGHOST=/var/tmp/pg PGPORT=54322 npm run db:test:local
 
 ## Portal (frontend)
 
+Usar **Node.js 24 ou superior** (as dependências de testes precisam de uma versão recente).
+
+
 ```bash
 npm --prefix web install
 ```
@@ -119,8 +154,9 @@ Para ver os ecrãs sem projeto Supabase (por exemplo, para rever o aspeto), com 
 guardados só no browser. Nenhum email é enviado. Uma faixa amarela no topo tem atalhos para entrar
 como cliente novo, cliente com acesso ou equipa (qualquer password; código MFA: quaisquer 6
 dígitos), abrir o "email" do link mágico ou do convite e ver outra organização.
-O painel da equipa da etapa 3 (processos, ficha, propostas, pagamentos) aparece vazio na
-demonstração e não grava alterações: para o experimentar, usar o Supabase de desenvolvimento.
+A demonstração inclui um processo fictício da Marta, com percurso, pagamentos e documentos
+em vários estados, disponível também na área da equipa. As alterações de negócio e os downloads
+continuam só no Supabase de desenvolvimento; na demonstração devolvem uma mensagem de só leitura.
 
 Num build, a demonstração só entra com a variável `VITE_DEMO_MODE=true` definida no momento do
 build. Na Vercel, essa variável fica **só no ambiente Preview** (nunca em Production). Desde

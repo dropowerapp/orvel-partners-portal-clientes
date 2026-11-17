@@ -1,7 +1,7 @@
 {
   "name": "orvel-portal",
   "private": true,
-  "description": "Portal de clientes (white label): \u00e1rea de cliente e painel da equipa",
+  "description": "Portal de clientes (white label): área de cliente e painel da equipa",
   "scripts": {
     "db:start": "supabase start",
     "db:reset": "supabase db reset",
@@ -13,9 +13,15 @@
     "web:build": "npm --prefix web run build",
     "web:test": "npm --prefix web test",
     "functions:test": "cd supabase/functions && deno task test",
-    "functions:serve": "supabase functions serve --env-file supabase/functions/.env"
+    "functions:serve": "supabase functions serve --env-file supabase/functions/.env",
+    "db:test:memory": "node scripts/local/db-test-pglite.mjs"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.16",
+    "@electric-sql/pglite-pgtap": "^0.0.17",
     "supabase": "^2.122.0"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }

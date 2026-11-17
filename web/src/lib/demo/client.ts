@@ -6,6 +6,8 @@
 // parte (supabase/tests). Aqui só se imitam os resultados, para se poderem ver os ecrãs.
 import { DEMO_NOTICE, DEMO_ORGS, type DemoClientRow, type DemoUser, INITIAL_CONSENTS, initialClients, initialUsers } from "./data";
 
+import { portalRows } from "./portalData";
+
 const STORAGE_KEY = "portal.demo";
 
 interface DemoLink {
@@ -166,15 +168,15 @@ function demoQrCode(seed: string): string {
 type Row = { [column: string]: unknown };
 
 function visibleRows(table: string, state: DemoState): Row[] {
-  const asRows = (rows: DemoClientRow[]): Row[] => rows.map((r) => ({ ...r }));
   const user = state.users.find((u) => u.id === state.userId);
-  if (!user || table !== "clients") return [];
-  if (user.role === "admin") {
-    // Equipa: só com MFA, e só a sua organização (como a RLS).
-    return state.aal === "aal2" ? asRows(state.clients.filter((c) => c.organization_id === user.orgId)) : [];
-  }
-  // Cliente: só os seus dados, e só depois de aceitar o aviso de privacidade.
-  return state.consents.includes(user.id) ? asRows(state.clients.filter((c) => c.id === user.clientId)) : [];
+  if (!user) return [];
+  if (user.role === "admin" && state.aal !== "aal2") return [];
+  if (user.role === "client" && !state.consents.includes(user.id)) return [];
+  const clients = state.clients.filter((c) => c.organization_id === user.orgId && (user.role === "admin" || c.id === user.clientId));
+  if (table === "clients") return clients.map((c) => ({ ...c }));
+  const candidates = clients.filter((c) => c.id === "demo-client-marta");
+  const rows = candidates.flatMap((c) => portalRows(table, c));
+  return rows.filter((row, index) => rows.findIndex((other) => other.id === row.id) === index);
 }
 
 /** Divide uma lista de colunas do PostgREST pelas vírgulas de topo (ignora as dos recursos embutidos). */
@@ -343,6 +345,12 @@ async function rpc(name: string, args: Record<string, unknown> = {}) {
       });
       return { data: null, error: null };
     }
+    case "set_document_visibility":
+    case "create_document_request":
+    case "remove_document_request":
+    case "review_document_request":
+    case "register_upload":
+    case "register_issued_document":
     case "create_client_process":
     case "next_proposal_reference":
       return { data: null, error: { code: "P0001", message: "demo_read_only" } };
@@ -359,6 +367,7 @@ function functionError(code: string, status: number) {
 
 async function invoke(name: string, options: { body?: Record<string, unknown> } = {}) {
   await wait(500);
+  if (name === "sign-download") return { data: null, error: functionError("demo_read_only", 400) };
   if (name !== "invite-client") return { data: null, error: functionError("not_found", 404) };
   const state = load();
   const user = state.users.find((u) => u.id === state.userId);

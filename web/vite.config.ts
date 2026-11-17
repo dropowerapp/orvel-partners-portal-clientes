@@ -13,7 +13,7 @@ const IMAGE_TYPES: Record<string, string> = {
   jpeg: "image/jpeg",
 };
 
-const BRANDING_DIR = resolve(__dirname, "../branding");
+const BRANDING_DIR = resolve(import.meta.dirname, "../branding");
 
 /**
  * Só na demonstração: ficheiros da marca (../branding) em /demo-branding. No servidor de

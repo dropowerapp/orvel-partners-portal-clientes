@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { Alert, Badge, Card, PageTitle, Spinner } from "../../components/ui";
+import { Icon } from "../../components/Icon";
 import { useAuth } from "../../lib/AuthProvider";
 import { daysUntil, localized, pendingForClient, phaseProgress, upcomingDeadlines } from "../../lib/client";
 import {
@@ -55,6 +56,7 @@ export default function ClientHome() {
   const title = firstName ? t("client_home.title", { name: firstName }) : t("client_home.title_anonymous");
 
   if (processesQuery.isPending) return <Spinner />;
+  if (processesQuery.isError) return <Alert>{t("client_home.load_error")}</Alert>;
   if (!current) {
     return (
       <PageTitle eyebrow={t("auth_layout.eyebrow_client")} title={title}>
@@ -81,6 +83,20 @@ export default function ClientHome() {
         {[current.plan_name, t(`client_status.${current.status}`)].filter(Boolean).join(" · ")}
       </PageTitle>
 
+      <section className="mb-8 flex flex-col gap-7 rounded-2xl bg-primary px-6 py-7 text-white sm:px-8 xl:flex-row xl:items-center xl:justify-between">
+        <div className="max-w-xl">
+          <p className="mb-3 text-xs tracking-[0.18em] text-silver uppercase">{t("client_home.overview")}</p>
+          <h2 className="text-2xl font-light sm:text-3xl">{t(current.completed_at ? "client_home.project_complete" : "client_home.project_heading")}</h2>
+          <p className="mt-3 text-sm leading-relaxed text-silver">{t("client_home.project_intro")}</p>
+          <Link to={CLIENT_PATHS.timeline} className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white hover:underline">{t("client_home.follow_progress")}<Icon name="arrow" className="size-4" /></Link>
+        </div>
+        <div className="min-w-44 border-t border-white/15 pt-5 xl:border-t-0 xl:border-l xl:pl-7 xl:pt-0">
+          <p className="text-xs text-silver">{t("client_home.progress")}</p>
+          <p className="my-2 text-4xl font-light tabular-nums">{steps.isPending || steps.isError ? "—" : progress.percent + "%"}</p>
+          <div className="h-1.5 overflow-hidden rounded-full bg-white/15"><div className="h-full rounded-full bg-silver" style={{ width: (steps.isPending || steps.isError ? 0 : progress.percent) + "%" }} /></div>
+        </div>
+      </section>
+      {(proposals.isError || payments.isError || requests.isError || steps.isError || deadlines.isError) && <div className="mb-6"><Alert>{t("client_home.load_error")}</Alert></div>}
       <div className="grid gap-6 lg:grid-cols-[3fr_2fr]">
         <div className="flex flex-col gap-6">
           <Card title={t("client_home.pending_title")}>
@@ -94,7 +110,7 @@ export default function ClientHome() {
                   <li key={item.kind}>
                     <Link
                       to={PENDING_LINKS[item.kind]}
-                      className="flex items-center justify-between gap-3 rounded-md border border-line px-4 py-3 hover:bg-background"
+                      className="flex items-center justify-between gap-3 rounded-xl border border-line px-4 py-4 transition-colors hover:bg-background"
                     >
                       <span className="text-sm font-semibold text-primary">{t(`client_home.pending.${item.kind}`, { count: item.count ?? 0 })}</span>
                       <span aria-hidden="true" className="text-action">→</span>

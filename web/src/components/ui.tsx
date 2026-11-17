@@ -33,7 +33,7 @@ export function Button({ variant = "primary", busy = false, className = "", disa
       {...props}
       disabled={disabled || busy}
       aria-busy={busy || undefined}
-      className={`inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-base font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action ${styles} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action ${styles} ${className}`}
     >
       {children}
     </button>
@@ -96,10 +96,10 @@ export function Eyebrow({ children }: { children: ReactNode }) {
 /** Título das páginas das áreas de cliente e equipa. */
 export function PageTitle({ eyebrow, title, children }: { eyebrow: string; title: ReactNode; children?: ReactNode }) {
   return (
-    <div className="mb-8">
+    <div className="mb-9">
       <Eyebrow>{eyebrow}</Eyebrow>
-      <h1 className="text-3xl leading-tight font-light text-primary sm:text-4xl">{title}</h1>
-      <span className="my-5 block h-px w-10 bg-silver" />
+      <h1 className="text-3xl leading-tight font-light tracking-tight text-primary sm:text-[2.75rem]">{title}</h1>
+      <span className="my-4 block h-px w-10 bg-silver" />
       {children && <div className="max-w-prose text-base leading-relaxed text-muted">{children}</div>}
     </div>
   );
@@ -228,14 +228,14 @@ export function Badge({ tone = "neutral", children }: { tone?: BadgeTone; childr
 /** Bloco branco com título, para as secções da ficha do processo. */
 export function Card({ title, actions, children }: { title?: ReactNode; actions?: ReactNode; children: ReactNode }) {
   return (
-    <section className="rounded-lg border border-line bg-white">
+    <section className="portal-card">
       {(title || actions) && (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
+        <div className="portal-card-header">
           {title && <h2 className="text-base font-semibold text-primary">{title}</h2>}
           {actions}
         </div>
       )}
-      <div className="px-5 py-4">{children}</div>
+      <div className="portal-card-content">{children}</div>
     </section>
   );
 }

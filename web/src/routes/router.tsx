@@ -4,12 +4,13 @@ import { ComingSoonPanel } from "../components/ComingSoon";
 import { RequireArea } from "../components/Guards";
 import { TEAM_PATHS } from "../lib/teamData";
 import Confirm from "./auth/Confirm";
+import ClientDocuments from "./client/ClientDocuments";
 import ClientHome from "./client/ClientHome";
 import ClientLayout, { CLIENT_PATHS } from "./client/ClientLayout";
 import ClientLogin from "./client/ClientLogin";
 import ClientDeadlines from "./client/ClientDeadlines";
 import ClientDetails from "./client/ClientDetails";
-import { ClientComingSoon, ClientContact, ClientMore } from "./client/ClientPages";
+import { ClientContact, ClientMore } from "./client/ClientPages";
 import ClientPayment from "./client/ClientPayment";
 import ClientProposal from "./client/ClientProposal";
 import ClientTimeline from "./client/ClientTimeline";
@@ -21,6 +22,7 @@ import ForgotPassword from "./team/ForgotPassword";
 import Mfa from "./team/Mfa";
 import NewPassword from "./team/NewPassword";
 import NewProcess from "./team/NewProcess";
+import ProcessDocuments from "./team/process/ProcessDocuments";
 import ProcessActivity from "./team/process/ProcessActivity";
 import ProcessInternal from "./team/process/ProcessInternal";
 import ProcessLayout from "./team/process/ProcessLayout";
@@ -34,7 +36,7 @@ import TeamLayout, { TeamComingSoon } from "./team/TeamLayout";
 import TeamLogin from "./team/TeamLogin";
 
 /** Separadores da ficha que chegam nas etapas seguintes (documentos, prazos). */
-function ProcessTabComingSoon({ tab }: { tab: "documents" | "deadlines" }) {
+function ProcessTabComingSoon({ tab }: { tab: "deadlines" }) {
   const { t } = useTranslation();
   return <ComingSoonPanel body={t(`process.coming_soon.${tab}`)} />;
 }
@@ -58,7 +60,7 @@ export const routes: RouteObject[] = [
         element: <ClientLayout />,
         children: [
           { path: CLIENT_PATHS.home, element: <ClientHome /> },
-          { path: CLIENT_PATHS.documents, element: <ClientComingSoon section="documents" /> },
+          { path: CLIENT_PATHS.documents, element: <ClientDocuments /> },
           { path: CLIENT_PATHS.timeline, element: <ClientTimeline /> },
           { path: CLIENT_PATHS.deadlines, element: <ClientDeadlines /> },
           { path: CLIENT_PATHS.more, element: <ClientMore /> },
@@ -90,7 +92,7 @@ export const routes: RouteObject[] = [
               { path: "pessoas", element: <ProcessPeople /> },
               { path: "proposta", element: <ProcessProposals /> },
               { path: "pagamentos", element: <ProcessPayments /> },
-              { path: "documentos", element: <ProcessTabComingSoon tab="documents" /> },
+              { path: "documentos", element: <ProcessDocuments /> },
               { path: "percurso", element: <ProcessTimeline /> },
               { path: "prazos", element: <ProcessTabComingSoon tab="deadlines" /> },
               { path: "interno", element: <ProcessInternal /> },

@@ -83,7 +83,7 @@ select throws_ok($$ select public.register_upload(tests.request_id('person_a_spo
     tests.upload_path('org_x', 'proc_a', 'person_a_spouse', 'photo', 'nao-existe.jpg'), 'x.jpg') $$,
   'P0001', 'upload_not_found', 'recusa registo sem ficheiro no Storage');
 select throws_ok($$ select public.register_upload(tests.request_id('person_a_spouse', 'passport'),
-    tests.upload_path('org_x', 'proc_a', 'person_a_spouse', 'passport', 'p.pdf'), 'outra.pdf') $$,
+    tests.upload_path('org_x', 'proc_a', 'person_a_spouse', 'passport', 'outra.pdf'), 'outra.pdf') $$,
   'P0001', 'request_not_open', 'pedido já enviado não aceita novo registo até ser rejeitado');
 
 -- Aceitação da proposta

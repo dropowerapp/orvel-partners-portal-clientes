@@ -1,24 +1,9 @@
-// Páginas da área de cliente que ainda não têm conteúdo (etapas 4 a 6), o menu "Mais" e o contacto.
+// Menu "Mais" e contacto da área de cliente.
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
-import { ComingSoonPage } from "../../components/ComingSoon";
 import { PageTitle } from "../../components/ui";
 import { useOrg } from "../../lib/OrgProvider";
 import { CLIENT_PATHS } from "./ClientLayout";
-
-type Section = "documents";
-
-export function ClientComingSoon({ section }: { section: Section }) {
-  const { t } = useTranslation();
-  const org = useOrg();
-  return (
-    <ComingSoonPage
-      eyebrow={t("auth_layout.eyebrow_client")}
-      title={t(`client_pages.${section}.title`)}
-      body={t(`client_pages.${section}.body`, { email: org.contact_email ?? "" })}
-    />
-  );
-}
 
 export function ClientMore() {
   const { t } = useTranslation();

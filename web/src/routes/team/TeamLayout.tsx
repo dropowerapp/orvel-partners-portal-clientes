@@ -13,10 +13,10 @@ export default function TeamLayout() {
       afterSignOut={ROUTES.teamLogin}
       wide
       nav={[
-        { to: TEAM_PATHS.processes, label: t("team_nav.processes") },
-        { to: TEAM_PATHS.clients, label: t("team_nav.clients") },
-        { to: TEAM_PATHS.calendar, label: t("team_nav.calendar") },
-        { to: TEAM_PATHS.settings, label: t("team_nav.settings") },
+        { to: TEAM_PATHS.processes, icon: "briefcase", label: t("team_nav.processes") },
+        { to: TEAM_PATHS.clients, icon: "users", label: t("team_nav.clients") },
+        { to: TEAM_PATHS.calendar, icon: "calendar", label: t("team_nav.calendar") },
+        { to: TEAM_PATHS.settings, icon: "settings", label: t("team_nav.settings") },
       ]}
     >
       <Outlet />

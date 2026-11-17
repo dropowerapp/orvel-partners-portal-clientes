@@ -28,3 +28,47 @@ html,
 body {
   @apply bg-background font-sans text-primary antialiased;
 }
+
+/* Portal: identidade Orvel, superfícies claras e navegação persistente. */
+:root { font-synthesis: none; }
+html { scroll-behavior: smooth; }
+body { margin: 0; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button:not(:disabled), select { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--org-action); outline-offset: 4px; }
+.portal-shell { min-height: 100dvh; background: var(--org-background); }
+.skip-link { position: fixed; left: 1rem; top: -5rem; z-index: 100; background: white; padding: .75rem; }
+.skip-link:focus { top: 1rem; }
+.portal-sidebar { display: none; }
+.portal-body { min-width: 0; display: flex; min-height: 100dvh; flex-direction: column; }
+.portal-topbar { height: 76px; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid color-mix(in srgb, var(--org-line) 70%, transparent); background: #fff; }
+.portal-main { width: 100%; max-width: 1180px; margin: 0 auto; padding: 2rem 1.25rem 3rem; flex: 1; }
+.portal-main-wide { max-width: 1400px; }
+.portal-nav-link { display: flex; align-items: center; gap: .8rem; padding: .85rem 1rem; border-radius: .65rem; color: var(--org-wordmark); font-size: .95rem; white-space: nowrap; transition: background .18s, color .18s; }
+.portal-nav-link:hover { background: var(--org-background); color: var(--org-primary); }
+.portal-nav-link.is-active { background: var(--org-primary); color: white; }
+.portal-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; margin: 0 1.25rem; padding: 1.4rem 0; border-top: 1px solid var(--org-line); color: var(--org-wordmark); font-size: .75rem; }
+.portal-bottom-nav { position: fixed; inset: auto 0 0; z-index: 30; background: #fff; border-top: 1px solid var(--org-line); padding-bottom: env(safe-area-inset-bottom); }
+.portal-mobile-link { display: flex; min-height: 70px; flex-direction: column; align-items: center; justify-content: center; gap: .4rem; color: var(--org-wordmark); font-size: .69rem; }
+.portal-mobile-link.is-active { color: var(--org-action); background: var(--org-background); box-shadow: inset 0 2px var(--org-action); font-weight: 600; }
+.has-bottom-nav { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+.portal-card { border: 1px solid color-mix(in srgb, var(--org-line) 75%, transparent); border-radius: 1rem; background: #fff; box-shadow: 0 3px 15px rgb(11 22 40 / 2%); }
+.portal-card-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; padding: 1.25rem 1.5rem; border-bottom: 1px solid color-mix(in srgb, var(--org-line) 60%, transparent); }
+.portal-card-content { padding: 1.5rem; }
+.document-row + .document-row { border-top: 1px solid var(--org-line); }
+.upload-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem; padding: 1.5rem; border: 1px dashed var(--org-silver); border-radius: .75rem; background: var(--org-background); text-align: center; }
+.upload-zone:focus-within, .upload-zone.is-dragging { outline: 2px solid var(--org-action); outline-offset: 2px; background: #fff; }
+@media (min-width: 768px) { .portal-main { padding: 2.75rem 2.5rem 3rem; } .portal-topbar { padding: 0 2.5rem; } .portal-footer { margin: 0 2.5rem; } }
+@media (min-width: 1024px) {
+  .portal-shell { display: grid; grid-template-columns: 252px minmax(0, 1fr); }
+  .portal-sidebar { display: flex; position: sticky; top: 0; height: 100dvh; flex-direction: column; border-right: 1px solid var(--org-line); background: white; padding: 2.25rem 1.25rem 1.25rem; }
+  .portal-brand { min-height: 58px; padding-left: 1rem; display: flex; align-items: center; margin-bottom: 3.5rem; }
+  .portal-nav-label { margin: 0 1rem 1rem; color: var(--org-wordmark); font-size: .65rem; letter-spacing: .16em; text-transform: uppercase; }
+  .portal-sidebar-bottom { margin-top: auto; padding-top: 2rem; }
+  .portal-help { display: flex; align-items: center; gap: .7rem; margin-bottom: 1rem; padding: 1rem .75rem; border-bottom: 1px solid var(--org-line); }
+  .portal-help strong { display: block; font-size: .85rem; font-weight: 600; }
+  .portal-help span span { display: block; color: var(--org-wordmark); font-size: .75rem; }
+  .has-bottom-nav { padding-bottom: 0; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation-duration: .01ms !important; } }

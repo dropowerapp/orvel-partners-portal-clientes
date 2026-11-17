@@ -80,7 +80,12 @@
     "payment_outstanding": "Por pagar. Já pagou {{paid}} de {{total}}.",
     "deadlines_title": "Próximos prazos",
     "contact_title": "Fale connosco",
-    "contact_body": "Um só contacto do início ao fim, em português, com a equipa {{org}}."
+    "contact_body": "Um só contacto do início ao fim, em português, com a equipa {{org}}.",
+    "overview": "O seu projeto",
+    "project_heading": "Um novo capítulo começa aqui.",
+    "project_complete": "O seu processo está concluído.",
+    "project_intro": "Acompanhe cada etapa da sua empresa no Dubai. A nossa equipa está consigo ao longo do caminho.",
+    "follow_progress": "Ver o meu percurso"
   },
   "team_login": {
     "title": "Entrar como equipa",
@@ -337,7 +342,6 @@
     },
     "closed_notice": "Este processo está fechado (concluído ou cancelado). Os dados ficam só para consulta.",
     "coming_soon": {
-      "documents": "Pedidos, documentos recebidos e emitidos, validação e downloads chegam na etapa 5.",
       "timeline": "A cronologia do processo (passos, datas e notas para o cliente) chega na etapa 6.",
       "deadlines": "Os prazos e renovações chegam na etapa 6."
     }
@@ -348,7 +352,7 @@
       "new": "preparar a proposta e enviá-la ao cliente (separador Proposta).",
       "proposal_sent": "aguardar que o cliente aceite a proposta no portal.",
       "awaiting_payment": "registar os pagamentos e marcá-los quando forem recebidos (separador Pagamentos).",
-      "awaiting_documents": "receber e validar os documentos pedidos (chega na etapa 5).",
+      "awaiting_documents": "receber e validar os documentos pedidos (separador Documentos).",
       "in_progress": "acompanhar o processo até à conclusão.",
       "completed": "nenhum. O processo está concluído.",
       "cancelled": "nenhum. O processo foi cancelado."
@@ -547,7 +551,10 @@
       "document_request_rejected": "Documento rejeitado: {{reason}}",
       "document_uploaded": "Documento carregado",
       "document_issued": "Documento emitido carregado",
-      "document_downloaded": "Ficheiro sensível descarregado"
+      "document_downloaded": "Ficheiro sensível descarregado",
+      "document_request_created": "Pedido de documento criado",
+      "document_request_removed": "Pedido de documento removido",
+      "document_visibility_changed": "Visibilidade do documento alterada"
     }
   },
   "client_status": {
@@ -736,7 +743,21 @@
     "person_has_documents": "Esta pessoa já tem documentos enviados e não pode ser removida. Fale connosco.",
     "company_names_count": "Indique entre um e três nomes.",
     "invalid_request": "Pedido inválido. Atualize a página e tente novamente.",
-    "server_error": "Ocorreu um erro no servidor. Tente novamente daqui a pouco."
+    "server_error": "Ocorreu um erro no servidor. Tente novamente daqui a pouco.",
+    "document_file_type": "Escolha um ficheiro PDF, JPG ou PNG.",
+    "document_file_size": "O ficheiro não pode ultrapassar 10 MB.",
+    "document_file_empty": "Este ficheiro está vazio. Escolha outro.",
+    "document_file_required": "Escolha o ficheiro que pretende carregar.",
+    "document_fields_required": "Selecione o tipo de documento e a pessoa.",
+    "document_dates_invalid": "A validade não pode ser anterior à data de emissão.",
+    "rejection_reason_required": "Indique o que o cliente precisa de corrigir.",
+    "document_review_conflict": "Este pedido foi alterado. Atualize a página antes de o rever.",
+    "document_request_has_files": "Só é possível remover pedidos pendentes sem ficheiros.",
+    "document_type_invalid": "Este tipo de documento não está disponível.",
+    "document_metadata_invalid": "Não foi possível validar o ficheiro enviado.",
+    "document_path_invalid": "O ficheiro não pertence a este processo.",
+    "upload_not_found": "O ficheiro não foi encontrado. Volte a tentar.",
+    "request_not_open": "Este pedido já não aceita novos envios."
   },
   "demo": {
     "title": "Modo de demonstração",
@@ -751,5 +772,93 @@
     "reset": "Recomeçar a demonstração",
     "hide": "Esconder atalhos",
     "show": "Mostrar atalhos"
+  },
+  "shell": {
+    "help_title": "Estamos por perto",
+    "help_body": "Fale com a nossa equipa",
+    "private_area": "Área privada",
+    "footer": "O seu próximo passo, com confiança."
+  },
+  "documents": {
+    "title": "Os seus documentos",
+    "subtitle": "Tudo o que precisa de enviar e receber, num só lugar.",
+    "status": {
+      "pending": "Por enviar",
+      "submitted": "Em análise",
+      "approved": "Aprovado",
+      "rejected": "Precisa de correção"
+    },
+    "stats": {
+      "pending": "Por enviar",
+      "submitted": "Em análise",
+      "approved": "Aprovados",
+      "rejected": "A corrigir"
+    },
+    "filters": {
+      "all": "Todos os pedidos",
+      "action": "Precisa da sua atenção",
+      "submitted": "Em análise",
+      "approved": "Aprovados"
+    },
+    "filter_label": "Filtrar pedidos de documentos",
+    "sections": "Secções de documentos",
+    "tab_requests": "Pedidos e recebidos",
+    "tab_issued": "Documentos emitidos",
+    "choose_file": "Escolher ficheiro ou arrastar para aqui",
+    "replace_file": "Enviar uma nova versão",
+    "file_hint": "PDF, JPG ou PNG · Até 10 MB por ficheiro",
+    "uploading": "A enviar o ficheiro…",
+    "download": "Abrir ficheiro",
+    "purged": "Ficheiro eliminado",
+    "privacy_note": "Os ficheiros ficam na sua área privada e só podem ser acedidos por utilizadores autorizados.",
+    "issued_title": "Documentos emitidos",
+    "issued_empty": "Ainda não há documentos emitidos",
+    "issued_empty_body": "Os documentos preparados pela equipa ficam disponíveis aqui.",
+    "requests_empty": "Sem pedidos para mostrar",
+    "requests_empty_body": "A equipa está a preparar os pedidos necessários ao seu processo.",
+    "filter_empty_body": "Não existem pedidos neste estado.",
+    "team_empty_body": "Adicione um pedido para indicar ao cliente o que deve enviar.",
+    "no_process": "O seu processo está a ser preparado",
+    "person": "Pessoa",
+    "type": "Tipo de documento",
+    "select_person": "Selecionar pessoa",
+    "select_type": "Selecionar documento",
+    "company_document": "Documento da empresa",
+    "request_count_one": "{{count}} pedido",
+    "request_count_other": "{{count}} pedidos",
+    "rejection_title": "O que precisa de corrigir",
+    "under_review": "Recebido. A equipa vai analisar o ficheiro.",
+    "load_error": "Não foi possível carregar os documentos. Tente novamente.",
+    "retry": "Tentar novamente",
+    "registration_pending": "O ficheiro já foi enviado, mas falta confirmar o registo. Tente concluir sem voltar a enviar o ficheiro.",
+    "retry_registration": "Concluir registo",
+    "expires": "Validade: {{date}}",
+    "visible": "Visível ao cliente",
+    "internal": "Só equipa",
+    "new_request": "Adicionar pedido",
+    "new_issued": "Carregar documento emitido",
+    "team_requests": "Pedidos de documentos",
+    "approve": "Aprovar",
+    "request_correction": "Pedir correção",
+    "rejection_label": "Motivo da correção",
+    "rejection_hint": "Este texto será visível ao cliente. Explique o que precisa de corrigir.",
+    "confirm_rejection": "Confirmar pedido de correção",
+    "remove_request": "Remover pedido",
+    "remove_question": "Remover este pedido ainda sem ficheiros?",
+    "previous_versions_one": "{{count}} versão anterior",
+    "previous_versions_other": "{{count}} versões anteriores",
+    "custom_title": "Título personalizado (opcional)",
+    "instructions": "Instruções para o cliente (opcional)",
+    "issued_on": "Data de emissão (opcional)",
+    "expires_on": "Data de validade (opcional)",
+    "deadline_hint": "A validade cria automaticamente um prazo no processo.",
+    "visible_label": "Disponibilizar ao cliente",
+    "visible_hint": "Desative para guardar apenas na área da equipa.",
+    "create_request": "Criar pedido",
+    "save_issued": "Guardar documento",
+    "request_count": "{{count}} pedidos",
+    "previous_versions": "{{count}} versões anteriores",
+    "make_visible": "Disponibilizar ao cliente",
+    "make_internal": "Guardar só para a equipa"
   }
 }

@@ -25,11 +25,11 @@ export default function ClientLayout() {
       afterSignOut={ROUTES.clientLogin}
       bottomNav
       nav={[
-        { to: CLIENT_PATHS.home, label: t("client_nav.home"), end: true },
-        { to: CLIENT_PATHS.documents, label: t("client_nav.documents") },
-        { to: CLIENT_PATHS.timeline, label: t("client_nav.timeline") },
-        { to: CLIENT_PATHS.deadlines, label: t("client_nav.deadlines") },
-        { to: CLIENT_PATHS.more, label: t("client_nav.more") },
+        { to: CLIENT_PATHS.home, icon: "home", label: t("client_nav.home"), end: true },
+        { to: CLIENT_PATHS.documents, icon: "files", label: t("client_nav.documents") },
+        { to: CLIENT_PATHS.timeline, icon: "route", label: t("client_nav.timeline") },
+        { to: CLIENT_PATHS.deadlines, icon: "calendar", label: t("client_nav.deadlines") },
+        { to: CLIENT_PATHS.more, activePaths: [CLIENT_PATHS.proposal, CLIENT_PATHS.payment, CLIENT_PATHS.details, CLIENT_PATHS.contact], icon: "more", label: t("client_nav.more") },
       ]}
     >
       <ProcessPicker />
