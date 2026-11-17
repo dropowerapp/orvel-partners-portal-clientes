@@ -16,7 +16,7 @@ base de dados), sem o construir já.
 | 1 | Esquema, RLS, funções do cliente, Storage, dados fictícios, testes de RLS | ✅ |
 | 2 | Autenticação (MFA equipa, link mágico, convite), consentimento, tema, i18n | ✅ (validada no Supabase de dev a 17/11/2026) |
 | 3 | Painel da equipa: processos, ficha, pessoas, proposta, pagamentos | ✅ no ramo `etapa-3-painel-equipa` (testada no Supabase de dev a 17/11/2026; falta a revisão no browser) |
-| 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | 🚧 ramo `etapa-4-area-cliente` (também percurso por fases e prazos do cliente) |
+| 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | ✅ ramo `etapa-4-area-cliente` (também percurso por fases e prazos; testada no Supabase de dev a 18/11/2026: db-test 268/268, e2e 66/66) |
 | 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | — |
 | 6 | Cronologia, prazos e calendário | — |
 | 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | — |
@@ -305,10 +305,10 @@ Para isso:
 - Conta de cliente de teste com email real: `hello@orvelpartners.com` ("Teste Orvel", sem
   processos), criada a pedido para experimentar o link mágico. Por causa dela, o `db-seed.sh`
   recusa voltar a correr (há um utilizador fora de `@exemplo.test`).
-- O Supabase limita os emails de autenticação por hora: depois de várias corridas do e2e (ou
-  vários links pedidos), o pedido do link do Rui pode falhar com "email rate limit exceeded" e as
-  verificações do cliente falham em cadeia. Esperar uma hora ou subir o limite em
-  Authentication → Rate Limits.
+- O Supabase limita os emails de autenticação por hora (era 2). No projeto de desenvolvimento o
+  limite está em 30 por hora desde 18/11/2026 (`rate_limit_email_sent`); se o pedido do link do Rui
+  falhar com "email rate limit exceeded", as verificações do cliente falham em cadeia: esperar
+  uma hora ou subir o limite em Authentication → Rate Limits.
 - Com esta configuração, o e2e corre com o endereço de `PUBLIC_SITE_URL`, e o `auth-config.sh`
   tem de manter os endereços nas Redirect URLs:
 
