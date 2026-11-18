@@ -341,6 +341,16 @@ async function rpc(name: string, args: Record<string, unknown> = {}) {
       });
       return { data: null, error: null };
     }
+    case "get_client_processes": {
+      if (!user || user.role !== "client" || user.orgId !== args.p_org || !state.consents.includes(user.id)) {
+        return { data: [], error: null };
+      }
+      // O cenário da Marta já tem proposta aceite; o novo cliente ainda não tem processo.
+      return {
+        data: visibleRows("processes", state).map((p) => ({ ...p, proposal_accepted: true })),
+        error: null,
+      };
+    }
     case "set_document_visibility":
     case "create_document_request":
     case "remove_document_request":

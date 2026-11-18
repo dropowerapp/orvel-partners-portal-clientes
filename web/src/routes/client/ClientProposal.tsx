@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 import { Alert, Badge, Button, Card, CheckboxField, DataList, PageTitle, Spinner } from "../../components/ui";
 import type { ClientProposal as Proposal } from "../../lib/client";
 import { useClientProcesses, useClientProposals } from "../../lib/clientData";
@@ -11,6 +12,7 @@ import { errorKey } from "../../lib/errors";
 import { supabase } from "../../lib/supabase";
 import { todayIn } from "../../lib/team";
 import { useFormat } from "../../lib/teamData";
+import { CLIENT_PATHS } from "./ClientLayout";
 
 export default function ClientProposal() {
   const { t } = useTranslation();
@@ -30,7 +32,7 @@ export default function ClientProposal() {
       {proposals.isError && <Alert>{t("client_proposal.load_error")}</Alert>}
       <div className="flex flex-col gap-6">
         {accepted && <AcceptedProposal proposal={accepted} />}
-        {open && <OpenProposal proposal={open} />}
+        {open && <OpenProposal key={open.id} proposal={open} closed={!!current?.completed_at || !!current?.cancelled_at} />}
         {history.length > 0 && (
           <Card title={t("client_proposal.history")}>
             <ul className="divide-y divide-line">
@@ -76,10 +78,11 @@ function PdfButton({ proposal }: { proposal: Proposal }) {
   );
 }
 
-function OpenProposal({ proposal }: { proposal: Proposal }) {
+function OpenProposal({ proposal, closed }: { proposal: Proposal; closed: boolean }) {
   const { t } = useTranslation();
   const format = useFormat();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [plan, setPlan] = useState<string | null>(proposal.plans.length === 1 ? proposal.plans[0].name : null);
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -87,7 +90,7 @@ function OpenProposal({ proposal }: { proposal: Proposal }) {
 
   const text = useQuery({
     queryKey: ["acceptance-text", proposal.id, plan],
-    enabled: !!plan && !expired,
+    enabled: !!plan && !expired && !closed,
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_acceptance_text", { p_proposal_id: proposal.id, p_plan_name: plan });
       if (error) throw error;
@@ -104,9 +107,12 @@ function OpenProposal({ proposal }: { proposal: Proposal }) {
       });
       if (error) throw error;
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["client"] });
-      void queryClient.invalidateQueries({ queryKey: ["client-processes"] });
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["client"] }),
+        queryClient.invalidateQueries({ queryKey: ["client-processes"] }),
+      ]);
+      navigate(CLIENT_PATHS.home, { replace: true });
     },
     onError: (e) => setError(t(errorKey(e))),
   });
@@ -121,7 +127,9 @@ function OpenProposal({ proposal }: { proposal: Proposal }) {
           ]}
         />
         <PdfButton proposal={proposal} />
-        {expired ? (
+        {closed ? (
+          <Alert tone="info">{t("client_proposal.closed")}</Alert>
+        ) : expired ? (
           <Alert tone="info">{t("client_proposal.expired")}</Alert>
         ) : (
           <>

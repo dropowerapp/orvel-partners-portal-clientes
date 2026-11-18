@@ -2,6 +2,11 @@ begin;
 select no_plan();
 select tests.seed_fixtures();
 
+-- Este ensaio cobre o acompanhamento de um processo já aceite pelo cliente.
+select tests.login('client_a');
+select public.accept_proposal(tests.id('proposal_a'), 'Completo', 'fixture de teste');
+select tests.logout();
+
 create temporary table doc_case as select
  tests.request_id('person_a_spouse', 'passport') as request_id,
  tests.upload_path('org_x', 'proc_a', 'person_a_spouse', 'passport', 'first.pdf') as first_path,

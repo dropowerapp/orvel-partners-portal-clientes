@@ -1,6 +1,7 @@
 begin;
 select no_plan();
 select tests.seed_fixtures();
+
 -- Este alvo não tem objeto físico: simula a ausência após sucesso da Storage API.
 update public.documents set storage_path = organization_id || '/' || process_id || '/uploads/teste-retencao/passaporte.pdf'
   where id = tests.id('doc_a_passport');
@@ -16,6 +17,10 @@ select throws_ok($$ update public.documents set storage_path = tests.id('org_y')
   'P0001', 'document_path_invalid', 'documento não aponta para outra organização');
 select throws_ok($$ update public.proposals set pdf_path = tests.id('org_y') || '/alheio/proposta.pdf' where id = tests.id('proposal_a') $$,
   'P0001', 'document_path_invalid', 'proposta não aponta para outra organização');
+select tests.logout();
+-- Este ensaio cobre o acompanhamento de um processo já aceite pelo cliente.
+select tests.login('client_a');
+select public.accept_proposal(tests.id('proposal_a'), 'Completo', 'fixture de teste');
 select tests.logout();
 select is_empty($$ select * from public.admin_preview_document_purges(tests.id('org_x')) $$, 'processo aberto não é candidato');
 update public.processes set completed_at = now() where id = tests.id('proc_a');

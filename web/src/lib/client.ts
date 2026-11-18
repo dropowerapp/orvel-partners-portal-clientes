@@ -18,6 +18,11 @@ export interface ClientProcess {
   created_at: string;
 }
 
+/** A API devolve só os dados mínimos antes da aceitação. A RLS protege o acompanhamento. */
+export interface ClientPortalProcess extends ClientProcess {
+  proposal_accepted: boolean;
+}
+
 export interface ClientProposal {
   id: string;
   reference: string;

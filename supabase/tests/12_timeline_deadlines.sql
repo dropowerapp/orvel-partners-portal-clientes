@@ -1,6 +1,11 @@
 begin;
 select no_plan();
 select tests.seed_fixtures();
+
+-- Este ensaio cobre o acompanhamento de um processo já aceite pelo cliente.
+select tests.login('client_a');
+select public.accept_proposal(tests.id('proposal_a'), 'Completo', 'fixture de teste');
+select tests.logout();
 create temporary table schedule_case (step_id uuid, deadline_id uuid);
 grant all on schedule_case to authenticated;
 

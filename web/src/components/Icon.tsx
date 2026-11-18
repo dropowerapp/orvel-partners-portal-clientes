@@ -1,7 +1,8 @@
 import type { SVGProps } from "react";
 
-export type IconName = "home" | "files" | "route" | "calendar" | "more" | "users" | "briefcase" | "settings" | "logout" | "arrow" | "upload" | "download" | "check" | "clock" | "shield" | "plus" | "close";
+export type IconName = "home" | "files" | "route" | "calendar" | "more" | "users" | "briefcase" | "settings" | "logout" | "arrow" | "upload" | "download" | "check" | "clock" | "shield" | "plus" | "close" | "mail";
 const paths: Record<IconName, string> = {
+  mail: "M3 5h18v14H3zM3 5l9 7 9-7",
   home: "m3 10 9-7 9 7M5 9v11h5v-6h4v6h5V9",
   files: "M14 2H5v20h14V7l-5-5v5h5M8 12h8M8 16h6",
   route: "M5 4h10a4 4 0 0 1 0 8H9a4 4 0 0 0 0 8h10M16 17l3 3-3 3M3 2h4v4H3z",

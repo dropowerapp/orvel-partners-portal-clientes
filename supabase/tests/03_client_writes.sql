@@ -32,6 +32,23 @@ select throws_ok($$ insert into public.privacy_consents (organization_id, user_i
                     select organization_id, tests.id('client_a'), id from public.privacy_notices limit 1 $$, '42501', null,
   'consentimento só pela função');
 
+-- Aceitação da proposta
+select is(public.get_acceptance_text(tests.id('proposal_a'), 'Completo'),
+  'Declaro que li e aceito a proposta TSX-2026-001, no plano Completo, pelo valor total de 32,000.00 AED, nas condições descritas no documento.',
+  'texto de aceitação gerado no servidor');
+select throws_ok($$ select public.accept_proposal(tests.id('proposal_a'), 'Plano Inventado') $$, 'P0001', 'plan_not_in_proposal',
+  'só aceita planos apresentados');
+select lives_ok($$ select public.accept_proposal(tests.id('proposal_a'), 'Completo', 'Mozilla/5.0 teste') $$, 'aceita a proposta');
+select throws_ok($$ select public.accept_proposal(tests.id('proposal_a'), 'Completo') $$, 'P0001', 'proposal_not_open',
+  'não aceita duas vezes');
+select tests.logout();
+select is((select (status::text, chosen_plan, accepted_by, accepted_text is not null) from public.proposals where id = tests.id('proposal_a')),
+  row('accepted'::text, 'Completo'::text, tests.id('client_a'), true), 'aceitação registada com plano, utilizador e texto');
+select is((select (plan_name, includes_bank_account) from public.processes where id = tests.id('proc_a')),
+  row('Completo'::text, true), 'plano escolhido passa para o processo');
+
+select tests.login('client_a');
+
 -- Funções validadas: dados pessoais
 select lives_ok($$ select public.update_my_details(tests.id('client_a'), '  Rui   Fictício ', '+351 911 111 111', 'Portugal',
                    'Rua Exemplo 1', 'Lisboa', '1000-001', 'Portugal') $$, 'atualiza os seus dados');
@@ -85,21 +102,6 @@ select throws_ok($$ select public.register_upload(tests.request_id('person_a_spo
 select throws_ok($$ select public.register_upload(tests.request_id('person_a_spouse', 'passport'),
     tests.upload_path('org_x', 'proc_a', 'person_a_spouse', 'passport', 'outra.pdf'), 'outra.pdf') $$,
   'P0001', 'request_not_open', 'pedido já enviado não aceita novo registo até ser rejeitado');
-
--- Aceitação da proposta
-select is(public.get_acceptance_text(tests.id('proposal_a'), 'Completo'),
-  'Declaro que li e aceito a proposta TSX-2026-001, no plano Completo, pelo valor total de 32,000.00 AED, nas condições descritas no documento.',
-  'texto de aceitação gerado no servidor');
-select throws_ok($$ select public.accept_proposal(tests.id('proposal_a'), 'Plano Inventado') $$, 'P0001', 'plan_not_in_proposal',
-  'só aceita planos apresentados');
-select lives_ok($$ select public.accept_proposal(tests.id('proposal_a'), 'Completo', 'Mozilla/5.0 teste') $$, 'aceita a proposta');
-select throws_ok($$ select public.accept_proposal(tests.id('proposal_a'), 'Completo') $$, 'P0001', 'proposal_not_open',
-  'não aceita duas vezes');
-select tests.logout();
-select is((select (status::text, chosen_plan, accepted_by, accepted_text is not null) from public.proposals where id = tests.id('proposal_a')),
-  row('accepted'::text, 'Completo'::text, tests.id('client_a'), true), 'aceitação registada com plano, utilizador e texto');
-select is((select (plan_name, includes_bank_account) from public.processes where id = tests.id('proc_a')),
-  row('Completo'::text, true), 'plano escolhido passa para o processo');
 
 -- A equipa não consegue alterar nem forjar uma aceitação
 select tests.login('staff_x', 'aal2');

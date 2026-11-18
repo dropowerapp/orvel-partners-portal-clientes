@@ -55,7 +55,9 @@ export function AppShell({ children, afterSignOut, nav = [], bottomNav = false, 
         <main id="conteudo" className={"portal-main " + (wide ? "portal-main-wide" : "")}>{children}</main>
         <footer className="portal-footer"><span>{org.name}</span><span>{t("shell.footer")}</span></footer>
       </div>
-      {bottomNav && <nav aria-label={t("app.main_menu")} className="portal-bottom-nav lg:hidden"><ul className="grid grid-cols-5">{links(true)}</ul></nav>}
+      {bottomNav && <nav aria-label={t("app.main_menu")} className="portal-bottom-nav lg:hidden">
+        <ul className="grid" style={{ gridTemplateColumns: `repeat(${Math.max(nav.length, 1)}, minmax(0, 1fr))` }}>{links(true)}</ul>
+      </nav>}
     </div>
   );
 }

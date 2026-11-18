@@ -3,6 +3,11 @@ begin;
 select no_plan();
 select tests.seed_fixtures();
 
+-- Este ensaio cobre o acompanhamento de um processo já aceite pelo cliente.
+select tests.login('client_a');
+select public.accept_proposal(tests.id('proposal_a'), 'Completo', 'fixture de teste');
+select tests.logout();
+
 select results_eq(
   $$ select ts.phase, count(*)::int from public.timeline_template_steps ts
      join public.timeline_templates t on t.id = ts.template_id

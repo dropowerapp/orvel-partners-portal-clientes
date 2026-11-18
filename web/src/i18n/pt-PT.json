@@ -658,6 +658,7 @@
   },
   "client_proposal": {
     "title": "Proposta",
+    "access_intro": "Comece pela sua proposta. Depois de a aceitar, pode acompanhar o processo, enviar documentos e consultar pagamentos e prazos.",
     "intro_open": "Reveja a proposta, escolha o plano e aceite-a aqui. Fica com o comprovativo da aceitação.",
     "intro_accepted": "A sua proposta foi aceite. Pode consultá-la sempre que precisar.",
     "intro_none": "A equipa está a preparar a sua proposta. Avisamos por email quando estiver disponível.",
@@ -666,6 +667,7 @@
     "open_pdf": "Abrir a proposta (PDF)",
     "sent_at": "Enviada a",
     "expired": "Esta proposta já não está válida. Fale connosco para receber uma proposta atualizada.",
+    "closed": "Este processo está encerrado. Fale connosco se precisar de uma nova proposta.",
     "choose_plan": "Escolha o plano",
     "includes_bank": "Inclui abertura de conta bancária",
     "text_error": "Não foi possível carregar o texto de aceitação. Tente novamente.",

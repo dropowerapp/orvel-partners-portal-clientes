@@ -2,7 +2,8 @@
 // Tudo passa pela RLS: o cliente só lê o que é seu, e nunca nomes da equipa nem dados internos.
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useSyncExternalStore } from "react";
-import type { ClientDeadline, ClientPayment, ClientProcess, ClientProposal, ClientRequest, ClientStep } from "./client";
+import type { ClientDeadline, ClientPayment, ClientPortalProcess, ClientProposal, ClientRequest, ClientStep } from "./client";
+import { useOrg } from "./OrgProvider";
 import { supabase } from "./supabase";
 
 const KEY = "portal.process";
@@ -18,6 +19,7 @@ function readChoice(): string | null {
 
 /** Processos do cliente e o escolhido (o mais recente por omissão). */
 export function useClientProcesses() {
+  const org = useOrg();
   const choice = useSyncExternalStore(
     (cb) => {
       listeners.add(cb);
@@ -27,14 +29,11 @@ export function useClientProcesses() {
     () => null,
   );
   const query = useQuery({
-    queryKey: ["client-processes"],
+    queryKey: ["client-processes", org.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("processes")
-        .select("id, status, plan_name, includes_bank_account, company_name_options, bank_account_id, bank_details_released_at, completed_at, cancelled_at, created_at")
-        .order("created_at", { ascending: false });
+      const { data, error } = await supabase.rpc("get_client_processes", { p_org: org.id });
       if (error) throw error;
-      return (data ?? []) as ClientProcess[];
+      return (data ?? []) as ClientPortalProcess[];
     },
   });
   const list = query.data ?? [];

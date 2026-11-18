@@ -4,6 +4,8 @@ select no_plan();
 select tests.seed_fixtures();
 
 select tests.login('client_a');
+select is_empty($$ select 1 from public.bank_accounts $$, 'dados bancários escondidos antes da aceitação');
+select lives_ok($$ select public.accept_proposal(tests.id('proposal_a'), 'Completo', 'teste') $$, 'cliente A aceita a proposta');
 
 -- O que é dele
 select results_eq($$ select id from public.clients $$, array[tests.id('client_a')], 'cliente A vê só a sua ficha');
@@ -36,8 +38,6 @@ select is_empty($$ select 1 from public.timeline_templates $$, 'não lê modelos
 select is_empty($$ select 1 from public.privacy_consents where user_id <> tests.id('client_a') $$, 'não vê consentimentos de outros');
 
 -- Dados bancários: só depois de aceitar e de a equipa libertar
-select is_empty($$ select 1 from public.bank_accounts $$, 'dados bancários escondidos antes da aceitação');
-select lives_ok($$ select public.accept_proposal(tests.id('proposal_a'), 'Completo', 'teste') $$, 'cliente A aceita a proposta');
 select is_empty($$ select 1 from public.bank_accounts $$, 'aceite mas não libertado: continuam escondidos');
 select tests.logout();
 select tests.login('staff_x', 'aal2');
