@@ -19,8 +19,15 @@ base de dados), sem o construir já.
 | 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | ✅ ramo `etapa-4-area-cliente` (também percurso por fases e prazos; testada no Supabase de dev a 18/11/2026: db-test 268/268, e2e 66/66) |
 | 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | ✅ `codex/documentos-design`, publicada como Vercel Preview; migração e fluxo autenticado online de envio, revisão e download validados em 17/11/2026. Ver relatório e âmbito abaixo. |
 | 6 | Cronologia, prazos e calendário | Implementada e validada localmente em `codex/documentos-design`; migração aplicada ao Supabase de testes. Publicação do frontend e validação autenticada online pendentes. |
-| 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | Conservação preparada e migração instalada nos testes. Eliminação desativada, sem worker publicado nem agendamento. Avisos e resumo semanal por implementar. |
-| 8 | Teste do fluxo completo, deploy | — |
+| 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | Conservação preparada e migração instalada nos testes e na produção. Eliminação desativada, sem worker publicado nem agendamento. Avisos e resumo semanal por implementar. |
+| 8 | Teste do fluxo completo, deploy | Supabase de produção criado e configuração inicial validada em 18/11. Integrações, backups e lançamento pendentes. |
+
+**Produção — 18/11/2026:** criado o Supabase `orvel-portal-producao`
+(`ilwkiruybzxplnhwcwrs`), separado dos testes, na organização Orvel Partners e no plano Free.
+As 14 migrações estão instaladas; registo público desligado, bucket privado e download protegido
+validados. Não contém clientes nem documentos. A eliminação continua desativada. Emails,
+administração real, backups e publicação Vercel ainda estão pendentes.
+[Configuração e condições para lançamento](docs/preparacao-producao-2026-11-17.md).
 
 ## Etapa 5 e design (17/11/2026)
 
@@ -49,7 +56,8 @@ Publicação concluída em 17/11/2026:
 - Migração aplicada e registada em `supabase_migrations.schema_migrations`, no projeto
   `xdakbbvnpoojhyapznkf`, ramo `main`. **O painel Supabase identifica este ramo como PRODUCTION**;
   o alvo foi confirmado expressamente pela responsável. As referências históricas abaixo a
-  "Supabase de dev" não significam que exista um ambiente isolado de produção.
+  "Supabase de dev" referem-se a este projeto de testes. O ambiente isolado de produção foi
+  criado posteriormente, em 18/11, conforme o estado atual acima.
 - Novo hostname associado à Orvel; callback exato `/auth/confirmar` adicionado às Redirect URLs;
   `Site URL` e `PUBLIC_SITE_URL` apontam para a nova Preview. `ALLOWED_ORIGINS` conserva as cinco
   origens anteriores e acrescenta o novo endereço (a lista anterior foi confirmada pelo seu digest).
@@ -477,19 +485,24 @@ nem uma garantia de ausência de vulnerabilidades.
 
 ### Preparação da produção e conservação (17/11/2026)
 
-A integração Supabase ficou operacional em 17/11. Foi encontrado apenas o projeto existente com dados
-fictícios, `xdakbbvnpoojhyapznkf`, na organização **Orvel Partners**. A responsável escolheu esta
-organização para um novo projeto `orvel-portal-producao`, mas a criação foi recusada pelo limite
-de projetos gratuitos da conta. Escolheu **manter o plano gratuito e libertar uma vaga noutro
-projeto**. Em **18/11/2026**, decidiu primeiro **criar uma conta própria da Orvel e separar a
-propriedade da Dropower**. Confirmou a conta criada, o convite como Owner aceite, a remoção
-da conta anterior e a reconexão. A verificação posterior da integração devolveu listas vazias
-e erro de permissão sobre a organização/projeto conhecidos; a autorização da ligação ainda
-precisa de correção antes de criar produção. **GitHub e Vercel ficam como estão por agora**,
-por indicação expressa da responsável.
-[Sequência e recursos associados](docs/preparacao-producao-2026-11-17.md#atualização-de-1811-separar-orvel-e-dropower).
-Não foi criado um projeto de produção, contratado um plano ou pausado outro projeto.
-A integração Vercel ainda exige autorização de acesso à equipa; não houve novo deploy.
+A ligação Supabase **ORVEL PARTNERS** ficou operacional em 18/11. O painel da organização
+confirma uma única conta Owner, a conta indicada pela responsável, e a ausência da conta
+Dropower. Foi criado `orvel-portal-producao` (`ilwkiruybzxplnhwcwrs`) em `eu-west-1`, após
+consulta de custo de 0 USD/mês no plano Free. Foram aplicadas as 14 migrações, sem seed nem
+cópia de dados. O projeto de testes `xdakbbvnpoojhyapznkf` foi preservado.
+
+Na produção, o registo público e as sessões anónimas estão desligados, TOTP disponível,
+passwords com mínimo configurado de 12 caracteres e requisitos de maiúsculas/minúsculas/dígitos.
+Site URL, callback exato e CORS estão preparados para `https://portal.orvelpartners.com`;
+isto não comprova que o domínio já esteja publicado. `sign-download` v2 está ativa com JWT,
+e os testes HTTP recusaram leitura e download sem sessão (401). As tabelas públicas têm RLS,
+sem permissões de tabelas para anónimos; o bucket de documentos é privado.
+
+**GitHub e Vercel ficam como estão por agora**, por indicação expressa da responsável.
+A integração Vercel continua a devolver 403 por falta de autorização da equipa; não houve
+novo deploy. Emails de produção, conta real de administração/MFA, marca no Storage, backups,
+aviso de privacidade aprovado e validação autenticada final continuam pendentes.
+[Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).
 
 No Supabase de testes foram aplicadas as migrações de cronologia/prazos, conservação e
 permissões de infraestrutura. `sign-download` foi atualizada para a versão 4, com validação do
@@ -539,5 +552,8 @@ Depois da migração de permissões, as **381 verificações SQL** voltaram a pa
 preparação foi também executada no projeto remoto: nenhuma migração em falta, tabelas públicas
 com RLS, bucket privado e zero permissões de leitura de tabelas para anónimos. Os testes HTTP
 recusaram leitura e download anónimos (401) e confirmaram o CORS da Preview (200).
-Continuam pendentes a criação do ambiente isolado, definições finais de Auth/Vercel, recuperação
-de backups e aprovação jurídica. [Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).
+Em 18/11, a consulta foi repetida no novo projeto de produção: sem migrações em falta, sem
+dados de teste e sem administrador ou aviso publicado, como esperado nesta fase. As variáveis
+de servidor incluem `RETENTION_ENABLED=false`; `purge-documents` continua ausente e não há
+`pg_cron`. Continuam pendentes as integrações finais, recuperação de backups, aprovação jurídica
+e ensaio autenticado no domínio final. [Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).
