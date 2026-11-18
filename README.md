@@ -26,7 +26,8 @@ base de dados), sem o construir já.
 (`ilwkiruybzxplnhwcwrs`), separado dos testes, na organização Orvel Partners e no plano Free.
 As 14 migrações estão instaladas; registo público desligado, bucket privado e download protegido
 validados. Não contém clientes nem documentos. A eliminação continua desativada. Emails,
-administração real, backups e publicação Vercel ainda estão pendentes.
+administração real, backups e publicação Vercel ainda estão pendentes. A Vercel já tem acesso
+recuperado, variáveis Production separadas, Node 24 e domínio associado; falta o DNS.
 [Configuração e condições para lançamento](docs/preparacao-producao-2026-11-17.md).
 
 ## Etapa 5 e design (17/11/2026)
@@ -100,8 +101,8 @@ de tamanho do bundle. [Âmbito e publicação pendente](docs/validacao-percurso-
 
 **Backend atualizado em 17/11/2026:** a migração desta etapa foi aplicada e confirmada no
 Supabase existente (`xdakbbvnpoojhyapznkf`), que conserva os dados fictícios. O frontend ainda
-aguarda publicação: a integração Vercel devolve 403 por falta de autorização da equipa
-`dropower-s-projects`. A Preview continua na etapa 5; a validação autenticada da etapa 6
+aguarda publicação. O acesso à equipa Vercel `dropower-s-projects` foi recuperado em 18/11.
+A Preview continua na etapa 5; a validação autenticada da etapa 6
 continua pendente. [Estado dos acessos e preparação de produção](docs/preparacao-producao-2026-11-17.md).
 Os avisos por email e tarefas agendadas pertencem à etapa 7.
 
@@ -499,8 +500,15 @@ e os testes HTTP recusaram leitura e download sem sessão (401). As tabelas púb
 sem permissões de tabelas para anónimos; o bucket de documentos é privado.
 
 **GitHub e Vercel ficam como estão por agora**, por indicação expressa da responsável.
-A integração Vercel continua a devolver 403 por falta de autorização da equipa; não houve
-novo deploy. Emails de produção, conta real de administração/MFA, marca no Storage, backups,
+A autorização de equipa Vercel foi concluída e verificada em 18/11. Foram criadas apenas em
+Production as variáveis do Supabase novo e `VITE_DEMO_MODE=false`, preservando Preview.
+Raiz `web`, Node 24, `npm ci`, `npm run build` e saída `dist` confirmados no painel. O build
+local de produção passou e o pacote usa apenas o backend novo, sem contas de demonstração.
+O domínio `portal.orvelpartners.com` está associado; falta o CNAME no DNS externo. A utilização
+de código/conversas deste projeto para treino de IA na Vercel foi desligada, com autorização
+expressa, e confirmada após recarregar o painel. O plano atual é Hobby; decidir o plano adequado
+ao uso comercial antes do lançamento. Não houve novo deploy. Emails de produção,
+conta real de administração/MFA, marca no Storage, backups,
 aviso de privacidade aprovado e validação autenticada final continuam pendentes.
 [Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).
 

@@ -1,6 +1,6 @@
 # Preparação de produção — atualizado em 18/11/2026
 
-O Supabase de produção foi criado e configurado parcialmente. O portal ainda não está lançado
+O Supabase de produção foi criado e a configuração Vercel foi preparada. O portal ainda não está lançado
 para clientes reais: faltam emails, administração real/MFA, marca no Storage, backups com
 restauração, aprovação do aviso de privacidade e publicação/ensaio final na Vercel.
 A eliminação de documentos permanece desativada por decisão da responsável.
@@ -15,13 +15,13 @@ A eliminação de documentos permanece desativada por decisão da responsável.
 | Produção | `orvel-portal-producao`, `ilwkiruybzxplnhwcwrs`, região `eu-west-1` (Irlanda), ACTIVE_HEALTHY, PostgreSQL 17.12, Nano. |
 | Testes | `xdakbbvnpoojhyapznkf`, `orvelpartners's Project`; dados fictícios preservados. O rótulo main/PRODUCTION do fornecedor não altera esta finalidade. |
 | Custos | Consulta anterior à criação: 0 USD/mês. Nenhum plano contratado, projeto apagado ou pausado. |
-| Vercel | Equipa `dropower-s-projects`, `team_4UE4GPF895jF3QvZu1crnFMN`; projeto `orvel-partners-portal-clientes`. Leitura repetida: 403, falta autorização desta equipa na ligação. |
+| Vercel | Equipa `dropower-s-projects`, `team_4UE4GPF895jF3QvZu1crnFMN`; projeto `orvel-partners-portal-clientes`, `prj_qGopqpbxJ08ClmkSGLFbasqrGQ0Z`. Acesso recuperado após consentimento da equipa; plano Hobby ativo confirmado no painel. |
 | GitHub | `dropowerapp/orvel-partners-portal-clientes`, ramo local `codex/documentos-design`. Sem push nesta preparação. |
 
 [Projeto de produção](https://supabase.com/dashboard/project/ilwkiruybzxplnhwcwrs).
 **GitHub e Vercel mantêm a propriedade atual**, por indicação expressa da responsável.
-A recuperação do acesso Vercel faz-se pelo consentimento específico da equipa, na mesma ligação;
-não exige uma transferência nem deve ser confundida com a ligação Supabase já resolvida.
+O consentimento específico da equipa recuperou o acesso Vercel na mesma ligação. Não houve
+transferência nem nova ligação das contas. Os bloqueios anteriores de acesso estão resolvidos.
 
 A criação tinha sido recusada pelo limite gratuito antes da separação das contas. Depois da
 reconexão e da seleção explícita da ligação ORVEL PARTNERS, o acesso funcionou e a criação
@@ -137,13 +137,68 @@ e 39 testes de Edge Functions aprovados, com build e deno check. Nesta preparaç
 instaladas as mesmas migrações e o mesmo download, sem alterar o código da aplicação;
 a verificação adicional foi remota. Não executar o e2e/seed de desenvolvimento em produção.
 
+## Vercel configurada em 18/11
+
+Criadas e relidas três variáveis, exclusivamente no destino Production:
+
+| Variável | Configuração |
+|---|---|
+| `VITE_SUPABASE_URL` | `https://ilwkiruybzxplnhwcwrs.supabase.co` |
+| `VITE_SUPABASE_ANON_KEY` | Chave **publicável** ativa do projeto novo; valor relido coincide com o Supabase. Não foi copiada nenhuma chave de serviço. |
+| `VITE_DEMO_MODE` | `false` |
+
+Os IDs, destinos e valores guardados das três variáveis de Preview ficaram iguais. Não foram
+criadas variáveis de eliminação na Vercel: essa tarefa pertence ao servidor Supabase e continua
+sem deploy, sem cron e com `RETENTION_ENABLED=false` na configuração já guardada.
+
+Definições de build guardadas pela API e confirmadas no painel: Vite, raiz `web`, Node `24.x`,
+instalação `npm ci`, build `npm run build`, saída `dist`. Visibilidade pública do código
+desligada por `publicSource=false`; proteção de deployments Vercel preservada
+(`all_except_custom_domains`). Esta proteção não se aplica ao domínio personalizado.
+
+Build local de produção concluído com Node 24 e as variáveis acima. Inspeção do JavaScript
+gerado confirma o URL do Supabase novo, ausência da referência do Supabase de testes, de contas
+fictícias de demonstração e da variável de chave de serviço. Mantém o aviso conhecido de bundle
+superior a 500 kB. Não houve alteração de código funcional nem repetição das suites anteriores.
+O comentário de `web/.env.example` foi corrigido: `VITE_DEMO_MODE=true` também afeta builds.
+
+### Domínio e DNS pendente
+
+`portal.orvelpartners.com` associado ao projeto; a Vercel devolveu `verified=true` para a
+associação. A consulta DNS posterior continua a devolver `misconfigured=true`, sem CNAME/A.
+Isso significa que a associação do domínio não demonstra resolução DNS ou HTTPS operacionais.
+Os nameservers são externos: `ns33.domaincontrol.com` e `ns34.domaincontrol.com`.
+
+Registo recomendado pela Vercel especificamente para este projeto, a criar no gestor DNS:
+
+| Tipo | Nome | Destino |
+|---|---|---|
+| CNAME | `portal` | `a8219958b7e61fda.vercel-dns-017.com.` |
+
+Nenhum registo DNS foi alterado; preservar MX/TXT de email e os registos do site principal.
+Depois da alteração, repetir a verificação DNS e HTTPS. Não é necessário transferir o domínio.
+
+### Plano e privacidade
+
+O painel de faturação confirma **Hobby ativo**. Os termos limitam Hobby a uso pessoal ou não
+comercial; é necessária uma decisão de plano antes do lançamento empresarial. Não foi feito
+upgrade nem iniciada uma subscrição. [Termos — Hobby](https://vercel.com/legal/terms#hobby-plan).
+
+A opção “Improve models with this project’s data” foi **desativada e guardada apenas neste
+projeto**, após autorização explícita da responsável. O painel foi recarregado e confirmou a
+opção desligada, sem alterações por guardar. O texto da Vercel refere a utilização e partilha
+de código e conversas para treino daqui para a frente, não revogação retroativa. A preferência
+global da equipa não foi alterada.
+
+Não houve push, novo deploy ou promoção de produção. A última Preview continua na etapa 5.
+A configuração guardada só será incorporada num build/deploy posterior.
+
 ## Condições para lançamento
 
-1. **Vercel:** autorizar a equipa na ligação existente, confirmar o plano adequado ao uso
-   comercial e o domínio HTTPS. Manter Preview ligada aos testes; definir apenas Production
-   com `VITE_SUPABASE_URL=https://ilwkiruybzxplnhwcwrs.supabase.co` e a chave publicável deste
-   projeto em `VITE_SUPABASE_ANON_KEY`. Nunca usar service_role/secret em `VITE_*`.
-   Confirmar raiz `web`, Node 24, build e commit. Não promover um build feito com os testes.
+1. **Vercel:** acesso, variáveis separadas, privacidade e build já preparados. Concluir a decisão
+   de plano e DNS/HTTPS descritos acima. Publicar o commit revisto com as variáveis Production
+   e validar o resultado remoto. Não promover um build feito com os testes nem colocar
+   service_role/secret em `VITE_*`.
 2. **Emails:** confirmar conta/domínio Resend e chave de envio limitada ao domínio Orvel.
    Guardar a chave no servidor, configurar o segredo assinado do hook e publicar as duas
    funções de email. Validar entrega com um destinatário autorizado antes de convidar clientes.
