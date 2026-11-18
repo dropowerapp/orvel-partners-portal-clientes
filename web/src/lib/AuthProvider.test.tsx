@@ -4,6 +4,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useState } from "react";
+import { MemoryRouter } from "react-router";
+import PublicPrivacy from "../routes/client/PublicPrivacy";
 import { CLIENT_CONTEXT, ORG } from "../test/fixtures";
 import { AuthProvider, useAuth } from "./AuthProvider";
 
@@ -11,7 +13,7 @@ const mocks = vi.hoisted(() => ({
   getSession: vi.fn(), rpc: vi.fn(), listener: null as null | ((event: AuthChangeEvent, session: Session | null) => void),
 }));
 vi.mock("./OrgProvider", () => ({ useOrg: () => ORG }));
-vi.mock("./supabase", () => ({ supabase: {
+vi.mock("./supabase", () => ({ SUPABASE_URL: "", supabase: {
   rpc: mocks.rpc,
   auth: {
     getSession: mocks.getSession,
@@ -44,6 +46,20 @@ beforeEach(() => {
 });
 
 describe("isolamento dos dados em memória entre sessões", () => {
+  it("a sessão anónima inicial não cancela a leitura pública do aviso", async () => {
+    mocks.getSession.mockReturnValue(new Promise(() => {}));
+    let resolveNotice!: (value: unknown) => void;
+    mocks.rpc.mockImplementation(() => new Promise((resolve) => { resolveNotice = resolve; }));
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    render(<QueryClientProvider client={client}><AuthProvider><MemoryRouter>
+      <PublicPrivacy />
+    </MemoryRouter></AuthProvider></QueryClientProvider>);
+    await waitFor(() => expect(mocks.rpc).toHaveBeenCalledWith("get_org_public", { p_host: "orvel" }));
+    act(() => mocks.listener!("INITIAL_SESSION", null));
+    await act(async () => resolveNotice({ data: { privacy_notice: null }, error: null }));
+    expect(await screen.findByText(/O aviso de privacidade ainda está a ser preparado/)).toBeInTheDocument();
+  });
+
   it("terminar sessão noutra janela limpa consultas, mutações, processo escolhido e formulários", async () => {
     const client = setup();
     await screen.findByText("cliente-a/aal1");

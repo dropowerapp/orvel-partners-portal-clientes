@@ -16,7 +16,9 @@ export default function PublicPrivacy() {
   // Consulta nova ao abrir: a marca pode estar em cache desde antes da publicação.
   // Sem dependência de sessão, de documentos ou de dados pessoais do cliente.
   const query = useQuery({
-    queryKey: ["public-privacy", org.id, org.slug],
+    // Prefixo de dados públicos preservado por clearSessionData: o evento inicial de
+    // autenticação não pode cancelar esta leitura e deixá-la permanentemente pendente.
+    queryKey: ["org", org.slug, "privacy-notice"],
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_org_public", { p_host: org.slug });
       if (error) throw error;
