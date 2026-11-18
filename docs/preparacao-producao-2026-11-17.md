@@ -11,7 +11,7 @@ A eliminação de documentos permanece desativada por decisão da responsável.
 | Recurso | Estado confirmado em 18/11 |
 |---|---|
 | Organização Supabase | Orvel Partners, `etjykbrkqrzyurwmocop`, plano Free. |
-| Propriedade | Painel Team consultado: exatamente um membro, a conta indicada pela responsável, marcada YOU e Owner; conta Dropower ausente. Página Security consultada em 18/11: MFA da conta proprietária ainda por configurar; entregue à responsável. |
+| Propriedade | Painel Team consultado: exatamente um membro, a conta indicada pela responsável, marcada YOU e Owner; conta Dropower ausente. Página Security de `dropforcemanagement@gmail.com` recarregada em 18/11: «Set up MFA». A responsável esclareceu que ainda não configurou o MFA; página preparada para concluir. |
 | Ligação Codex | Ligação **ORVEL PARTNERS** operacional. Chamadas dirigidas explicitamente a essa ligação; não usar a ligação DROPFORCE. |
 | Produção | `orvel-portal-producao`, `ilwkiruybzxplnhwcwrs`, região `eu-west-1` (Irlanda), ACTIVE_HEALTHY, PostgreSQL 17.12, Nano. |
 | Testes | `xdakbbvnpoojhyapznkf`, `orvelpartners's Project`; dados fictícios preservados. O rótulo main/PRODUCTION do fornecedor não altera esta finalidade. |
@@ -295,8 +295,9 @@ worker sem publicação e `RETENTION_ENABLED=false` preservado.
    foi limitada a envio no domínio Orvel e um novo reenvio foi entregue. Não colocar segredos
    no chat ou no Git.
 3. **Administração e marca:** conta `hello@orvelpartners.com` e associação administrativa criadas;
-   primeiro login e TOTP concluídos. A conta proprietária Supabase ainda não tinha MFA;
-   configuração entregue à responsável. Verificar também MFA/recuperação das restantes plataformas.
+   primeiro login e TOTP concluídos. O MFA da conta proprietária Supabase continua por configurar,
+   conforme a página Security e esclarecimento da responsável. Concluir nessa página e verificar
+   o estado ativo. Verificar também MFA/recuperação das restantes plataformas.
    Marca carregada e verificada; caminhos preenchidos na organização.
    Não copiar o administrador fictício nem reaproveitar chaves do backend de testes.
 4. **Backups:** a responsável confirmou que não há destino e pediu proposta com custos.
@@ -306,7 +307,9 @@ worker sem publicação e `RETENTION_ENABLED=false` preservado.
    No painel do novo projeto ainda não existem backups. Não copiar documentação de clientes
    para um destino não aprovado. [Backups Supabase](https://supabase.com/docs/guides/platform/backups).
 5. **Privacidade:** [rascunho de revisão preparado](aviso-privacidade-rascunho-2026-11-18.md),
-   com entidade, morada, fundamentos, destinatários e prazos por confirmar. Aprovar o texto e a
+   com **CATIA DROPFORCE MANAGEMENT - FZCO** e a sede em Building A1, Dubai Digital Park,
+   Dubai Silicon Oasis, Dubai, United Arab Emirates, PO BOX 342001, indicadas pela responsável.
+   Registo, fundamentos, destinatários e prazos continuam por confirmar. Aprovar o texto e a
    conservação antes de publicar. O rascunho da migração não é aprovação jurídica. Rever também
    o texto das propostas e a distinção entre tomada de conhecimento e consentimento.
 6. **Ensaio final:** convite, reenvio de convite, entrada e MFA concluídos. Após aprovação da

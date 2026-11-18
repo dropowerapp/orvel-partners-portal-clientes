@@ -523,8 +523,10 @@ de produção e o hook assinado estão configurados; o Resend aceitou a mensagem
 teste já não pode enviar emails. O ensaio autenticado de emails e o primeiro login/MFA da
 administração passaram. Marca no Storage e limitação da chave Resend concluídas. Backups,
 aviso de privacidade aprovado e os restantes percursos autenticados continuam pendentes.
-A conta proprietária do Supabase ainda não tinha MFA na verificação de 18/11; configuração
-entregue à responsável na página de segurança. Não confundir com o MFA do administrador do portal.
+A página de segurança da conta proprietária do Supabase, recarregada em 18/11, mostrou
+«Set up MFA»; a responsável esclareceu que ainda não o configurou. Este ponto continua pendente.
+O MFA do administrador do portal já foi validado. O rascunho de privacidade inclui a denominação
+CATIA DROPFORCE MANAGEMENT - FZCO e a morada no Dubai indicadas pela responsável, sem publicação.
 [Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).
 
 No Supabase de testes foram aplicadas as migrações de cronologia/prazos, conservação e

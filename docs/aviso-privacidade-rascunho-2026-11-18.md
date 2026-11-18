@@ -9,8 +9,9 @@ Não usar o prazo técnico inicial de 30 dias como política aprovada.
 
 ### Quem trata os seus dados
 
-A sua área de cliente é disponibilizada pela **[DENOMINAÇÃO LEGAL]**, que usa a marca
-Orvel Partners, com sede em **[MORADA COMPLETA, PAÍS]**, identificação de registo
+A sua área de cliente é disponibilizada pela **CATIA DROPFORCE MANAGEMENT - FZCO**, que usa a marca
+Orvel Partners, com sede em **Building A1, Dubai Digital Park, Dubai Silicon Oasis, Dubai,
+United Arab Emirates, PO BOX 342001**, identificação de registo
 **[NÚMERO E ENTIDADE DE REGISTO]**. Para assuntos de privacidade, contacte
 **hello@orvelpartners.com**. **[IDENTIFICAR REPRESENTANTE OU ENCARREGADO DE PROTEÇÃO DE
 DADOS, SE APLICÁVEL]**.
@@ -89,6 +90,10 @@ declarar a inexistência de decisões desse tipo em todo o serviço.
 Versão: **[VERSÃO APROVADA]** · Aplicável desde: **[DATA DE PUBLICAÇÃO]**.
 
 ## Notas internas para a revisão
+
+A denominação e a morada acima foram indicadas pela responsável em 18/11/2026 para este
+rascunho. A identificação de registo e os restantes campos continuam por confirmar; esta
+atualização não constitui aprovação ou publicação do aviso.
 
 O aviso deve identificar responsável, finalidades/fundamentos, destinatários, transferências,
 conservação e forma de exercer direitos, com informação clara antes da recolha. A definição
