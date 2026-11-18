@@ -27,7 +27,7 @@ base de dados), sem o construir já.
 As 14 migrações estão instaladas; registo público desligado, bucket privado e download protegido
 validados. Não contém clientes nem documentos. A eliminação continua desativada. O Resend e
 o hook de email estão configurados; o envio técnico para o endereço autorizado foi aceite
-pelo Resend, aguardando confirmação de receção. O ensaio autenticado de emails,
+pelo Resend, com receção na caixa de entrada confirmada pela responsável em 18/11. O ensaio autenticado de emails,
 administração real, backups e publicação Vercel ainda estão pendentes. A Vercel já tem acesso
 recuperado, variáveis Production separadas, Node 24 e domínio associado; falta o DNS.
 [Configuração e condições para lançamento](docs/preparacao-producao-2026-11-17.md).
@@ -511,7 +511,7 @@ de código/conversas deste projeto para treino de IA na Vercel foi desligada, co
 expressa, e confirmada após recarregar o painel. O plano atual é Hobby; decidir o plano adequado
 ao uso comercial antes do lançamento. Não houve novo deploy do frontend. As funções de email
 de produção e o hook assinado estão configurados; o Resend aceitou a mensagem técnica para
-`hello@orvelpartners.com`, ainda sem confirmação da caixa de correio. A função temporária de
+`hello@orvelpartners.com`, com entrega na caixa de entrada confirmada pela responsável. A função temporária de
 teste já não pode enviar emails. O ensaio autenticado de emails,
 conta real de administração/MFA, marca no Storage, backups,
 aviso de privacidade aprovado e validação autenticada final continuam pendentes.

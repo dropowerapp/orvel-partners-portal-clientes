@@ -112,8 +112,9 @@ Foi enviada uma mensagem técnica para **hello@orvelpartners.com**, destinatári
 pela responsável, com o assunto **[TESTE] Portal Orvel — ligação de produção ao Resend**.
 Usou o módulo partilhado `_shared/email.ts`, os segredos do projeto novo e o remetente
 `Orvel Partners <hello@orvelpartners.com>`. O Resend respondeu **HTTP 200**, com o identificador
-`01a1eddf-dccf-75c8-8806-f76e43f152ab`. A receção na caixa de correio ainda aguarda confirmação;
-a aceitação pela API não demonstra entrega na caixa de entrada.
+`01a1eddf-dccf-75c8-8806-f76e43f152ab`. A responsável confirmou em 18/11/2026 que a mensagem
+chegou à **caixa de entrada**, não ao spam. A confirmação de entrega provém da destinatária;
+o painel Resend não foi consultado para este resultado.
 
 O teste não criou utilizadores ou associações, não continha um link de autenticação e não
 convidou clientes. Verificou `EMAIL_MODE=resend` e `RETENTION_ENABLED=false` antes do envio.
@@ -134,8 +135,8 @@ eliminação; `pg_cron` continua ausente e `purge-documents` não está publicad
 
 Este ensaio valida o transporte Supabase → Resend. O percurso Auth → hook assinado → email
 com link válido → entrada no portal e o convite pela equipa ainda exigem a primeira conta
-real, MFA e o domínio final operacional. O âmbito/permissões da chave Resend e a entrega no
-destino não foram confirmados no painel Resend, que pede início de sessão.
+real, MFA e o domínio final operacional. O âmbito/permissões da chave Resend não foi
+confirmado no painel Resend, que pede início de sessão.
 
 ### Testes HTTP na produção
 
@@ -236,8 +237,8 @@ A configuração guardada só será incorporada num build/deploy posterior.
    e validar o resultado remoto. Não promover um build feito com os testes nem colocar
    service_role/secret em `VITE_*`.
 2. **Emails:** chave no servidor, segredo assinado, hook e duas funções já configurados;
-   envio técnico aceite pelo Resend. Confirmar a receção em `hello@orvelpartners.com` e
-   testar os percursos autenticados descritos acima. Confirmar que a chave é só de envio
+   envio técnico aceite pelo Resend e entrega na caixa de entrada de `hello@orvelpartners.com`
+   confirmada pela responsável. Testar os percursos autenticados descritos acima. Confirmar que a chave é só de envio
    e limitada ao domínio Orvel antes de convidar clientes. Não colocar segredos no chat ou no Git.
 3. **Administração e marca:** confirmar o email da primeira conta real, criar o acesso e
    concluir TOTP com a responsável. Verificar também MFA/recuperação das contas de plataforma.
