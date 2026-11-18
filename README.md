@@ -477,11 +477,18 @@ nem uma garantia de ausência de vulnerabilidades.
 
 ### Preparação da produção e conservação (17/11/2026)
 
-A integração Supabase está operacional. Foi encontrado apenas o projeto existente com dados
+A integração Supabase ficou operacional em 17/11. Foi encontrado apenas o projeto existente com dados
 fictícios, `xdakbbvnpoojhyapznkf`, na organização **Orvel Partners**. A responsável escolheu esta
 organização para um novo projeto `orvel-portal-producao`, mas a criação foi recusada pelo limite
 de projetos gratuitos da conta. Escolheu **manter o plano gratuito e libertar uma vaga noutro
-projeto**. Não foi criado um projeto de produção, contratado um plano ou pausado outro projeto.
+projeto**. Em **18/11/2026**, decidiu primeiro **criar uma conta própria da Orvel e separar a
+propriedade da Dropower**. Confirmou a conta criada, o convite como Owner aceite, a remoção
+da conta anterior e a reconexão. A verificação posterior da integração devolveu listas vazias
+e erro de permissão sobre a organização/projeto conhecidos; a autorização da ligação ainda
+precisa de correção antes de criar produção. **GitHub e Vercel ficam como estão por agora**,
+por indicação expressa da responsável.
+[Sequência e recursos associados](docs/preparacao-producao-2026-11-17.md#atualização-de-1811-separar-orvel-e-dropower).
+Não foi criado um projeto de produção, contratado um plano ou pausado outro projeto.
 A integração Vercel ainda exige autorização de acesso à equipa; não houve novo deploy.
 
 No Supabase de testes foram aplicadas as migrações de cronologia/prazos, conservação e

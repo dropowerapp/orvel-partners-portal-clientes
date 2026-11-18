@@ -1,8 +1,10 @@
 # Preparação de produção — 17/11/2026
 
-O portal continua em testes. O acesso Supabase foi recuperado e o backend existente recebeu
-as alterações pendentes. Ainda não existe um projeto separado para clientes reais nem houve
-um novo deploy Vercel. A eliminação de documentos continua desativada por decisão da responsável.
+O portal continua em testes. O acesso Supabase foi recuperado em 17/11 e o backend existente
+recebeu as alterações pendentes. Após a passagem de propriedade em 18/11, a ligação do Codex
+voltou a ficar sem permissão; ver o diagnóstico abaixo. Ainda não existe um projeto separado
+para clientes reais nem houve um novo deploy Vercel. A eliminação de documentos continua
+desativada por decisão da responsável.
 
 ## Ambientes e acessos
 
@@ -11,12 +13,100 @@ um novo deploy Vercel. A eliminação de documentos continua desativada por deci
 | Organização Supabase | Orvel Partners, `etjykbrkqrzyurwmocop`, plano gratuito. |
 | Projeto existente | `xdakbbvnpoojhyapznkf`, `eu-west-1`, ativo; contém contas e processos fictícios. O rótulo `main / PRODUCTION` do fornecedor não torna estes dados próprios para produção. |
 | Novo projeto pretendido | `orvel-portal-producao`, mesma organização e região; criação recusada pelo limite de projetos gratuitos de um membro. Nenhum projeto novo foi criado. |
-| Decisão sobre custos | Manter o plano gratuito. A responsável vai libertar uma vaga noutro projeto seu. Não pausar/apagar outros projetos nem contratar um plano automaticamente. |
+| Decisão sobre custos | Manter o plano gratuito. Em 18/11, a responsável decidiu criar uma conta própria da Orvel e separar a propriedade da Dropower antes de prosseguir. Não pausar/apagar outros projetos nem contratar um plano automaticamente. |
 | Vercel | Equipa `dropower-s-projects`, `team_4UE4GPF895jF3QvZu1crnFMN`, projeto `orvel-partners-portal-clientes`; integração responde 403 por falta de autorização de equipa. O consentimento temporário deve ser concluído na mesma ligação. |
 
 O plano gratuito limita-se a dois projetos ativos e pode pausar projetos após uma semana de
 inatividade. Esta limitação de disponibilidade mantém-se mesmo com a configuração de segurança
 correta. [Limites publicados pelo Supabase](https://supabase.com/pricing).
+
+## Atualização de 18/11: separar Orvel e Dropower
+
+A responsável pediu uma conta Supabase própria da Orvel, por serem empresas distintas.
+A organização **Orvel Partners** já existe separada e o projeto pode permanecer nela.
+O procedimento preparado é atribuir a propriedade à nova conta e retirar depois os acessos
+Dropower, sem copiar a base de dados nem recriar o projeto. A responsável confirmou a criação
+da nova conta e a entrada no painel em 18/11; o email de destino foi indicado na conversa.
+A responsável confirmou também que aceitou o convite como **Owner**, removeu a conta Dropower
+e voltou a ligar o Supabase pela conta Orvel. A lista final de membros e o MFA da conta não
+foram verificados diretamente pela integração. Não foi enviado um convite nem alterado
+qualquer membro por esta integração.
+
+Sequência para a passagem:
+
+1. Conta criada e entrada no painel confirmadas pela responsável. Confirmar MFA e recuperação;
+   deixar a conta sem criar um projeto novo nesta fase.
+2. Convite como Owner aceite pela nova conta, segundo confirmação da responsável. A integração
+   Supabase disponível não tem operações de gestão de membros nem identifica a conta OAuth
+   atual; a confirmação do papel Owner vem da responsável, não de uma lista obtida pela API.
+3. Remoção da conta Dropower e nova ligação confirmadas pela responsável. Contudo, as chamadas
+   da integração devolvem zero organizações e projetos, e a consulta direta aos identificadores
+   conhecidos devolve `You do not have permission to perform this action`. É preciso resolver
+   a autorização da organização Orvel Partners na ligação atual antes de executar alterações.
+4. Confirmar os acessos finais da organização Orvel. Não alterar membros nem projetos das organizações
+   Dropower. Inventariar credenciais de serviço/integrações já emitidas: remover um membro não
+   deve ser tratado como prova de revogação de todas as credenciais que esse membro conhecia.
+5. Verificar membros finais, acesso da Orvel, quota gratuita e funcionamento do portal. Após
+   resolver a propriedade, retomar a criação do projeto isolado de produção sem dados de teste.
+
+Este é o fluxo de [transferência de propriedade de uma organização documentado pelo Supabase](https://supabase.com/docs/guides/platform/access-control#transferring-ownership-of-an-organization).
+É necessário manter pelo menos um proprietário; a saída do anterior acontece depois da
+aceitação do novo. A eliminação de documentos continua desativada em todas as fases.
+
+Inventário confirmado antes da passagem: 14 migrações instaladas, até
+`20261118140000_platform_privileges`; `auth-send-email` v12, `invite-client` v12 e
+`sign-download` v4 ativas; `purge-documents` não publicada. O código local conserva alterações
+ainda não enviadas ao remoto Dropower.
+
+A responsável determinou expressamente que **GitHub e Vercel ficam como estão por agora**.
+A separação autorizada nesta fase limita-se ao Supabase; a propriedade dos outros recursos
+permanece no inventário para uma decisão futura, sem iniciar transferências:
+
+| Recurso | Vínculo atual | Trabalho seguinte |
+|---|---|---|
+| Vercel | Equipa `dropower-s-projects` | Manter por indicação expressa da responsável. Não transferir nesta fase. |
+| GitHub | `dropowerapp/orvel-partners-portal-clientes` | Manter por indicação expressa da responsável. Preservar histórico e alterações locais. |
+| Resend | Chave dedicada ao domínio Orvel documentada no projeto; proprietário da conta por confirmar | Confirmar conta, domínio, acessos e credenciais, sem interromper os emails. |
+
+Após a confirmação do convite, mas antes da remoção da conta Dropower, a integração listou
+Orvel Partners e o projeto
+`xdakbbvnpoojhyapznkf` como `ACTIVE_HEALTHY`. A base confirma 14 migrações, zero reservas de
+eliminação, zero documentos marcados como eliminados e ausência de `pg_cron`. Continuam
+ativas apenas as três funções inventariadas; `purge-documents` não está publicada. Estas
+leituras demonstravam o acesso técnico dessa ligação, mas não identificavam quem a autorizou
+nem provam que a Dropower já foi removida.
+
+Depois da remoção e da reconexão comunicadas pela responsável, foram feitas quatro leituras:
+`list_organizations` e `list_projects` devolveram listas vazias; `get_organization` e
+`get_project` devolveram erro de permissão. A pesquisa de documentação funciona, pelo que a
+existência de ferramentas Supabase no chat não comprova autorização sobre o projeto.
+Não foi repetida a criação de produção nem executado SQL remoto sem acesso. A documentação
+exige selecionar a organização que contém o projeto no consentimento e refere que alguns
+clientes precisam de reiniciar depois da autorização. A responsável confirmou uma nova
+ligação com a conta Orvel e a seleção explícita de **Orvel Partners**; a nova verificação
+continuou a devolver listas vazias e erro de permissão ao consultar a organização diretamente.
+Não se deve voltar a tratar a escolha da organização como desconhecida nem repetir a criação
+sem acesso. O próximo passo é fechar completamente e reabrir o Codex, retomar esta conversa
+e testar uma vez a ligação recarregada. Uma sessão antiga é uma hipótese, não uma causa
+comprovada. A produção permanece por criar e a eliminação não foi ativada.
+[Autorização do MCP](https://supabase.com/docs/guides/ai-tools/mcp#next-steps).
+
+Orientação sobre as contas e os planos, consultada em 18/11:
+
+- GitHub: preferir uma **organização Orvel**, gerida por contas individuais autorizadas. O
+  plano Free permite repositórios públicos/privados ilimitados, com limites de funcionalidades
+  e recursos como Actions. Não é necessário um novo login para cada empresa quando a mesma
+  pessoa gere organizações distintas. A conta que controla a organização Orvel deve pertencer
+  à pessoa autorizada pela Orvel, sem depender de uma conta partilhada da Dropower.
+  [Organizações](https://docs.github.com/en/organizations/collaborating-with-groups-in-organizations/about-organizations)
+  e [planos](https://docs.github.com/en/get-started/learning-about-github/githubs-plans).
+- Vercel: uma equipa própria permite separar acessos e faturação. Hobby permite até 200
+  projetos, mas os termos limitam esse plano a utilização pessoal ou não comercial. O portal
+  empresarial Orvel exige um plano adequado a uso comercial; Pro é anunciado a partir de
+  20 USD/mês, com custos adicionais conforme membros/consumo. Não foi aprovado nem contratado
+  um plano Vercel nesta conversa; verificar o custo concreto antes da criação/transferência.
+  [Limites](https://vercel.com/docs/limits), [termos — Hobby](https://vercel.com/legal/terms)
+  e [preços](https://vercel.com/pricing).
 
 ## Alterações aplicadas ao Supabase de testes
 
