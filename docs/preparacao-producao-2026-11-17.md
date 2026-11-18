@@ -2,9 +2,12 @@
 
 O Supabase de produção foi criado e o frontend atual foi publicado na Vercel para validação controlada. O portal ainda não está lançado
 para clientes reais: faltam backups com restauração, aprovação do aviso de
-privacidade, decisão de plano e os restantes percursos autenticados no domínio público.
+privacidade, adequação contratual do alojamento, aplicação da regra de acesso após aceitação
+da proposta e os restantes percursos autenticados no domínio público.
 Administração/MFA, convites, reenvio e login já foram validados em 18/11.
 A eliminação de documentos permanece desativada por decisão da responsável.
+Em 18/11, a responsável confirmou **não contratar planos pagos por enquanto**; a proposta
+de custos fica adiada. A revisão do aviso está preparada localmente, sem publicação.
 
 ## Ambientes e propriedade
 
@@ -239,8 +242,11 @@ principal não foram alterados pelo agente.
 ### Plano e privacidade
 
 O painel de faturação confirma **Hobby ativo**. Os termos limitam Hobby a uso pessoal ou não
-comercial; é necessária uma decisão de plano antes do lançamento empresarial. Não foi feito
-upgrade nem iniciada uma subscrição. [Termos — Hobby](https://vercel.com/legal/terms#hobby-plan).
+comercial. A responsável decidiu manter a preparação sem planos pagos; resolver a adequação
+contratual do alojamento antes da abertura empresarial. Não foi feito upgrade nem iniciada
+uma subscrição. [Termos — Hobby](https://vercel.com/legal/terms#hobby-plan).
+O [DPA público da Vercel](https://vercel.com/legal/dpa) refere Pro e Enterprise no seu âmbito;
+não considerar Hobby abrangido sem outro instrumento confirmado.
 
 A opção “Improve models with this project’s data” foi **desativada e guardada apenas neste
 projeto**, após autorização explícita da responsável. O painel foi recarregado e confirmou a
@@ -285,8 +291,9 @@ worker sem publicação e `RETENTION_ENABLED=false` preservado.
 
 ## Condições para lançamento
 
-1. **Vercel:** acesso, variáveis separadas, privacidade e build já preparados. Concluir a decisão
-   de plano; DNS e HTTPS já foram confirmados. O commit revisto já foi publicado com as variáveis
+1. **Vercel:** acesso, variáveis separadas, privacidade e build já preparados. Preservar a decisão
+   de não contratar planos pagos; adequação ao uso comercial ainda por resolver. DNS e HTTPS
+   já foram confirmados. O commit revisto já foi publicado com as variáveis
    Production; autenticação validada no domínio final. Não promover um build feito com os testes nem colocar
    service_role/secret em `VITE_*`.
 2. **Emails:** chave no servidor, segredo assinado, hook e duas funções já configurados;
@@ -303,22 +310,31 @@ worker sem publicação e `RETENTION_ENABLED=false` preservado.
    Não copiar o administrador fictício nem reaproveitar chaves do backend de testes.
 4. **Backups:** a responsável confirmou que não há destino e pediu proposta com custos.
    [Solução e estimativa preparadas](backups-e-custos-2026-11-18.md), sem contratação ou cópia externa.
+   A contratação da solução proposta foi adiada pela decisão posterior de não ter planos pagos.
    Escolher destino restrito e política para PostgreSQL e Storage separadamente.
    Executar e registar a restauração, hashes, permissões e objetivos de perda/tempo de recuperação.
    No painel do novo projeto ainda não existem backups. Não copiar documentação de clientes
    para um destino não aprovado. [Backups Supabase](https://supabase.com/docs/guides/platform/backups).
-5. **Privacidade:** [rascunho de revisão preparado](aviso-privacidade-rascunho-2026-11-18.md),
+5. **Privacidade:** [rascunho revisto, revisão 2](aviso-privacidade-rascunho-2026-11-18.md),
    com **CATIA DROPFORCE MANAGEMENT - FZCO** e a sede em Building A1, Dubai Digital Park,
    Dubai Silicon Oasis, Dubai, United Arab Emirates, PO BOX 342001, indicadas pela responsável.
-   Registo, fundamentos, destinatários e prazos continuam por confirmar. Aprovar o texto e a
-   conservação antes de publicar. O rascunho da migração não é aprovação jurídica. Rever também
-   o texto das propostas e a distinção entre tomada de conhecimento e consentimento.
+   Registo, regime/fundamentos, destinatários/transferências e prazos continuam por confirmar.
+   Aprovar o texto antes de publicar; a política de conservação não autoriza ativar eliminação.
+   O rascunho da migração não é aprovação jurídica. Texto de confirmação de leitura preparado
+   no frontend local, sem deploy. [Constatações e decisões](revisao-privacidade-e-acesso-2026-11-18.md).
 6. **Ensaio final:** convite, reenvio de convite, entrada e MFA concluídos. Após aprovação da
    privacidade, validar consentimento, envio, revisão, rejeição/reenvio de documentos, download,
    isolamento entre clientes, cronologia e prazos no domínio final. Usar documentos fictícios
    controlados, sem importar o seed de testes.
 7. **Eliminação:** manter `RETENTION_ENABLED=false`, `purge-documents` sem deploy e sem cron.
    A ativação exige decisão posterior, política aprovada e ensaio; não faz parte desta fase.
+8. **Acesso após proposta aceite:** regra confirmada pela responsável, substituindo a indicação
+   inicial de pagamento. Ainda não aplicada: a aplicação atual permite convite antes da aceitação
+   e aceita a proposta dentro da área de cliente. Preparar o percurso prévio e a autorização
+   por processo, incluindo APIs e ficheiros; publicar o aviso não implementa esta condição.
+
+Na revisão do aviso em 18/11, nova consulta de leitura confirmou 0 avisos publicados, 0
+documentos, 0 tarefas de eliminação e ausência de `pg_cron`. Sem alterações remotas nesta revisão.
 
 ## Histórico preservado do ambiente de testes
 

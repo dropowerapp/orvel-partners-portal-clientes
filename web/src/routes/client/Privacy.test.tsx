@@ -30,16 +30,16 @@ describe("Privacy", () => {
     renderAt("/privacidade", <Privacy />, ["/"]);
     expect(screen.getByText("Os ficheiros são apagados 30 dias depois.")).toBeInTheDocument();
     expect(screen.getByText("Versão 2")).toBeInTheDocument();
-    await userEvent.click(screen.getByRole("button", { name: "Aceitar e continuar" }));
-    expect(screen.getByRole("alert")).toHaveTextContent("confirme que leu e aceita");
+    await userEvent.click(screen.getByRole("button", { name: "Confirmar leitura e continuar" }));
+    expect(screen.getByRole("alert")).toHaveTextContent("confirme que tomou conhecimento");
     expect(rpc).not.toHaveBeenCalled();
   });
 
-  it("aceita o aviso em vigor e entra", async () => {
+  it("regista a tomada de conhecimento do aviso em vigor e entra", async () => {
     rpc.mockResolvedValue({ error: null });
     renderAt("/privacidade", <Privacy />, ["/"]);
     await userEvent.click(screen.getByRole("checkbox"));
-    await userEvent.click(screen.getByRole("button", { name: "Aceitar e continuar" }));
+    await userEvent.click(screen.getByRole("button", { name: "Confirmar leitura e continuar" }));
     await screen.findByText("rota:/");
     expect(rpc).toHaveBeenCalledWith("accept_privacy_notice", { p_notice_id: "n2", p_user_agent: navigator.userAgent });
     expect(refresh).toHaveBeenCalled();

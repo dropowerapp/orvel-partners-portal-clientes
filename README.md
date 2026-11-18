@@ -31,13 +31,17 @@ A eliminação continua desativada. O commit `030d4c1` está publicado em Produc
 A conta `hello@orvelpartners.com` entrou no painel com TOTP e sessão AAL2. Convite e reenvio
 pelo portal, entrega pelo Resend, novo link pelo Auth hook e login do cliente foram validados;
 um link reutilizado foi recusado. A área do cliente permanece bloqueada pela ausência de aviso
-de privacidade aprovado/publicado. Backups, plano comercial e restantes condições de lançamento
-continuam pendentes. A chave Resend já está limitada a envio pelo domínio Orvel; novo convite
+de privacidade aprovado/publicado. A revisão 2 está preparada localmente. A responsável confirmou
+acesso **após aceitação da proposta**; esta condição ainda precisa de implementação, porque a
+aplicação atual aceita a proposta dentro da área de cliente. **Sem planos pagos por enquanto**;
+proposta de custos adiada. Backups, adequação contratual do alojamento e restantes condições de
+lançamento continuam pendentes. A chave Resend já está limitada a envio pelo domínio Orvel; novo convite
 entregue após a alteração. Os logótipos originais já estão no Storage de produção e no portal.
 [Validação dos convites e login](docs/validacao-convites-login-2026-11-18.md).
 [Configuração e condições para lançamento](docs/preparacao-producao-2026-11-17.md).
 [Proposta de backups e custos](docs/backups-e-custos-2026-11-18.md).
 [Rascunho de privacidade para revisão](docs/aviso-privacidade-rascunho-2026-11-18.md).
+[Revisão de privacidade e regra de acesso](docs/revisao-privacidade-e-acesso-2026-11-18.md).
 
 ## Etapa 5 e design (17/11/2026)
 
@@ -515,8 +519,9 @@ Raiz `web`, Node 24, `npm ci`, `npm run build` e saída `dist` confirmados no pa
 local de produção passou e o pacote usa apenas o backend novo, com o modo de demonstração desativado.
 O domínio `portal.orvelpartners.com` está ligado por CNAME; DNS, HTTPS e ecrã de entrada confirmados. A utilização
 de código/conversas deste projeto para treino de IA na Vercel foi desligada, com autorização
-expressa, e confirmada após recarregar o painel. O plano atual é Hobby; decidir o plano adequado
-ao uso comercial antes do lançamento. O commit `030d4c1` foi publicado em Production para
+expressa, e confirmada após recarregar o painel. O plano atual é Hobby; o seu enquadramento
+para uso comercial continua por resolver. A responsável decidiu não contratar planos pagos
+por enquanto. O commit `030d4c1` foi publicado em Production para
 validar convites e login; a Preview permanece separada. As funções de email
 de produção e o hook assinado estão configurados; o Resend aceitou a mensagem técnica para
 `hello@orvelpartners.com`, com entrega na caixa de entrada confirmada pela responsável. A função temporária de
@@ -526,7 +531,9 @@ aviso de privacidade aprovado e os restantes percursos autenticados continuam pe
 O MFA da conta proprietária Supabase foi configurado pela responsável e confirmado em 18/11:
 Google Authenticator ativo e 10 códigos de recuperação disponíveis, sem os abrir ou copiar.
 O MFA do administrador do portal também já foi validado. O rascunho de privacidade inclui a denominação
-CATIA DROPFORCE MANAGEMENT - FZCO e a morada no Dubai indicadas pela responsável, sem publicação.
+CATIA DROPFORCE MANAGEMENT - FZCO e a morada no Dubai indicadas pela responsável. A revisão 2
+incorpora acesso após aceitação da proposta e separa a confirmação de leitura dos consentimentos
+específicos. Aviso e nova redação do frontend preparados localmente, sem publicação.
 [Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).
 
 No Supabase de testes foram aplicadas as migrações de cronologia/prazos, conservação e

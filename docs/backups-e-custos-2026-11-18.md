@@ -1,6 +1,8 @@
 # Backups e custos para lançamento — 18/11/2026
 
-**Proposta preparada, sem contratação ou agendamento.** A responsável confirmou que ainda
+**Proposta adiada por decisão da responsável: sem planos pagos por enquanto (18/11/2026).**
+As opções e estimativas abaixo ficam como referência; não constituem contratação ou tarefa
+autorizada para ativação. Não houve subscrição nem agendamento. A responsável confirmou que ainda
 não existe destino de backups e pediu a solução e os custos. Não foram copiados dados de clientes
 para outro fornecedor. A eliminação de documentos e de cópias permanece desativada.
 
@@ -91,6 +93,7 @@ um ensaio de recuperação. [Guia oficial](https://supabase.com/docs/guides/plat
 
 ## Decisões necessárias
 
-Confirmar a solução e o orçamento; criar/autorizar o destino B2 europeu; decidir onde executar
-e guardar os segredos; aprovar os objetivos e a política de conservação. Depois implementar,
-ensaiar e só então agendar. A proposta não implica autorização de custos ou abertura a clientes.
+Não contratar nem criar recursos pagos nesta fase. Quando a decisão de orçamento for retomada,
+rever preços e opções, confirmar destino e local dos segredos, aprovar objetivos e conservação.
+Depois implementar, ensaiar e só então agendar. A recuperação continua por validar; esta proposta
+adiada não implica autorização de custos ou abertura a clientes.

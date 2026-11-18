@@ -47,10 +47,10 @@
     "title": "Aviso de privacidade",
     "intro": "Antes de entrar, leia como tratamos os seus dados pessoais.",
     "version": "Versão {{version}}",
-    "checkbox": "Li e aceito o aviso de privacidade.",
-    "accept": "Aceitar e continuar",
+    "checkbox": "Li e tomei conhecimento do aviso de privacidade.",
+    "accept": "Confirmar leitura e continuar",
     "accepting": "A guardar…",
-    "must_check": "Para continuar, confirme que leu e aceita o aviso.",
+    "must_check": "Para continuar, confirme que tomou conhecimento do aviso.",
     "missing_title": "A sua área de cliente ainda não está disponível",
     "missing_body": "Estamos a terminar a preparação do portal. Assim que estiver disponível, recebe um email da equipa {{org}}."
   },

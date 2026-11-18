@@ -1,111 +1,162 @@
-# Aviso de privacidade — rascunho para revisão
+# Aviso de privacidade — rascunho revisto
 
-**Não aprovado e não publicado.** Preparado em 18/11/2026 para a Orvel. Os campos entre
-colchetes exigem confirmação. Este documento não substitui revisão jurídica, especialmente
-quanto à entidade responsável, regime aplicável, transferências internacionais e conservação.
-Não usar o prazo técnico inicial de 30 dias como política aprovada.
+**Revisão 2 · 18/11/2026 · Não aprovado e não publicado.**
 
-## Texto proposto para o cliente
+Texto preparado para revisão pela Orvel e pelo seu assessor jurídico. Os campos entre
+colchetes ainda exigem decisão. A regra de acesso após aceitação da proposta foi indicada
+pela responsável, mas ainda não está implementada. Não copiar este rascunho para o portal
+como aviso em vigor. As verificações, fontes e decisões em falta estão no
+[relatório de revisão](revisao-privacidade-e-acesso-2026-11-18.md).
 
-### Quem trata os seus dados
+---
 
-A sua área de cliente é disponibilizada pela **CATIA DROPFORCE MANAGEMENT - FZCO**, que usa a marca
-Orvel Partners, com sede em **Building A1, Dubai Digital Park, Dubai Silicon Oasis, Dubai,
-United Arab Emirates, PO BOX 342001**, identificação de registo
-**[NÚMERO E ENTIDADE DE REGISTO]**. Para assuntos de privacidade, contacte
-**hello@orvelpartners.com**. **[IDENTIFICAR REPRESENTANTE OU ENCARREGADO DE PROTEÇÃO DE
-DADOS, SE APLICÁVEL]**.
+## Quem é responsável pelos seus dados
 
-### Dados e finalidade
+A **CATIA DROPFORCE MANAGEMENT - FZCO**, que utiliza a marca **Orvel Partners**, é responsável
+pelo tratamento dos dados pessoais descrito neste aviso. A sua sede é **Building A1, Dubai
+Digital Park, Dubai Silicon Oasis, Dubai, United Arab Emirates, PO BOX 342001**.
 
-Usamos os dados de identificação e contacto, informações do processo, propostas e pagamentos,
-documentos pedidos pela equipa e registos de utilização necessários para disponibilizar a área
-de cliente, acompanhar os serviços contratados, verificar documentação e comunicar consigo.
-O portal permite gerir processos de constituição de empresas e relocalização, incluindo etapas
-e prazos associados. Os documentos concretamente necessários dependem do serviço contratado.
+Para assuntos de privacidade e pedidos relativos aos seus dados, contacte
+**hello@orvelpartners.com** ou escreva para a morada acima.
 
-O portal regista operações relevantes, como alterações do processo, revisão e acesso a
-documentos sensíveis. O endereço de email é usado para enviar convites e links de entrada.
-Estes emails de acesso não incluem anexos com os seus documentos.
+[Completar a identificação de registo e os contactos de representante ou encarregado de
+proteção de dados, caso sejam aplicáveis.]
 
-**[VALIDAR FINALIDADES E FUNDAMENTOS POR CATEGORIA: diligências pré-contratuais/contrato,
-obrigações legais concretas e, quando aplicável, interesse legítimo identificado. Qualquer
-tratamento que exija consentimento específico terá de o recolher separadamente.]**
+## A quem se destina este aviso
 
-Se fornecer dados de familiares ou de outras pessoas envolvidas no processo, a equipa terá
-de confirmar a legitimidade dessa comunicação e a informação a prestar a essas pessoas.
-**[DEFINIR O PROCEDIMENTO PARA MENORES E EVENTUAIS DADOS DE SAÚDE OU OUTRAS CATEGORIAS
-QUE EXIJAM CONDIÇÕES ADICIONAIS; NÃO RECOLHER POR DEFEITO.]**
+Este aviso explica o tratamento de dados associado à preparação e acompanhamento dos
+serviços Orvel e à utilização da área de cliente. Abrange os dados que nos fornece e os
+dados de outras pessoas incluídas no processo, como representantes da empresa ou familiares.
 
-### Acesso, fornecedores e países
+A área de cliente destina-se ao acompanhamento do serviço **após a aceitação da proposta**.
+O acesso é pessoal e associado ao email registado pela equipa. A confirmação de leitura
+deste aviso é distinta da aceitação da proposta e de qualquer consentimento específico.
 
-O acesso à documentação no portal é limitado às contas autorizadas para o respetivo processo
-e à equipa autorizada da Orvel. A área administrativa exige autenticação de dois passos.
-Os ficheiros dos processos ficam num bucket privado e os downloads usam ligações temporárias.
+A preparação da proposta pode implicar a recolha de dados antes de existir acesso ao portal.
+Este aviso abrange também esses contactos iniciais.
 
-A infraestrutura inclui Supabase para base de dados, autenticação e ficheiros, Vercel para
-servir a aplicação e Resend para emails de acesso. O projeto Supabase do portal está alojado
-na Irlanda. Esta localização, por si só, não significa que todo o tratamento por todos os
-fornecedores ou pela equipa ocorra exclusivamente na União Europeia.
+## Que dados utilizamos e para quê
 
-**[CONFIRMAR ENTIDADES CONTRATANTES, SUBCONTRATANTES, PAÍSES, ACESSO DA EQUIPA E GARANTIAS
-APLICÁVEIS ÀS TRANSFERÊNCIAS. IDENTIFICAR AUTORIDADES, ZONAS FRANCAS, BANCOS E OUTROS
-DESTINATÁRIOS A QUEM A ORVEL ENVIA DADOS PARA EXECUTAR O SERVIÇO.]**
+Consoante o serviço e as pessoas envolvidas, tratamos:
 
-Um fornecedor de cópias de segurança só será incluído depois de selecionado e contratado.
-**[ATUALIZAR ESTA SECÇÃO ANTES DE PUBLICAR.]**
+- **Identificação e contacto:** nome, email, telefone e dados de identificação necessários
+  ao processo, para comunicar consigo e identificar as pessoas envolvidas.
+- **Proposta e serviço:** proposta apresentada, serviço escolhido, registo da aceitação,
+  informações da empresa, pessoas abrangidas, etapas e prazos, para preparar e executar
+  os serviços de constituição de empresas ou relocalização acordados.
+- **Documentos:** ficheiros pedidos pela equipa e documentos emitidos no âmbito do serviço,
+  para verificar os elementos necessários e acompanhar o processo. Envie apenas o que lhe
+  for solicitado; evite incluir informação sem relação com o pedido.
+- **Pagamentos:** montantes, estado e datas de pagamento e eventual comprovativo solicitado,
+  para acompanhar os pagamentos do serviço. O portal atual não disponibiliza um formulário
+  de pagamento por cartão.
+- **Acesso e atividade:** conta de utilizador, datas e horas de operações, endereço IP e
+  informação do navegador nas operações que os registam, versão do aviso apresentada e
+  confirmação de leitura, para permitir o acesso, proteger o portal e manter um histórico
+  das operações relevantes.
 
-### Conservação
+Os dados são fornecidos por si, por uma pessoa autorizada a acompanhar o processo ou pela
+equipa durante a prestação do serviço. [Identificar as restantes fontes efetivas, incluindo
+entidades que emitam documentação ou comuniquem resultados à Orvel.]
 
-Conservamos cada categoria apenas durante o período necessário à finalidade e às obrigações
-aplicáveis. **[INSERIR PRAZOS OU CRITÉRIOS APROVADOS PARA DOCUMENTOS DE IDENTIFICAÇÃO,
-DOCUMENTOS EMITIDOS, DADOS CONTRATUAIS/PAGAMENTOS, REGISTOS DE SEGURANÇA E BACKUPS.]**
+Quando um elemento for necessário para uma etapa, a equipa explicará o pedido e o efeito
+da sua falta. A ausência de informação indispensável poderá impedir essa etapa do serviço.
+[Identificar os elementos exigidos por contrato ou por lei e a consequência concreta.]
 
-**[EXPLICAR AS EXCEÇÕES POR OBRIGAÇÃO LEGAL OU LITÍGIO, O DESTINO NO TERMO DO PRAZO E O
-TRATAMENTO DAS CÓPIAS DE SEGURANÇA. ALINHAR O TEXTO COM O FUNCIONAMENTO REAL.]**
+## Fundamentos do tratamento
 
-### Pedidos e direitos
+Propõe-se a execução do contrato, ou as diligências solicitadas antes da contratação, como
+fundamento para os dados estritamente necessários à preparação e prestação do serviço ao
+próprio titular. [Validar a aplicação deste fundamento e identificar separadamente o
+fundamento para dados de representantes, familiares e outras pessoas.]
 
-Pode contactar-nos para pedir informação sobre os seus dados e exercer os direitos que sejam
-aplicáveis, incluindo acesso, correção, apagamento, limitação, oposição e portabilidade.
-Quando o fundamento for consentimento, pode retirá-lo nos termos aplicáveis, sem afetar o
-tratamento anterior lícito. Pode também apresentar reclamação à autoridade competente
-**[IDENTIFICAR CONFORME O REGIME E A SITUAÇÃO DO TITULAR]**.
+[Completar o fundamento aplicável à segurança e aos registos de atividade. Quando houver
+uma obrigação legal de recolha ou conservação, identificar a obrigação concreta. Se for
+invocado interesse legítimo, identificar o interesse e validar a sua utilização no regime
+aplicável.]
 
-A equipa poderá pedir os elementos estritamente necessários para confirmar a identidade
-e responder ao pedido. **[DEFINIR RESPONSÁVEL INTERNO, CANAL E PRAZOS DE RESPOSTA.]**
+Qualquer tratamento que dependa de consentimento específico será apresentado separadamente,
+com indicação da finalidade e de como retirar esse consentimento. A confirmação de leitura
+deste aviso não autoriza, por si só, marketing nem outros tratamentos opcionais.
 
-### Utilização do portal
+Se o processo envolver menores, dados de saúde ou outras informações que exijam proteção
+adicional, a equipa deverá confirmar previamente a necessidade e as condições do tratamento.
+[Validar este procedimento e a informação a prestar a cada pessoa envolvida.]
 
-O acesso depende do email registado pela equipa. Certos dados são necessários para executar
-o serviço; quando não forem disponibilizados, a equipa explicará o efeito no processo.
-**[IDENTIFICAR CAMPOS OBRIGATÓRIOS, FUNDAMENTO E CONSEQUÊNCIAS CONCRETAS.]**
+## Quem pode aceder e onde são tratados os dados
 
-O portal regista a versão deste aviso apresentada e a confirmação do utilizador.
-**[VALIDAR A REDAÇÃO DESTA CONFIRMAÇÃO: TOMADA DE CONHECIMENTO NÃO É CONSENTIMENTO
-GENÉRICO PARA TODO O TRATAMENTO.]** Não foram implementadas decisões automatizadas de
-elegibilidade no portal; confirmar também os procedimentos externos da Orvel antes de
-declarar a inexistência de decisões desse tipo em todo o serviço.
+No portal, os dados do processo são acessíveis à conta de cliente autorizada e à equipa
+Orvel autorizada. A administração exige autenticação de dois passos. Os ficheiros dos
+processos são guardados em armazenamento privado e os downloads usam ligações temporárias.
 
-Versão: **[VERSÃO APROVADA]** · Aplicável desde: **[DATA DE PUBLICAÇÃO]**.
+A infraestrutura atual utiliza:
 
-## Notas internas para a revisão
+- **Supabase:** base de dados, autenticação e armazenamento de ficheiros. O projeto do
+  portal está na região da Irlanda.
+- **Vercel:** disponibilização da aplicação e tratamento dos pedidos técnicos de acesso.
+- **Resend:** envio de convites e emails de autenticação, incluindo o endereço do
+  destinatário, o conteúdo da mensagem e dados de entrega. Estes emails não levam os
+  documentos do processo em anexo.
 
-A denominação e a morada acima foram indicadas pela responsável em 18/11/2026 para este
-rascunho. A identificação de registo e os restantes campos continuam por confirmar; esta
-atualização não constitui aprovação ou publicação do aviso.
+A localização do projeto Supabase não significa que todo o tratamento ocorra na União
+Europeia. [Completar os países de acesso da equipa e dos fornecedores, as entidades
+contratantes, os subcontratantes relevantes e as garantias aplicáveis às transferências,
+incluindo como obter informação sobre essas garantias.]
 
-O aviso deve identificar responsável, finalidades/fundamentos, destinatários, transferências,
-conservação e forma de exercer direitos, com informação clara antes da recolha. A definição
-dos fundamentos e das garantias depende da entidade e dos serviços efetivos; confirmar a
-aplicação do RGPD e do regime dos EAU com o revisor jurídico. Referências consultadas:
-[transparência — DPC](https://www.dataprotection.ie/en/individuals/know-your-rights/right-be-informed-transparency-article-13-14-gdpr)
-e [informação aos titulares — Comissão Europeia](https://commission.europa.eu/law/law-topic/data-protection/information-individuals_en).
+[Identificar os destinatários efetivos do serviço, por exemplo autoridades, zonas francas
+ou bancos quando intervenham, os dados comunicados e a finalidade. Não pressupor que todos
+os destinatários atuam como subcontratantes da Orvel.]
 
-Estado técnico atual: não existe aviso publicado, a área de cliente está bloqueada,
-`RETENTION_ENABLED=false`, não existe cron nem worker de eliminação publicado. Não prometer
-eliminação automática no texto enquanto essa operação não estiver aprovada e validada.
+## Armazenamento no seu navegador
 
-Depois de preencher/rever: guardar versão aprovada, confirmar política de conservação,
-alinhar a redação do checkbox se necessário, publicar de forma explícita e executar o ensaio
-de cliente com dados fictícios. Publicar o aviso e ativar eliminação são decisões separadas.
+O portal guarda informação de sessão no navegador para manter o acesso autenticado e
+recordar o processo selecionado durante a utilização. Terminar a sessão é especialmente
+importante num dispositivo partilhado. Apagar o armazenamento do portal no navegador pode
+obrigar a voltar a entrar. [Completar o inventário e a duração deste armazenamento após
+verificação no domínio final.]
+
+## Durante quanto tempo conservamos os dados
+
+Os prazos e os respetivos pontos de início são definidos por categoria e finalidade,
+considerando a prestação do serviço, as obrigações aplicáveis e eventuais litígios.
+
+| Categoria | Prazo ou critério a aprovar antes da publicação |
+|---|---|
+| Contactos e propostas não aceites | [Prazo após o último contacto ou encerramento da proposta.] |
+| Documentos de identificação e outros ficheiros enviados | [Prazo após conclusão/cancelamento, por tipo de documento, e exceções justificadas.] |
+| Documentos emitidos e histórico do processo | [Prazo e evento a partir do qual é contado.] |
+| Propostas aceites, registos contratuais e pagamentos | [Prazo, obrigação aplicável e eventual conservação para defesa de direitos.] |
+| Conta, autenticação e registos de segurança/atividade | [Prazos separados, incluindo registos dos fornecedores.] |
+| Cópias de segurança, quando implementadas | [Prazo, acesso restrito e tratamento dos dados eliminados após uma recuperação.] |
+
+A eliminação automática de documentos está atualmente desativada. Isso não estabelece
+um prazo de conservação ilimitado nem impede a apresentação de pedidos de apagamento.
+Os pedidos são avaliados individualmente; quando algum dado tiver de ser conservado,
+será explicada a razão aplicável. [Aprovar o procedimento interno antes de receber dados reais.]
+
+## Como exercer os seus direitos
+
+Pode escrever para **hello@orvelpartners.com** para pedir informação sobre os seus dados
+ou exercer os direitos aplicáveis à sua situação, incluindo acesso, correção, apagamento,
+limitação, oposição ou portabilidade. Se um tratamento depender do seu consentimento,
+pode retirá-lo sem afetar a licitude do tratamento anterior.
+
+Poderemos pedir apenas os elementos necessários para confirmar a sua identidade. Não envie
+passwords, códigos de autenticação ou cópias integrais de documentos por email sem indicação
+de um meio adequado. Responderemos dentro do prazo legal aplicável.
+
+Pode apresentar reclamação à autoridade de proteção de dados competente.
+[Identificar a autoridade e o canal aplicáveis, após confirmar o regime e os destinatários
+do serviço; não os deduzir apenas da localização do servidor.]
+
+## Decisões automatizadas e alterações
+
+O portal regista etapas e prazos e apresenta o estado do processo. Não implementa uma
+decisão automática de elegibilidade para os serviços. [Confirmar também os procedimentos
+externos da Orvel e dos intervenientes antes de alargar esta afirmação ao serviço completo.]
+
+Quando este aviso for atualizado, será identificada a nova versão e a sua data. O portal
+regista a versão apresentada e a confirmação de leitura. Uma alteração do aviso não
+substitui a obtenção de um consentimento específico quando este seja necessário.
+
+Versão publicada: **[A DEFINIR]** · Aplicável desde: **[A DEFINIR]**.

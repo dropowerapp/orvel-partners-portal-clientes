@@ -1,4 +1,5 @@
-// Aviso de privacidade e consentimento (primeiro login e sempre que a versão muda).
+// Tomada de conhecimento do aviso (primeiro login e sempre que a versão muda).
+// Os nomes históricos da RPC/tabela não representam consentimento para tratamentos opcionais.
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate, useNavigate } from "react-router";
