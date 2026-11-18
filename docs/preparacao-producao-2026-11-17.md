@@ -1,7 +1,7 @@
 # Preparação de produção — atualizado em 18/11/2026
 
 O Supabase de produção foi criado e a configuração Vercel foi preparada. O portal ainda não está lançado
-para clientes reais: faltam emails, administração real/MFA, marca no Storage, backups com
+para clientes reais: faltam o ensaio autenticado de emails, administração real/MFA, marca no Storage, backups com
 restauração, aprovação do aviso de privacidade e publicação/ensaio final na Vercel.
 A eliminação de documentos permanece desativada por decisão da responsável.
 
@@ -81,7 +81,7 @@ a interface indica que exige Pro ou superior. Não foi feita alteração de plan
 
 ### Funções e variáveis de servidor
 
-`sign-download` publicada em produção, confirmada como v2/ACTIVE na listagem final, com
+`sign-download` publicada em produção, confirmada como v4/ACTIVE na listagem final, com
 `verify_jwt=true`. O código é o do
 repositório: valida a sessão, consulta o documento com as permissões do utilizador, verifica o
 caminho e assina por 60 segundos, com auditoria dos downloads sensíveis.
@@ -96,10 +96,46 @@ Variáveis guardadas no projeto (valores de configuração, sem chaves privadas)
 | `EMAIL_MODE` | `resend` |
 | `RETENTION_ENABLED` | `false` |
 
-`RESEND_API_KEY` e `SEND_EMAIL_HOOK_SECRET` ainda não configurados. `EMAIL_LOG_DOMAINS`
-não definido. Não ativar logging de emails em produção. `invite-client` e
-`auth-send-email` ainda não publicadas neste projeto; o hook de envio ainda não configurado.
-Não foram enviados emails. A lista remota deve conter apenas `sign-download` nesta fase.
+`RESEND_API_KEY` e `SEND_EMAIL_HOOK_SECRET` foram introduzidos pela responsável no painel;
+a existência dos nomes guardados foi confirmada sem copiar os valores para o repositório.
+`EMAIL_LOG_DOMAINS` não está definido. Não ativar logging de emails em produção.
+
+`invite-client` v2/ACTIVE está publicada com `verify_jwt=true`; mantém os controlos de
+sessão, pertença e MFA da equipa. `auth-send-email` v2/ACTIVE está publicada com
+`verify_jwt=false`, pois autentica cada pedido pela assinatura Standard Webhooks.
+O Send Email hook HTTPS foi criado pela responsável e o painel confirmou **ENABLED**;
+o endpoint preparado é a função `auth-send-email` deste projeto.
+
+### Teste de envio Resend — 18/11, 08:57 UTC
+
+Foi enviada uma mensagem técnica para **hello@orvelpartners.com**, destinatário indicado
+pela responsável, com o assunto **[TESTE] Portal Orvel — ligação de produção ao Resend**.
+Usou o módulo partilhado `_shared/email.ts`, os segredos do projeto novo e o remetente
+`Orvel Partners <hello@orvelpartners.com>`. O Resend respondeu **HTTP 200**, com o identificador
+`01a1eddf-dccf-75c8-8806-f76e43f152ab`. A receção na caixa de correio ainda aguarda confirmação;
+a aceitação pela API não demonstra entrega na caixa de entrada.
+
+O teste não criou utilizadores ou associações, não continha um link de autenticação e não
+convidou clientes. Verificou `EMAIL_MODE=resend` e `RETENTION_ENABLED=false` antes do envio.
+A função temporária exigiu JWT e validou a credencial de serviço no Auth do próprio projeto;
+o destinatário era fixo e o pedido Resend tinha uma chave de idempotência. Não foram alteradas
+as proteções das funções do portal para executar o teste.
+
+Após o envio, `email-delivery-check` foi substituída por v3, com JWT obrigatório e apenas uma
+resposta **410 `test_completed`**. A leitura remota do código confirmou que já não lê segredos,
+não contacta serviços externos e não pode enviar emails. Continua listada como ACTIVE pelo
+fornecedor, mas a operação de teste está desativada. Não voltar a publicar o código de envio.
+
+Pedidos HTTP sem credenciais foram recusados: `auth-send-email` devolveu 401
+`invalid_signature`; `invite-client` e a função de teste devolveram 401 por ausência de
+autenticação. Os 39 testes locais das Edge Functions e `deno check` passaram antes do deploy.
+A consulta posterior confirmou zero utilizadores Auth, associações, documentos e tarefas de
+eliminação; `pg_cron` continua ausente e `purge-documents` não está publicada.
+
+Este ensaio valida o transporte Supabase → Resend. O percurso Auth → hook assinado → email
+com link válido → entrada no portal e o convite pela equipa ainda exigem a primeira conta
+real, MFA e o domínio final operacional. O âmbito/permissões da chave Resend e a entrega no
+destino não foram confirmados no painel Resend, que pede início de sessão.
 
 ### Testes HTTP na produção
 
@@ -199,11 +235,10 @@ A configuração guardada só será incorporada num build/deploy posterior.
    de plano e DNS/HTTPS descritos acima. Publicar o commit revisto com as variáveis Production
    e validar o resultado remoto. Não promover um build feito com os testes nem colocar
    service_role/secret em `VITE_*`.
-2. **Emails:** confirmar conta/domínio Resend e chave de envio limitada ao domínio Orvel.
-   Guardar a chave no servidor, configurar o segredo assinado do hook e publicar as duas
-   funções de email. Validar entrega com um destinatário autorizado antes de convidar clientes.
-   Não colocar segredos no chat ou no Git. A integração atual não expõe gestão de segredos;
-   a introdução de novas credenciais pelo browser requer intervenção da responsável.
+2. **Emails:** chave no servidor, segredo assinado, hook e duas funções já configurados;
+   envio técnico aceite pelo Resend. Confirmar a receção em `hello@orvelpartners.com` e
+   testar os percursos autenticados descritos acima. Confirmar que a chave é só de envio
+   e limitada ao domínio Orvel antes de convidar clientes. Não colocar segredos no chat ou no Git.
 3. **Administração e marca:** confirmar o email da primeira conta real, criar o acesso e
    concluir TOTP com a responsável. Verificar também MFA/recuperação das contas de plataforma.
    Carregar apenas os ficheiros de `branding/orvel` e preencher os caminhos na organização.

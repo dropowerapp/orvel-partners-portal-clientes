@@ -25,7 +25,9 @@ base de dados), sem o construir já.
 **Produção — 18/11/2026:** criado o Supabase `orvel-portal-producao`
 (`ilwkiruybzxplnhwcwrs`), separado dos testes, na organização Orvel Partners e no plano Free.
 As 14 migrações estão instaladas; registo público desligado, bucket privado e download protegido
-validados. Não contém clientes nem documentos. A eliminação continua desativada. Emails,
+validados. Não contém clientes nem documentos. A eliminação continua desativada. O Resend e
+o hook de email estão configurados; o envio técnico para o endereço autorizado foi aceite
+pelo Resend, aguardando confirmação de receção. O ensaio autenticado de emails,
 administração real, backups e publicação Vercel ainda estão pendentes. A Vercel já tem acesso
 recuperado, variáveis Production separadas, Node 24 e domínio associado; falta o DNS.
 [Configuração e condições para lançamento](docs/preparacao-producao-2026-11-17.md).
@@ -495,7 +497,7 @@ cópia de dados. O projeto de testes `xdakbbvnpoojhyapznkf` foi preservado.
 Na produção, o registo público e as sessões anónimas estão desligados, TOTP disponível,
 passwords com mínimo configurado de 12 caracteres e requisitos de maiúsculas/minúsculas/dígitos.
 Site URL, callback exato e CORS estão preparados para `https://portal.orvelpartners.com`;
-isto não comprova que o domínio já esteja publicado. `sign-download` v2 está ativa com JWT,
+isto não comprova que o domínio já esteja publicado. `sign-download` v4 está ativa com JWT,
 e os testes HTTP recusaram leitura e download sem sessão (401). As tabelas públicas têm RLS,
 sem permissões de tabelas para anónimos; o bucket de documentos é privado.
 
@@ -507,7 +509,10 @@ local de produção passou e o pacote usa apenas o backend novo, sem contas de d
 O domínio `portal.orvelpartners.com` está associado; falta o CNAME no DNS externo. A utilização
 de código/conversas deste projeto para treino de IA na Vercel foi desligada, com autorização
 expressa, e confirmada após recarregar o painel. O plano atual é Hobby; decidir o plano adequado
-ao uso comercial antes do lançamento. Não houve novo deploy. Emails de produção,
+ao uso comercial antes do lançamento. Não houve novo deploy do frontend. As funções de email
+de produção e o hook assinado estão configurados; o Resend aceitou a mensagem técnica para
+`hello@orvelpartners.com`, ainda sem confirmação da caixa de correio. A função temporária de
+teste já não pode enviar emails. O ensaio autenticado de emails,
 conta real de administração/MFA, marca no Storage, backups,
 aviso de privacidade aprovado e validação autenticada final continuam pendentes.
 [Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).
