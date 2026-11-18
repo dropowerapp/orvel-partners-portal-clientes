@@ -2,8 +2,9 @@
 
 O Supabase de produção foi criado e o frontend atual foi publicado na Vercel para validação controlada. O portal ainda não está lançado
 para clientes reais: faltam backups com restauração, aprovação do aviso de
-privacidade, adequação contratual do alojamento, aplicação da regra de acesso após aceitação
-da proposta e os restantes percursos autenticados no domínio público.
+privacidade, adequação contratual do alojamento e os restantes percursos autenticados no
+domínio público. A proposta é aceite dentro do portal; o acesso inicial restrito e a abertura
+do acompanhamento após aceitar já estão implementados e ensaiados em Preview.
 Administração/MFA, convites, reenvio e login já foram validados em 18/11.
 A eliminação de documentos permanece desativada por decisão da responsável.
 Em 18/11, a responsável confirmou **não contratar planos pagos por enquanto**; a proposta
@@ -20,7 +21,7 @@ de custos fica adiada. A revisão do aviso está preparada localmente, sem publi
 | Testes | `xdakbbvnpoojhyapznkf`, `orvelpartners's Project`; dados fictícios preservados. O rótulo main/PRODUCTION do fornecedor não altera esta finalidade. |
 | Custos | Consulta anterior à criação: 0 USD/mês. Nenhum plano contratado, projeto apagado ou pausado. |
 | Vercel | Equipa `dropower-s-projects`, `team_4UE4GPF895jF3QvZu1crnFMN`; projeto `orvel-partners-portal-clientes`, `prj_qGopqpbxJ08ClmkSGLFbasqrGQ0Z`. Acesso recuperado após consentimento da equipa; plano Hobby ativo confirmado no painel. |
-| GitHub | `dropowerapp/orvel-partners-portal-clientes`, ramo `codex/documentos-design`; commit `030d4c1` enviado em 18/11 para preparar o ensaio no domínio final. |
+| GitHub | `dropowerapp/orvel-partners-portal-clientes`, ramo `codex/documentos-design`; versão funcional `e9b6811` publicada em produção em 18/11. |
 
 [Projeto de produção](https://supabase.com/dashboard/project/ilwkiruybzxplnhwcwrs).
 **GitHub e Vercel mantêm a propriedade atual**, por indicação expressa da responsável.
@@ -37,8 +38,9 @@ contínuo. Confirmar a adequação antes do lançamento.
 
 ## Produção instalada
 
-Foram aplicadas as 14 migrações do repositório, desde `20261031100000_schema` até
-`20261118140000_platform_privileges`, incluindo documentos, cronologia/prazos e conservação.
+Foram aplicadas as 15 migrações do repositório, desde `20261031100000_schema` até
+`20261118140000_platform_privileges`, incluindo documentos, cronologia/prazos, conservação
+e `20261118122607_proposal_access` (adicionada após a instalação inicial das outras 14).
 O histórico remoto foi alinhado com as versões dos ficheiros locais após a aplicação pelo
 conector; `list_migrations` confirmou todas as versões.
 
@@ -178,7 +180,8 @@ entrar e enviar documentação no domínio final.
 O advisor do novo projeto indica:
 
 - Uma função anónima SECURITY DEFINER: `get_org_public`, destinada apenas à marca pública.
-- 19 funções SECURITY DEFINER executáveis por utilizadores autenticados: operações validadas
+- 19 funções SECURITY DEFINER na verificação inicial; 20 após acrescentar `get_client_processes`,
+  com verificação explícita de utilizador e pertença. São executáveis por utilizadores autenticados: operações validadas
   da aplicação. Manter os controlos internos de sessão, pertença, MFA e estado do processo;
   não retirar indiscriminadamente estas APIs necessárias.
 - RLS sem políticas na fila privada `private.document_purge_jobs`: intencional, uso exclusivo
@@ -315,23 +318,25 @@ worker sem publicação e `RETENTION_ENABLED=false` preservado.
    Executar e registar a restauração, hashes, permissões e objetivos de perda/tempo de recuperação.
    No painel do novo projeto ainda não existem backups. Não copiar documentação de clientes
    para um destino não aprovado. [Backups Supabase](https://supabase.com/docs/guides/platform/backups).
-5. **Privacidade:** [rascunho revisto, revisão 2](aviso-privacidade-rascunho-2026-11-18.md),
+5. **Privacidade:** [rascunho revisto, revisão 3](aviso-privacidade-rascunho-2026-11-18.md),
    com **CATIA DROPFORCE MANAGEMENT - FZCO** e a sede em Building A1, Dubai Digital Park,
    Dubai Silicon Oasis, Dubai, United Arab Emirates, PO BOX 342001, indicadas pela responsável.
    Registo, regime/fundamentos, destinatários/transferências e prazos continuam por confirmar.
    Aprovar o texto antes de publicar; a política de conservação não autoriza ativar eliminação.
-   O rascunho da migração não é aprovação jurídica. Texto de confirmação de leitura preparado
-   no frontend local, sem deploy. [Constatações e decisões](revisao-privacidade-e-acesso-2026-11-18.md).
+   O rascunho da migração não é aprovação jurídica. Texto de confirmação de leitura já no
+   frontend publicado; aviso jurídico ainda sem publicação.
+   [Constatações e decisões](revisao-privacidade-e-acesso-2026-11-18.md).
 6. **Ensaio final:** convite, reenvio de convite, entrada e MFA concluídos. Após aprovação da
    privacidade, validar consentimento, envio, revisão, rejeição/reenvio de documentos, download,
    isolamento entre clientes, cronologia e prazos no domínio final. Usar documentos fictícios
    controlados, sem importar o seed de testes.
 7. **Eliminação:** manter `RETENTION_ENABLED=false`, `purge-documents` sem deploy e sem cron.
    A ativação exige decisão posterior, política aprovada e ensaio; não faz parte desta fase.
-8. **Acesso após proposta aceite:** regra confirmada pela responsável, substituindo a indicação
-   inicial de pagamento. Ainda não aplicada: a aplicação atual permite convite antes da aceitação
-   e aceita a proposta dentro da área de cliente. Preparar o percurso prévio e a autorização
-   por processo, incluindo APIs e ficheiros; publicar o aviso não implementa esta condição.
+8. **Acesso após proposta aceite:** implementado no frontend e na base de dados. O convite
+   abre a área inicial com Proposta/Contacto (após a leitura do aviso). Aceitar dentro do portal
+   liberta apenas o respetivo processo, sem exigir pagamento. Ensaios automáticos e no Chrome
+   concluídos em testes; a produção continua bloqueada pelo aviso jurídico em falta.
+   [Evidência desta alteração](validacao-proposta-2026-11-18.md).
 
 Na revisão do aviso em 18/11, nova consulta de leitura confirmou 0 avisos publicados, 0
 documentos, 0 tarefas de eliminação e ausência de `pg_cron`. Sem alterações remotas nesta revisão.
@@ -344,6 +349,26 @@ Conserva contas/processos fictícios. A Preview atual inclui a etapa 6, cujo bac
 instalado; a validação autenticada dessa etapa continua pendente.
 A validação anterior de documentos no Chrome está em
 [validacao-documentos-2026-11-17.md](validacao-documentos-2026-11-17.md).
+
+## Atualização: proposta dentro do portal — 18/11, 16:46 UTC
+
+A migração de acesso foi instalada nos dois projetos, completando **15 migrações**. A versão
+funcional `e9b68118ffecceafbda6b8827ff7b133cc947588` está em:
+
+| Ambiente | Deployment | Resultado |
+|---|---|---|
+| Preview | `dpl_D8etEP8DyHa29xuZRJhf9ip4jVfy` | READY, Supabase de testes; percurso autenticado no Chrome aprovado. |
+| Production | `dpl_DYTJpvpp61oZutz9XgNUttrLofN2` | READY, novo build com variáveis de produção; `portal.orvelpartners.com` responde HTTP 200. |
+
+O JavaScript servido no domínio final contém o backend `ilwkiruybzxplnhwcwrs`, a nova consulta
+de processos e a redação de confirmação de leitura; não contém a referência do projeto de
+testes. O alias da Preview permanece no deployment de testes. **100 testes de frontend e
+437 verificações SQL** passaram, além de typecheck e build. O ensaio preservou os dados
+fictícios e não executou a limpeza do script remoto.
+
+Mantêm-se zero avisos publicados, zero documentos em produção, fila de eliminação vazia,
+ausência de cron e de `purge-documents`. Nenhum plano pago contratado; a publicação técnica
+não equivale à abertura comercial do portal.
 
 Este registo documenta preparação e verificações concretas. Não certifica segurança integral
 nem substitui uma auditoria independente, aprovação jurídica ou um ensaio de recuperação.

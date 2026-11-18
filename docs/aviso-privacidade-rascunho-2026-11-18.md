@@ -1,10 +1,11 @@
 # Aviso de privacidade — rascunho revisto
 
-**Revisão 2 · 18/11/2026 · Não aprovado e não publicado.**
+**Revisão 3 · 18/11/2026 · Não aprovado e não publicado.**
 
 Texto preparado para revisão pela Orvel e pelo seu assessor jurídico. Os campos entre
-colchetes ainda exigem decisão. A regra de acesso após aceitação da proposta foi indicada
-pela responsável, mas ainda não está implementada. Não copiar este rascunho para o portal
+colchetes ainda exigem decisão. A responsável confirmou a aceitação da proposta dentro do
+portal: acesso inicial à proposta e contacto, seguido do acompanhamento após aceitar.
+Este percurso está implementado; não copiar este rascunho para o portal
 como aviso em vigor. As verificações, fontes e decisões em falta estão no
 [relatório de revisão](revisao-privacidade-e-acesso-2026-11-18.md).
 
@@ -28,9 +29,15 @@ Este aviso explica o tratamento de dados associado à preparação e acompanhame
 serviços Orvel e à utilização da área de cliente. Abrange os dados que nos fornece e os
 dados de outras pessoas incluídas no processo, como representantes da empresa ou familiares.
 
-A área de cliente destina-se ao acompanhamento do serviço **após a aceitação da proposta**.
-O acesso é pessoal e associado ao email registado pela equipa. A confirmação de leitura
-deste aviso é distinta da aceitação da proposta e de qualquer consentimento específico.
+O acesso ao portal é pessoal e associado ao email registado pela equipa. Inicialmente,
+pode consultar a proposta, abrir o respetivo PDF, contactar a equipa e aceitar a proposta
+dentro do portal. **Após a aceitação**, ficam disponíveis o acompanhamento e as operações
+do respetivo processo, incluindo documentos, dados, pagamentos e prazos. A aceitação de
+uma proposta não abre outros processos ainda não aceites. O registo de pagamento é uma
+etapa do serviço e não é a condição de abertura desta área.
+
+A confirmação de leitura deste aviso é distinta da aceitação da proposta e de qualquer
+consentimento específico.
 
 A preparação da proposta pode implicar a recolha de dados antes de existir acesso ao portal.
 Este aviso abrange também esses contactos iniciais.

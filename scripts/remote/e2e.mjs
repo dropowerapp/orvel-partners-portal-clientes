@@ -5,7 +5,9 @@
 // consentimento exigido pela base de dados, login da equipa com password e MFA (TOTP), convite
 // (invite-client), políticas do Storage, a regra "o cliente nunca vê nomes da equipa" e as
 // operações do painel da equipa da etapa 3 (as mesmas consultas que o portal faz).
-// No fim desfaz o que alterou (exceto o cliente de teste do convite, que fica como dado fictício).
+// Requer seed recente: a proposta fictícia do Rui tem de estar enviada e ainda não aceite.
+// No fim desfaz os ficheiros/operações temporários. Preserva a aceitação da proposta e o
+// cliente de teste do convite; uma aceitação não é desfeita para repetir um ensaio.
 import { createHash, createHmac } from "node:crypto";
 import { createRequire } from "node:module";
 
@@ -149,6 +151,11 @@ const cleanup = { objects: [], documents: [], requestsToReset: [], factors: [], 
 console.log(`Projeto: ${URL_}\nPortal: ${SITE_URL}\n`);
 
 ids.orvel = noError(await admin.from("organizations").select("id").eq("slug", "orvel").single(), "organização Orvel").id;
+const ruiProposal = noError(
+  await admin.from("proposals").select("id,status,plans").eq("process_id", ids.procRui).eq("reference", "ORV-2026-901").single(),
+  "proposta fictícia do Rui",
+);
+assert(ruiProposal.status === "sent", "Este ensaio exige seed recente, com a proposta do Rui ainda por aceitar.");
 
 // ------------------------------------------------------------------------------------------------
 console.log("— Sem sessão");
@@ -244,7 +251,24 @@ await check("aceita o aviso de privacidade", async () => {
   const ctx = noError(await rui.rpc("get_session_context", { p_org: ids.orvel }), "get_session_context");
   assert(ctx.consent_required === false, "continua a pedir consentimento");
 });
-await check("depois de aceitar, vê só o seu processo e os seus dados", async () => {
+await check("antes da proposta aceite, vê a proposta mas não os dados do processo", async () => {
+  const procs = noError(await rui.rpc("get_client_processes", { p_org: ids.orvel }), "get_client_processes");
+  assert(procs.length === 1 && procs[0].id === ids.procRui && procs[0].proposal_accepted === false, "lista inicial incorreta");
+  assert(procs[0].plan_name === null && procs[0].bank_account_id === null, "dados reservados expostos");
+  const proposals = noError(await rui.from("proposals").select("id"), "proposals");
+  assert(proposals.some((p) => p.id === ruiProposal.id), "não pode consultar a proposta antes de aceitar");
+  for (const table of ["processes", "clients", "documents", "payments", "document_requests"]) {
+    assert(noError(await rui.from(table).select("id"), table).length === 0, `acesso antecipado a ${table}`);
+  }
+});
+await check("aceita a proposta fictícia dentro do portal", async () => {
+  noError(await rui.rpc("accept_proposal", {
+    p_proposal_id: ruiProposal.id, p_plan_name: ruiProposal.plans[0].name, p_user_agent: "teste e2e fictício",
+  }), "accept_proposal");
+  const procs = noError(await rui.rpc("get_client_processes", { p_org: ids.orvel }), "get_client_processes");
+  assert(procs.find((p) => p.id === ids.procRui)?.proposal_accepted === true, "processo não libertado");
+});
+await check("depois de aceitar a proposta, vê só o seu processo e os seus dados", async () => {
   const procs = noError(await rui.from("processes").select("id"), "processes");
   assert(procs.length === 1 && procs[0].id === ids.procRui, `${procs.length} processos`);
   const clients = noError(await rui.from("clients").select("id"), "clients");
