@@ -52,10 +52,14 @@ Consulta final: 2 utilizadores Auth, 2 associações, 1 cliente, 1 processo, **0
 `purge-documents` não publicada. A função técnica `email-delivery-check` continua desativada
 com resposta 410, sem envio de emails. Nenhum documento foi eliminado.
 
-O painel Resend mostrou a chave `Supabase_Orvel` em **Full access**. Limitar a envio no domínio
-Orvel antes do lançamento. Continuam pendentes a decisão sobre Vercel Hobby para uso comercial,
-backups com restauração, MFA/recuperação das contas de plataforma, marca no Storage e os restantes
-percursos autenticados. Ver [preparação e condições](preparacao-producao-2026-11-17.md).
+Na passagem inicial, o painel Resend mostrou `Supabase_Orvel` em Full access. Na continuação de
+18/11, foi limitada a **Sending access / orvelpartners.com** e novo reenvio foi entregue às
+09:34 UTC, email `01a1ee02-5022-7538-b0f0-0ef9d3dc6d2b`. Os três ficheiros da marca também
+foram carregados e verificados em produção. As contagens de Storage acima referem-se ao fim
+do ensaio inicial; depois existem três imagens de branding e continuam zero documentos.
+Permanecem a decisão sobre Vercel Hobby para uso comercial, backups com restauração,
+MFA/recuperação das contas de plataforma e os restantes percursos autenticados.
+Ver [preparação e condições](preparacao-producao-2026-11-17.md).
 
 Este ensaio confirma os percursos descritos. A restrição de navegação não substitui a auditoria
 das permissões nem o teste de isolamento entre dois clientes. O fluxo completo de documentos

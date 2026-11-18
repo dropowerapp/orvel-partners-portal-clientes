@@ -1,7 +1,7 @@
 # Preparação de produção — atualizado em 18/11/2026
 
 O Supabase de produção foi criado e o frontend atual foi publicado na Vercel para validação controlada. O portal ainda não está lançado
-para clientes reais: faltam marca no Storage, backups com restauração, aprovação do aviso de
+para clientes reais: faltam backups com restauração, aprovação do aviso de
 privacidade, decisão de plano e os restantes percursos autenticados no domínio público.
 Administração/MFA, convites, reenvio e login já foram validados em 18/11.
 A eliminação de documentos permanece desativada por decisão da responsável.
@@ -11,7 +11,7 @@ A eliminação de documentos permanece desativada por decisão da responsável.
 | Recurso | Estado confirmado em 18/11 |
 |---|---|
 | Organização Supabase | Orvel Partners, `etjykbrkqrzyurwmocop`, plano Free. |
-| Propriedade | Painel Team consultado: exatamente um membro, a conta indicada pela responsável, marcada YOU e Owner; conta Dropower ausente. MFA da conta Supabase ainda não verificado. |
+| Propriedade | Painel Team consultado: exatamente um membro, a conta indicada pela responsável, marcada YOU e Owner; conta Dropower ausente. Página Security consultada em 18/11: MFA da conta proprietária ainda por configurar; entregue à responsável. |
 | Ligação Codex | Ligação **ORVEL PARTNERS** operacional. Chamadas dirigidas explicitamente a essa ligação; não usar a ligação DROPFORCE. |
 | Produção | `orvel-portal-producao`, `ilwkiruybzxplnhwcwrs`, região `eu-west-1` (Irlanda), ACTIVE_HEALTHY, PostgreSQL 17.12, Nano. |
 | Testes | `xdakbbvnpoojhyapznkf`, `orvelpartners's Project`; dados fictícios preservados. O rótulo main/PRODUCTION do fornecedor não altera esta finalidade. |
@@ -45,7 +45,7 @@ de testes. A instalação cria apenas a organização e os valores iniciais da a
 
 | Verificação remota | Resultado |
 |---|---|
-| Utilizadores Auth / associações / clientes / processos / documentos / objetos Storage | 2 / 2 / 1 / 1 / 0 / 0 após o ensaio autorizado de convites; cliente e processo fictícios. |
+| Utilizadores Auth / associações / clientes / processos / documentos / objetos Storage | 2 / 2 / 1 / 1 / 0 / 3; cliente/processo fictícios e apenas três imagens da marca no Storage. |
 | Migrações esperadas | Nenhuma em falta. |
 | Tabelas públicas sem RLS | 0. |
 | Permissões de tabelas públicas para `anon` | 0. |
@@ -136,8 +136,23 @@ criadas depois, no ensaio abaixo; `pg_cron` continua ausente e `purge-documents`
 
 Este ensaio validou o transporte Supabase → Resend. O percurso Auth → hook assinado → email
 com link válido → entrada no portal e o convite pela equipa foram depois validados no domínio
-final, conforme o relatório abaixo. O painel Resend confirmou a chave `Supabase_Orvel` com
-**Full access**; reduzir para envio limitado ao domínio Orvel antes do lançamento real.
+final, conforme o relatório abaixo. A chave `Supabase_Orvel` estava em Full access e foi depois
+limitada a **Sending access / orvelpartners.com**, sem criar outra chave nem trocar segredos.
+O formulário foi reaberto e confirmou os valores guardados. Um reenvio pelo portal às 09:34 UTC
+foi entregue pelo Resend (`01a1ee02-5022-7538-b0f0-0ef9d3dc6d2b`), confirmando envio com a
+permissão reduzida. As outras chaves da conta não foram alteradas.
+
+### Marca instalada — 18/11
+
+Carregados no bucket público `branding`, na pasta da organização, apenas os três ficheiros
+originais existentes em `branding/orvel`: `logotipo.png`, `simbolo.png` e
+`logotipo-fundo-escuro.png`. Os caminhos `logo_path`, `theme.symbol_path` e
+`theme.logo_dark_path` foram preenchidos depois de confirmar o upload. As cores e tipografia
+foram preservadas. Não houve criação de bucket nem alteração das permissões de documentos.
+
+Os três URLs públicos devolveram HTTP 200 e bytes idênticos aos ficheiros locais (SHA-256
+comparado). A entrada no Chrome e o cabeçalho do painel administrativo mostram a marca.
+O bucket `documents` continua privado e vazio.
 
 ### Testes HTTP na produção
 
@@ -277,18 +292,23 @@ worker sem publicação e `RETENTION_ENABLED=false` preservado.
 2. **Emails:** chave no servidor, segredo assinado, hook e duas funções já configurados;
    envio técnico aceite pelo Resend e entrega na caixa de entrada de `hello@orvelpartners.com`
    confirmada pela responsável. Convite, reenvio e Auth hook validados. A chave `Supabase_Orvel`
-   tem Full access: substituí-la por uma chave só de envio e limitada ao domínio Orvel antes de
-   convidar clientes reais. Não colocar segredos no chat ou no Git.
+   foi limitada a envio no domínio Orvel e um novo reenvio foi entregue. Não colocar segredos
+   no chat ou no Git.
 3. **Administração e marca:** conta `hello@orvelpartners.com` e associação administrativa criadas;
-   primeiro login e TOTP concluídos. Verificar também MFA/recuperação das contas de plataforma.
-   Carregar apenas os ficheiros de `branding/orvel` e preencher os caminhos na organização.
+   primeiro login e TOTP concluídos. A conta proprietária Supabase ainda não tinha MFA;
+   configuração entregue à responsável. Verificar também MFA/recuperação das restantes plataformas.
+   Marca carregada e verificada; caminhos preenchidos na organização.
    Não copiar o administrador fictício nem reaproveitar chaves do backend de testes.
-4. **Backups:** escolher destino restrito e política para PostgreSQL e Storage separadamente.
+4. **Backups:** a responsável confirmou que não há destino e pediu proposta com custos.
+   [Solução e estimativa preparadas](backups-e-custos-2026-11-18.md), sem contratação ou cópia externa.
+   Escolher destino restrito e política para PostgreSQL e Storage separadamente.
    Executar e registar a restauração, hashes, permissões e objetivos de perda/tempo de recuperação.
    No painel do novo projeto ainda não existem backups. Não copiar documentação de clientes
    para um destino não aprovado. [Backups Supabase](https://supabase.com/docs/guides/platform/backups).
-5. **Privacidade:** aprovar o texto e a conservação antes de publicar o aviso. O rascunho da
-   migração não é aprovação jurídica. Rever também o texto das propostas.
+5. **Privacidade:** [rascunho de revisão preparado](aviso-privacidade-rascunho-2026-11-18.md),
+   com entidade, morada, fundamentos, destinatários e prazos por confirmar. Aprovar o texto e a
+   conservação antes de publicar. O rascunho da migração não é aprovação jurídica. Rever também
+   o texto das propostas e a distinção entre tomada de conhecimento e consentimento.
 6. **Ensaio final:** convite, reenvio de convite, entrada e MFA concluídos. Após aprovação da
    privacidade, validar consentimento, envio, revisão, rejeição/reenvio de documentos, download,
    isolamento entre clientes, cronologia e prazos no domínio final. Usar documentos fictícios

@@ -32,9 +32,12 @@ A conta `hello@orvelpartners.com` entrou no painel com TOTP e sessão AAL2. Conv
 pelo portal, entrega pelo Resend, novo link pelo Auth hook e login do cliente foram validados;
 um link reutilizado foi recusado. A área do cliente permanece bloqueada pela ausência de aviso
 de privacidade aprovado/publicado. Backups, plano comercial e restantes condições de lançamento
-continuam pendentes. A chave Resend está em Full access e deve ser limitada antes do lançamento.
+continuam pendentes. A chave Resend já está limitada a envio pelo domínio Orvel; novo convite
+entregue após a alteração. Os logótipos originais já estão no Storage de produção e no portal.
 [Validação dos convites e login](docs/validacao-convites-login-2026-11-18.md).
 [Configuração e condições para lançamento](docs/preparacao-producao-2026-11-17.md).
+[Proposta de backups e custos](docs/backups-e-custos-2026-11-18.md).
+[Rascunho de privacidade para revisão](docs/aviso-privacidade-rascunho-2026-11-18.md).
 
 ## Etapa 5 e design (17/11/2026)
 
@@ -518,8 +521,10 @@ validar convites e login; a Preview permanece separada. As funções de email
 de produção e o hook assinado estão configurados; o Resend aceitou a mensagem técnica para
 `hello@orvelpartners.com`, com entrega na caixa de entrada confirmada pela responsável. A função temporária de
 teste já não pode enviar emails. O ensaio autenticado de emails e o primeiro login/MFA da
-administração passaram. Marca no Storage, backups, limitação da chave Resend, aviso de
-privacidade aprovado e os restantes percursos autenticados continuam pendentes.
+administração passaram. Marca no Storage e limitação da chave Resend concluídas. Backups,
+aviso de privacidade aprovado e os restantes percursos autenticados continuam pendentes.
+A conta proprietária do Supabase ainda não tinha MFA na verificação de 18/11; configuração
+entregue à responsável na página de segurança. Não confundir com o MFA do administrador do portal.
 [Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).
 
 No Supabase de testes foram aplicadas as migrações de cronologia/prazos, conservação e
