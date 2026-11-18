@@ -18,18 +18,22 @@ base de dados), sem o construir já.
 | 3 | Painel da equipa: processos, ficha, pessoas, proposta, pagamentos | ✅ no ramo `etapa-3-painel-equipa` (testada no Supabase de dev a 17/11/2026; falta a revisão no browser) |
 | 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | ✅ ramo `etapa-4-area-cliente` (também percurso por fases e prazos; testada no Supabase de dev a 18/11/2026: db-test 268/268, e2e 66/66) |
 | 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | ✅ `codex/documentos-design`, publicada como Vercel Preview; migração e fluxo autenticado online de envio, revisão e download validados em 17/11/2026. Ver relatório e âmbito abaixo. |
-| 6 | Cronologia, prazos e calendário | Implementada e validada localmente em `codex/documentos-design`; migração aplicada ao Supabase de testes. Publicação do frontend e validação autenticada online pendentes. |
+| 6 | Cronologia, prazos e calendário | Implementada e validada localmente em `codex/documentos-design`; frontend publicado em Preview e Production em 18/11. Validação autenticada online pendente. |
 | 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | Conservação preparada e migração instalada nos testes e na produção. Eliminação desativada, sem worker publicado nem agendamento. Avisos e resumo semanal por implementar. |
-| 8 | Teste do fluxo completo, deploy | Supabase de produção criado e configuração inicial validada em 18/11. Integrações, backups e lançamento pendentes. |
+| 8 | Teste do fluxo completo, deploy | Produção publicada no domínio final; administração/MFA, convites, reenvio e login validados em 18/11. Privacidade, backups e restantes condições de lançamento pendentes. |
 
 **Produção — 18/11/2026:** criado o Supabase `orvel-portal-producao`
 (`ilwkiruybzxplnhwcwrs`), separado dos testes, na organização Orvel Partners e no plano Free.
 As 14 migrações estão instaladas; registo público desligado, bucket privado e download protegido
-validados. Não contém clientes nem documentos. A eliminação continua desativada. O Resend e
-o hook de email estão configurados; o envio técnico para o endereço autorizado foi aceite
-pelo Resend, com receção na caixa de entrada confirmada pela responsável em 18/11. O ensaio autenticado de emails,
-administração real, backups e publicação Vercel ainda estão pendentes. A Vercel já tem acesso
-recuperado, variáveis Production separadas, Node 24 e domínio associado; falta o DNS.
+validados. Contém a administração e um cliente/processo fictício autorizado, sem documentos.
+A eliminação continua desativada. O commit `030d4c1` está publicado em Production em
+`https://portal.orvelpartners.com`, com variáveis separadas, Node 24, DNS e HTTPS confirmados.
+A conta `hello@orvelpartners.com` entrou no painel com TOTP e sessão AAL2. Convite e reenvio
+pelo portal, entrega pelo Resend, novo link pelo Auth hook e login do cliente foram validados;
+um link reutilizado foi recusado. A área do cliente permanece bloqueada pela ausência de aviso
+de privacidade aprovado/publicado. Backups, plano comercial e restantes condições de lançamento
+continuam pendentes. A chave Resend está em Full access e deve ser limitada antes do lançamento.
+[Validação dos convites e login](docs/validacao-convites-login-2026-11-18.md).
 [Configuração e condições para lançamento](docs/preparacao-producao-2026-11-17.md).
 
 ## Etapa 5 e design (17/11/2026)
@@ -99,13 +103,13 @@ o azul-marinho e os cartões com espaço do design anterior:
 
 Validação local: **89 testes de frontend e 351 verificações SQL aprovados**, build de produção
 gerado e revisão da demonstração no Chrome em computador e telemóvel. O build conserva o aviso
-de tamanho do bundle. [Âmbito e publicação pendente](docs/validacao-percurso-prazos-2026-11-17.md).
+de tamanho do bundle. [Relatório local da etapa 6](docs/validacao-percurso-prazos-2026-11-17.md).
 
 **Backend atualizado em 17/11/2026:** a migração desta etapa foi aplicada e confirmada no
-Supabase existente (`xdakbbvnpoojhyapznkf`), que conserva os dados fictícios. O frontend ainda
-aguarda publicação. O acesso à equipa Vercel `dropower-s-projects` foi recuperado em 18/11.
-A Preview continua na etapa 5; a validação autenticada da etapa 6
-continua pendente. [Estado dos acessos e preparação de produção](docs/preparacao-producao-2026-11-17.md).
+Supabase existente (`xdakbbvnpoojhyapznkf`), que conserva os dados fictícios. O acesso à equipa
+Vercel `dropower-s-projects` foi recuperado em 18/11 e o frontend desta etapa foi publicado
+em Preview e Production. A validação autenticada da cronologia e dos prazos continua pendente.
+[Estado dos acessos e preparação de produção](docs/preparacao-producao-2026-11-17.md).
 Os avisos por email e tarefas agendadas pertencem à etapa 7.
 
 ## Estrutura
@@ -437,8 +441,8 @@ where u.email = 'email-do-administrador' and o.slug = 'orvel';
 
 ## Antes de abrir aos clientes
 
-- **Revisão de 17/11/2026: ainda não aprovado para dados reais.** A versão publicada é uma
-  Preview de teste; a etapa 6 e a correção de isolamento de sessões descrita abaixo continuam locais.
+- **Estado de 18/11/2026: ainda não aprovado para dados reais.** A versão atual, incluindo a
+  etapa 6 e a correção de sessões, está publicada no domínio final para validação controlada.
 - Confirmar no projeto remoto as políticas RLS, bucket privado, permissões, MFA da equipa e dos
   administradores das plataformas, origens/callbacks e configuração final de autenticação.
 - Separar os ambientes de testes e de clientes reais. Desativar no ambiente de clientes reais
@@ -455,8 +459,8 @@ where u.email = 'email-do-administrador' and o.slug = 'orvel';
   publicado, a área de cliente não abre.
 - Rever com o advogado o texto de aceitação da proposta (`organizations.proposal_acceptance_text`).
 - Configurar dados bancários e WhatsApp no ecrã de definições.
-- Aplicar as alterações pendentes, configurar domínio/HTTPS e testar o fluxo autenticado
-  completo no ambiente final, incluindo entrega real de emails, isolamento entre clientes,
+- Domínio/HTTPS, convites, entrega de emails, login e MFA validados. Completar o fluxo autenticado
+  no ambiente final após aprovação da privacidade, incluindo documentos, isolamento entre clientes,
   expiração dos downloads e mudança de conta em várias janelas.
 
 ### Revisão do código e dependências (17/11/2026)
@@ -496,8 +500,8 @@ cópia de dados. O projeto de testes `xdakbbvnpoojhyapznkf` foi preservado.
 
 Na produção, o registo público e as sessões anónimas estão desligados, TOTP disponível,
 passwords com mínimo configurado de 12 caracteres e requisitos de maiúsculas/minúsculas/dígitos.
-Site URL, callback exato e CORS estão preparados para `https://portal.orvelpartners.com`;
-isto não comprova que o domínio já esteja publicado. `sign-download` v4 está ativa com JWT,
+Site URL, callback exato e CORS estão configurados para `https://portal.orvelpartners.com`;
+o domínio foi publicado e verificado separadamente. `sign-download` v4 está ativa com JWT,
 e os testes HTTP recusaram leitura e download sem sessão (401). As tabelas públicas têm RLS,
 sem permissões de tabelas para anónimos; o bucket de documentos é privado.
 
@@ -505,16 +509,17 @@ sem permissões de tabelas para anónimos; o bucket de documentos é privado.
 A autorização de equipa Vercel foi concluída e verificada em 18/11. Foram criadas apenas em
 Production as variáveis do Supabase novo e `VITE_DEMO_MODE=false`, preservando Preview.
 Raiz `web`, Node 24, `npm ci`, `npm run build` e saída `dist` confirmados no painel. O build
-local de produção passou e o pacote usa apenas o backend novo, sem contas de demonstração.
-O domínio `portal.orvelpartners.com` está associado; falta o CNAME no DNS externo. A utilização
+local de produção passou e o pacote usa apenas o backend novo, com o modo de demonstração desativado.
+O domínio `portal.orvelpartners.com` está ligado por CNAME; DNS, HTTPS e ecrã de entrada confirmados. A utilização
 de código/conversas deste projeto para treino de IA na Vercel foi desligada, com autorização
 expressa, e confirmada após recarregar o painel. O plano atual é Hobby; decidir o plano adequado
-ao uso comercial antes do lançamento. Não houve novo deploy do frontend. As funções de email
+ao uso comercial antes do lançamento. O commit `030d4c1` foi publicado em Production para
+validar convites e login; a Preview permanece separada. As funções de email
 de produção e o hook assinado estão configurados; o Resend aceitou a mensagem técnica para
 `hello@orvelpartners.com`, com entrega na caixa de entrada confirmada pela responsável. A função temporária de
-teste já não pode enviar emails. O ensaio autenticado de emails,
-conta real de administração/MFA, marca no Storage, backups,
-aviso de privacidade aprovado e validação autenticada final continuam pendentes.
+teste já não pode enviar emails. O ensaio autenticado de emails e o primeiro login/MFA da
+administração passaram. Marca no Storage, backups, limitação da chave Resend, aviso de
+privacidade aprovado e os restantes percursos autenticados continuam pendentes.
 [Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).
 
 No Supabase de testes foram aplicadas as migrações de cronologia/prazos, conservação e
@@ -565,8 +570,9 @@ Depois da migração de permissões, as **381 verificações SQL** voltaram a pa
 preparação foi também executada no projeto remoto: nenhuma migração em falta, tabelas públicas
 com RLS, bucket privado e zero permissões de leitura de tabelas para anónimos. Os testes HTTP
 recusaram leitura e download anónimos (401) e confirmaram o CORS da Preview (200).
-Em 18/11, a consulta foi repetida no novo projeto de produção: sem migrações em falta, sem
-dados de teste e sem administrador ou aviso publicado, como esperado nesta fase. As variáveis
-de servidor incluem `RETENTION_ENABLED=false`; `purge-documents` continua ausente e não há
-`pg_cron`. Continuam pendentes as integrações finais, recuperação de backups, aprovação jurídica
-e ensaio autenticado no domínio final. [Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).
+Em 18/11, a consulta foi repetida no novo projeto de produção: sem migrações em falta.
+Após os testes autorizados, existem a administração com MFA e um cliente/processo fictício,
+sem documentos nem aviso publicado. As variáveis de servidor incluem `RETENTION_ENABLED=false`;
+`purge-documents` continua ausente, a fila está vazia e não há `pg_cron`. Continuam pendentes
+recuperação de backups, aprovação jurídica e os restantes percursos autenticados no domínio final.
+[Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).

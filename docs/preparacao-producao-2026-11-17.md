@@ -1,8 +1,9 @@
 # Preparação de produção — atualizado em 18/11/2026
 
-O Supabase de produção foi criado e a configuração Vercel foi preparada. O portal ainda não está lançado
-para clientes reais: faltam o ensaio autenticado de emails, administração real/MFA, marca no Storage, backups com
-restauração, aprovação do aviso de privacidade e publicação/ensaio final na Vercel.
+O Supabase de produção foi criado e o frontend atual foi publicado na Vercel para validação controlada. O portal ainda não está lançado
+para clientes reais: faltam marca no Storage, backups com restauração, aprovação do aviso de
+privacidade, decisão de plano e os restantes percursos autenticados no domínio público.
+Administração/MFA, convites, reenvio e login já foram validados em 18/11.
 A eliminação de documentos permanece desativada por decisão da responsável.
 
 ## Ambientes e propriedade
@@ -16,7 +17,7 @@ A eliminação de documentos permanece desativada por decisão da responsável.
 | Testes | `xdakbbvnpoojhyapznkf`, `orvelpartners's Project`; dados fictícios preservados. O rótulo main/PRODUCTION do fornecedor não altera esta finalidade. |
 | Custos | Consulta anterior à criação: 0 USD/mês. Nenhum plano contratado, projeto apagado ou pausado. |
 | Vercel | Equipa `dropower-s-projects`, `team_4UE4GPF895jF3QvZu1crnFMN`; projeto `orvel-partners-portal-clientes`, `prj_qGopqpbxJ08ClmkSGLFbasqrGQ0Z`. Acesso recuperado após consentimento da equipa; plano Hobby ativo confirmado no painel. |
-| GitHub | `dropowerapp/orvel-partners-portal-clientes`, ramo local `codex/documentos-design`. Sem push nesta preparação. |
+| GitHub | `dropowerapp/orvel-partners-portal-clientes`, ramo `codex/documentos-design`; commit `030d4c1` enviado em 18/11 para preparar o ensaio no domínio final. |
 
 [Projeto de produção](https://supabase.com/dashboard/project/ilwkiruybzxplnhwcwrs).
 **GitHub e Vercel mantêm a propriedade atual**, por indicação expressa da responsável.
@@ -44,22 +45,21 @@ de testes. A instalação cria apenas a organização e os valores iniciais da a
 
 | Verificação remota | Resultado |
 |---|---|
-| Utilizadores Auth / associações / processos / documentos / objetos Storage | 0 / 0 / 0 / 0 / 0 antes do deploy de download. |
+| Utilizadores Auth / associações / clientes / processos / documentos / objetos Storage | 2 / 2 / 1 / 1 / 0 / 0 após o ensaio autorizado de convites; cliente e processo fictícios. |
 | Migrações esperadas | Nenhuma em falta. |
 | Tabelas públicas sem RLS | 0. |
 | Permissões de tabelas públicas para `anon` | 0. |
 | Funções anónimas inesperadas | 0; só a marca pública é acessível. |
 | Funções `admin_*` executáveis por utilizadores | 0. |
 | Bucket `documents` | Privado; 10 MB; PDF, JPEG e PNG. |
-| Administradores ativos do portal | 0 — criação da conta real pendente. |
+| Administradores ativos do portal | 1 — `hello@orvelpartners.com`; TOTP verificado, sessão AAL2 e entrada no painel observados. |
 | Aviso de privacidade publicado | Não existe. |
 | Hostnames de teste/Preview na organização | Nenhum. |
 | Fila de eliminação `private.document_purge_jobs` | Vazia. |
 | `pg_cron` / função `purge-documents` | Ausentes. |
 
 A consulta usada é `scripts/remote/production-readiness.sql`, complementada por contagens
-sem dados pessoais. “Zero administradores sem TOTP” nesta instalação vazia não significa que
-o MFA de uma conta real já foi validado.
+e verificação da existência de TOTP verificado e sessão AAL2 da administração, sem ler segredos.
 
 ### Autenticação
 
@@ -113,8 +113,8 @@ pela responsável, com o assunto **[TESTE] Portal Orvel — ligação de produç
 Usou o módulo partilhado `_shared/email.ts`, os segredos do projeto novo e o remetente
 `Orvel Partners <hello@orvelpartners.com>`. O Resend respondeu **HTTP 200**, com o identificador
 `01a1eddf-dccf-75c8-8806-f76e43f152ab`. A responsável confirmou em 18/11/2026 que a mensagem
-chegou à **caixa de entrada**, não ao spam. A confirmação de entrega provém da destinatária;
-o painel Resend não foi consultado para este resultado.
+chegou à **caixa de entrada**, não ao spam. O painel Resend foi consultado mais tarde e também
+confirmou o estado Delivered.
 
 O teste não criou utilizadores ou associações, não continha um link de autenticação e não
 convidou clientes. Verificou `EMAIL_MODE=resend` e `RETENTION_ENABLED=false` antes do envio.
@@ -130,13 +130,14 @@ fornecedor, mas a operação de teste está desativada. Não voltar a publicar o
 Pedidos HTTP sem credenciais foram recusados: `auth-send-email` devolveu 401
 `invalid_signature`; `invite-client` e a função de teste devolveram 401 por ausência de
 autenticação. Os 39 testes locais das Edge Functions e `deno check` passaram antes do deploy.
-A consulta posterior confirmou zero utilizadores Auth, associações, documentos e tarefas de
-eliminação; `pg_cron` continua ausente e `purge-documents` não está publicada.
+A consulta imediatamente posterior a este teste técnico confirmou zero utilizadores Auth,
+associações, documentos e tarefas de eliminação. As contas de administração e de teste foram
+criadas depois, no ensaio abaixo; `pg_cron` continua ausente e `purge-documents` não está publicada.
 
-Este ensaio valida o transporte Supabase → Resend. O percurso Auth → hook assinado → email
-com link válido → entrada no portal e o convite pela equipa ainda exigem a primeira conta
-real, MFA e o domínio final operacional. O âmbito/permissões da chave Resend não foi
-confirmado no painel Resend, que pede início de sessão.
+Este ensaio validou o transporte Supabase → Resend. O percurso Auth → hook assinado → email
+com link válido → entrada no portal e o convite pela equipa foram depois validados no domínio
+final, conforme o relatório abaixo. O painel Resend confirmou a chave `Supabase_Orvel` com
+**Full access**; reduzir para envio limitado ao domínio Orvel antes do lançamento real.
 
 ### Testes HTTP na produção
 
@@ -194,26 +195,31 @@ desligada por `publicSource=false`; proteção de deployments Vercel preservada
 (`all_except_custom_domains`). Esta proteção não se aplica ao domínio personalizado.
 
 Build local de produção concluído com Node 24 e as variáveis acima. Inspeção do JavaScript
-gerado confirma o URL do Supabase novo, ausência da referência do Supabase de testes, de contas
-fictícias de demonstração e da variável de chave de serviço. Mantém o aviso conhecido de bundle
+gerado confirma o URL do Supabase novo, ausência da referência do Supabase de testes, dos
+identificadores/sessões da demonstração e da variável de chave de serviço. Permanecem textos
+de tradução relativos à demonstração e o prefixo literal `sb_secret_` usado pelo SDK para
+reconhecer tipos de chave; não são contas ativas nem credenciais secretas. Mantém o aviso conhecido de bundle
 superior a 500 kB. Não houve alteração de código funcional nem repetição das suites anteriores.
 O comentário de `web/.env.example` foi corrigido: `VITE_DEMO_MODE=true` também afeta builds.
 
-### Domínio e DNS pendente
+### Domínio e DNS
 
 `portal.orvelpartners.com` associado ao projeto; a Vercel devolveu `verified=true` para a
-associação. A consulta DNS posterior continua a devolver `misconfigured=true`, sem CNAME/A.
-Isso significa que a associação do domínio não demonstra resolução DNS ou HTTPS operacionais.
+associação. Após guardar o CNAME, a consulta devolveu `misconfigured=false`, com o destino esperado.
+O pedido HTTPS ao domínio final devolveu 200, com HSTS e CSP; o Chrome mostrou o ecrã de
+entrada Orvel, sem demonstração. O asset JavaScript remoto tem o mesmo nome/hash do build local.
 Os nameservers são externos: `ns33.domaincontrol.com` e `ns34.domaincontrol.com`.
 
-Registo recomendado pela Vercel especificamente para este projeto, a criar no gestor DNS:
+Registo recomendado pela Vercel e guardado na GoDaddy:
 
 | Tipo | Nome | Destino |
 |---|---|---|
 | CNAME | `portal` | `a8219958b7e61fda.vercel-dns-017.com.` |
 
-Nenhum registo DNS foi alterado; preservar MX/TXT de email e os registos do site principal.
-Depois da alteração, repetir a verificação DNS e HTTPS. Não é necessário transferir o domínio.
+A responsável autorizou a ligação do domínio e guardou o registo no Chrome. A leitura posterior
+mostrou o destino correto e TTL de uma hora (o formulário tinha sido preparado com 30 minutos).
+Não foi necessário criar outro registo ou transferir o domínio. Os registos de email e do site
+principal não foram alterados pelo agente.
 
 ### Plano e privacidade
 
@@ -227,21 +233,54 @@ opção desligada, sem alterações por guardar. O texto da Vercel refere a util
 de código e conversas para treino daqui para a frente, não revogação retroativa. A preferência
 global da equipa não foi alterada.
 
-Não houve push, novo deploy ou promoção de produção. A última Preview continua na etapa 5.
-A configuração guardada só será incorporada num build/deploy posterior.
+### Publicação para validar convites e login — 18/11
+
+Após autorização para validar no domínio final, foi enviado o commit
+`030d4c1d44f1f6324ebf99f6d89795685ca94373` para o ramo `codex/documentos-design` e criado
+um novo build com destino **Production**, usando as variáveis de produção acima.
+
+| Ambiente | Deployment | Estado |
+|---|---|---|
+| Production | `dpl_37RzFV4HY4KfptnpmLnr7ipfagK9` | READY; commit `030d4c1`; domínio `portal.orvelpartners.com` associado a este deployment. |
+| Preview | `dpl_AvfkZdPD1dgBUQFoUm6v9agxYqfx` | READY; mesmo commit, com variáveis de Preview preservadas. |
+
+[Deployment de produção](https://vercel.com/dropower-s-projects/orvel-partners-portal-clientes/37RzFV4HY4KfptnpmLnr7ipfagK9).
+O build remoto terminou sem erros, mantendo o aviso conhecido de bundle superior a 500 kB.
+A Vercel atribuiu também o alias do ramo ao deployment Production; esse alias foi reposto
+na Preview e a associação final foi relida pela API. O domínio final permanece em Production.
+
+A responsável escolheu `hello@orvelpartners.com` como primeira conta de administração, criou
+a password no painel Supabase e concluiu o primeiro login/TOTP. Uma única associação `admin`
+ativa foi criada. O painel autenticado foi observado e a base confirmou TOTP verificado e sessão
+AAL2. Nenhuma password, semente TOTP ou código foi recolhido.
+
+Com autorização explícita, foi criado pelo portal o cliente **Cliente de teste — Orvel**,
+usando `dropforcemanagement@gmail.com` e o plano **TESTE TÉCNICO — sem serviço contratado**.
+O convite e o reenvio tiveram confirmação na interface e estado Delivered no Resend. Um novo
+link pedido no ecrã de entrada percorreu o Auth hook e permitiu autenticar; o convite reenviado
+também permitiu autenticar. Após sair, o link anterior foi recusado por já ter sido usado.
+A tentativa do cliente de abrir `/equipa/processos` regressou à página de privacidade.
+
+O percurso do cliente termina corretamente em `/privacidade`, com indicação de área ainda
+indisponível: não existe aviso aprovado/publicado. Não foi aceite nem publicado o rascunho
+para contornar este bloqueio. A sessão de teste foi terminada e o painel administrativo ficou
+aberto. Não foram enviados documentos nem alterada a conservação: fila vazia, `pg_cron` ausente,
+worker sem publicação e `RETENTION_ENABLED=false` preservado.
+[Relatório e limites do ensaio](validacao-convites-login-2026-11-18.md).
 
 ## Condições para lançamento
 
 1. **Vercel:** acesso, variáveis separadas, privacidade e build já preparados. Concluir a decisão
-   de plano e DNS/HTTPS descritos acima. Publicar o commit revisto com as variáveis Production
-   e validar o resultado remoto. Não promover um build feito com os testes nem colocar
+   de plano; DNS e HTTPS já foram confirmados. O commit revisto já foi publicado com as variáveis
+   Production; autenticação validada no domínio final. Não promover um build feito com os testes nem colocar
    service_role/secret em `VITE_*`.
 2. **Emails:** chave no servidor, segredo assinado, hook e duas funções já configurados;
    envio técnico aceite pelo Resend e entrega na caixa de entrada de `hello@orvelpartners.com`
-   confirmada pela responsável. Testar os percursos autenticados descritos acima. Confirmar que a chave é só de envio
-   e limitada ao domínio Orvel antes de convidar clientes. Não colocar segredos no chat ou no Git.
-3. **Administração e marca:** confirmar o email da primeira conta real, criar o acesso e
-   concluir TOTP com a responsável. Verificar também MFA/recuperação das contas de plataforma.
+   confirmada pela responsável. Convite, reenvio e Auth hook validados. A chave `Supabase_Orvel`
+   tem Full access: substituí-la por uma chave só de envio e limitada ao domínio Orvel antes de
+   convidar clientes reais. Não colocar segredos no chat ou no Git.
+3. **Administração e marca:** conta `hello@orvelpartners.com` e associação administrativa criadas;
+   primeiro login e TOTP concluídos. Verificar também MFA/recuperação das contas de plataforma.
    Carregar apenas os ficheiros de `branding/orvel` e preencher os caminhos na organização.
    Não copiar o administrador fictício nem reaproveitar chaves do backend de testes.
 4. **Backups:** escolher destino restrito e política para PostgreSQL e Storage separadamente.
@@ -250,9 +289,10 @@ A configuração guardada só será incorporada num build/deploy posterior.
    para um destino não aprovado. [Backups Supabase](https://supabase.com/docs/guides/platform/backups).
 5. **Privacidade:** aprovar o texto e a conservação antes de publicar o aviso. O rascunho da
    migração não é aprovação jurídica. Rever também o texto das propostas.
-6. **Ensaio final:** convite, entrada, MFA, consentimento, envio, revisão, rejeição/reenvio,
-   download, isolamento entre clientes, cronologia e prazos no domínio final. Usar documentos
-   fictícios controlados, sem importar o seed de testes.
+6. **Ensaio final:** convite, reenvio de convite, entrada e MFA concluídos. Após aprovação da
+   privacidade, validar consentimento, envio, revisão, rejeição/reenvio de documentos, download,
+   isolamento entre clientes, cronologia e prazos no domínio final. Usar documentos fictícios
+   controlados, sem importar o seed de testes.
 7. **Eliminação:** manter `RETENTION_ENABLED=false`, `purge-documents` sem deploy e sem cron.
    A ativação exige decisão posterior, política aprovada e ensaio; não faz parte desta fase.
 
@@ -260,8 +300,8 @@ A configuração guardada só será incorporada num build/deploy posterior.
 
 O projeto `xdakbbvnpoojhyapznkf` já tinha recebido as 14 migrações,
 `auth-send-email` v12, `invite-client` v12 e `sign-download` v4.
-Conserva contas/processos fictícios e a Preview da etapa 5. A etapa 6 está implementada
-localmente e o seu backend instalado, mas ainda aguarda publicação e validação autenticada.
+Conserva contas/processos fictícios. A Preview atual inclui a etapa 6, cujo backend já está
+instalado; a validação autenticada dessa etapa continua pendente.
 A validação anterior de documentos no Chrome está em
 [validacao-documentos-2026-11-17.md](validacao-documentos-2026-11-17.md).
 
