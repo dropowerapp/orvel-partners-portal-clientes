@@ -3,13 +3,17 @@
 // No telemóvel: só o formulário, com o logótipo normal no topo.
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
+import { ROUTES } from "../lib/access";
 import { useOrg } from "../lib/OrgProvider";
 import { orgLogoDarkSrc, orgSymbolSrc } from "../lib/branding";
 import { OrgMark } from "./OrgMark";
 import { Eyebrow } from "./ui";
 
 export function AuthLayout(
-  { title, intro, children, area = "client" }: { title: string; intro?: ReactNode; children?: ReactNode; area?: "client" | "team" },
+  { title, intro, children, area = "client", wide = false }: {
+    title: string; intro?: ReactNode; children?: ReactNode; area?: "client" | "team"; wide?: boolean;
+  },
 ) {
   const { t } = useTranslation();
   const org = useOrg();
@@ -51,7 +55,7 @@ export function AuthLayout(
           <OrgMark />
         </header>
         <main id="conteudo" className="flex flex-1 items-start justify-center px-6 py-10 sm:px-10 lg:items-center">
-          <div className="w-full max-w-md">
+          <div className={`w-full ${wide ? "max-w-2xl" : "max-w-md"}`}>
             <Eyebrow>{area === "team" ? t("auth_layout.eyebrow_team") : t("auth_layout.eyebrow_client")}</Eyebrow>
             <h1 className="text-3xl leading-tight font-light text-primary">{title}</h1>
             <span className="my-5 block h-px w-10 bg-silver" />
@@ -59,11 +63,12 @@ export function AuthLayout(
             {children}
           </div>
         </main>
-        {org.contact_email && (
-          <footer className="px-6 pb-6 text-sm text-muted sm:px-10">
-            {t("app.contact_line", { email: org.contact_email })}
-          </footer>
-        )}
+        <footer className="flex flex-wrap items-center gap-x-6 gap-y-2 px-6 pb-6 text-sm text-muted sm:px-10">
+          {org.contact_email && <span>{t("app.contact_line", { email: org.contact_email })}</span>}
+          <Link to={ROUTES.publicPrivacy} className="text-action underline-offset-4 hover:underline">
+            {t("privacy.title")}
+          </Link>
+        </footer>
       </div>
     </div>
   );

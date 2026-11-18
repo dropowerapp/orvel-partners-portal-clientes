@@ -315,7 +315,7 @@ async function rpc(name: string, args: Record<string, unknown> = {}) {
       const key = String(args.p_host ?? "").toLowerCase();
       const org = DEMO_ORGS.find((o) => o.keys.includes(key) || key.startsWith(`${o.slug}.`)) ?? DEMO_ORGS[0];
       const { keys: _keys, ...publicOrg } = org;
-      return { data: publicOrg, error: null };
+      return { data: { ...publicOrg, privacy_notice: { ...DEMO_NOTICE, published_at: "2026-11-18T00:00:00Z" } }, error: null };
     }
     case "get_session_context": {
       if (!user) return { data: null, error: { code: "28000", message: "not_authenticated" } };

@@ -318,10 +318,14 @@ worker sem publicação e `RETENTION_ENABLED=false` preservado.
    Executar e registar a restauração, hashes, permissões e objetivos de perda/tempo de recuperação.
    No painel do novo projeto ainda não existem backups. Não copiar documentação de clientes
    para um destino não aprovado. [Backups Supabase](https://supabase.com/docs/guides/platform/backups).
-5. **Privacidade:** [rascunho revisto, revisão 3](aviso-privacidade-rascunho-2026-11-18.md),
+5. **Privacidade:** [rascunho revisto, revisão 9](aviso-privacidade-rascunho-2026-11-18.md),
    com **CATIA DROPFORCE MANAGEMENT - FZCO** e a sede em Building A1, Dubai Digital Park,
    Dubai Silicon Oasis, Dubai, United Arab Emirates, PO BOX 342001, indicadas pela responsável.
-   Registo, regime/fundamentos, destinatários/transferências e prazos continuam por confirmar.
+   Destinatários para constituição confirmados: IFZA ou entidade de constituição, apenas nos
+   EAU. Falta fechar os seis grupos de factos na [folha de decisões](confirmacoes-privacidade-2026-11-18.md),
+   fundamentos/transferências e prazos. O número da licença é informação de apoio à verificação
+   da entidade, não um requisito automático do aviso. A folha separa validação jurídica,
+   conservação sem ativação e publicação, incluindo disponibilização antes do login.
    Aprovar o texto antes de publicar; a política de conservação não autoriza ativar eliminação.
    O rascunho da migração não é aprovação jurídica. Texto de confirmação de leitura já no
    frontend publicado; aviso jurídico ainda sem publicação.

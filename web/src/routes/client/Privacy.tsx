@@ -4,15 +4,16 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate, useNavigate } from "react-router";
 import { AuthLayout } from "../../components/AuthLayout";
+import { PrivacyNoticeContent } from "../../components/PrivacyNoticeContent";
 import { Alert, Button, Spinner } from "../../components/ui";
-import { noticeText, ROUTES } from "../../lib/access";
+import { ROUTES } from "../../lib/access";
 import { useAuth } from "../../lib/AuthProvider";
 import { errorKey } from "../../lib/errors";
 import { useOrg } from "../../lib/OrgProvider";
 import { supabase } from "../../lib/supabase";
 
 export default function Privacy() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const org = useOrg();
   const navigate = useNavigate();
   const { ready, session, context, contextLoading, refresh, signOut } = useAuth();
@@ -46,7 +47,6 @@ export default function Privacy() {
   }
 
   const notice = context.notice;
-  const paragraphs = noticeText(notice, i18n.language).split(/\n{2,}/);
 
   async function accept() {
     if (!checked) {
@@ -75,8 +75,7 @@ export default function Privacy() {
         aria-label={t("privacy.title")}
         tabIndex={0}
       >
-        <p className="mb-2 text-xs uppercase tracking-wide text-muted">{t("privacy.version", { version: notice.version })}</p>
-        {paragraphs.map((p, i) => <p key={i} className="mb-3 whitespace-pre-line last:mb-0">{p}</p>)}
+        <PrivacyNoticeContent notice={notice} />
       </article>
       <div className="flex flex-col gap-4">
         {error && <Alert>{t(error)}</Alert>}

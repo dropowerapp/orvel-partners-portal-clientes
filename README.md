@@ -31,7 +31,8 @@ A eliminação continua desativada. O commit `e9b6811` está publicado em Produc
 A conta `hello@orvelpartners.com` entrou no painel com TOTP e sessão AAL2. Convite e reenvio
 pelo portal, entrega pelo Resend, novo link pelo Auth hook e login do cliente foram validados;
 um link reutilizado foi recusado. A área do cliente permanece bloqueada pela ausência de aviso
-de privacidade aprovado/publicado. A revisão 3 está preparada localmente. Está implementado o
+de privacidade aprovado/publicado. A revisão 9 está preparada para aprovação, com confirmações
+de negócio e jurídicas identificadas. Está implementado o
 acesso inicial à **proposta e contacto**, com aceitação dentro do portal. Só depois abre o
 acompanhamento do respetivo processo; esta regra também protege APIs e ficheiros. O pagamento
 não é a condição de abertura. **Sem planos pagos por enquanto**;
@@ -43,6 +44,7 @@ entregue após a alteração. Os logótipos originais já estão no Storage de p
 [Proposta de backups e custos](docs/backups-e-custos-2026-11-18.md).
 [Rascunho de privacidade para revisão](docs/aviso-privacidade-rascunho-2026-11-18.md).
 [Revisão de privacidade e regra de acesso](docs/revisao-privacidade-e-acesso-2026-11-18.md).
+[Confirmações para fechar o aviso e proposta de conservação](docs/confirmacoes-privacidade-2026-11-18.md).
 [Validação da proposta e abertura do processo](docs/validacao-proposta-2026-11-18.md).
 
 Validação desta regra: **100 testes de frontend, 437 verificações SQL**, typecheck e build
@@ -539,9 +541,10 @@ aviso de privacidade aprovado e os restantes percursos autenticados continuam pe
 O MFA da conta proprietária Supabase foi configurado pela responsável e confirmado em 18/11:
 Google Authenticator ativo e 10 códigos de recuperação disponíveis, sem os abrir ou copiar.
 O MFA do administrador do portal também já foi validado. O rascunho de privacidade inclui a denominação
-CATIA DROPFORCE MANAGEMENT - FZCO e a morada no Dubai indicadas pela responsável. A revisão 3
+CATIA DROPFORCE MANAGEMENT - FZCO e a morada no Dubai indicadas pela responsável. A revisão 9
 descreve a aceitação dentro do portal e separa a confirmação de leitura dos consentimentos
-específicos. O aviso continua sem publicação. O percurso inicial, a autorização após aceitar
+específicos. A folha de decisões reúne seis grupos de respostas ainda necessários, os fundamentos e prazos a validar;
+os prazos sugeridos não estão em vigor. O aviso continua sem publicação. O percurso inicial, a autorização após aceitar
 e a redação de confirmação de leitura estão publicados no commit `e9b6811`.
 [Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).
 

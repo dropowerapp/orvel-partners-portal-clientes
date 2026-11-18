@@ -24,6 +24,7 @@ export const ROUTES = {
   clientLogin: "/entrar",
   clientHome: "/",
   privacy: "/privacidade",
+  publicPrivacy: "/aviso-de-privacidade",
   teamLogin: "/equipa/entrar",
   teamHome: "/equipa",
   mfa: "/equipa/mfa",

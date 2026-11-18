@@ -45,6 +45,11 @@
   },
   "privacy": {
     "title": "Aviso de privacidade",
+    "public_intro": "Saiba como a {{org}} trata os seus dados pessoais.",
+    "public_missing": "O aviso de privacidade ainda está a ser preparado. Pode contactar a equipa para esclarecimentos sobre os seus dados.",
+    "public_error": "Não foi possível carregar o aviso de privacidade. Tente novamente.",
+    "published": "Publicado em {{date}}",
+    "back_login": "Voltar à entrada",
     "intro": "Antes de entrar, leia como tratamos os seus dados pessoais.",
     "version": "Versão {{version}}",
     "checkbox": "Li e tomei conhecimento do aviso de privacidade.",

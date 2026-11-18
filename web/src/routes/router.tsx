@@ -13,6 +13,7 @@ import ClientPayment from "./client/ClientPayment";
 import ClientProposal from "./client/ClientProposal";
 import ClientTimeline from "./client/ClientTimeline";
 import Privacy from "./client/Privacy";
+import PublicPrivacy from "./client/PublicPrivacy";
 import NoAccess from "./NoAccess";
 import NotFound from "./NotFound";
 import Clients from "./team/Clients";
@@ -38,6 +39,7 @@ import TeamLogin from "./team/TeamLogin";
 export const routes: RouteObject[] = [
   // Públicas
   { path: "/entrar", element: <ClientLogin /> },
+  { path: "/aviso-de-privacidade", element: <PublicPrivacy /> },
   { path: "/auth/confirmar", element: <Confirm /> },
   { path: "/equipa/entrar", element: <TeamLogin /> },
   { path: "/equipa/recuperar", element: <ForgotPassword /> },
