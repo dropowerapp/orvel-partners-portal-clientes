@@ -6,7 +6,10 @@ privacidade, adequação contratual do alojamento e os restantes percursos auten
 domínio público. A proposta é aceite dentro do portal; o acesso inicial restrito e a abertura
 do acompanhamento após aceitar já estão implementados e ensaiados em Preview.
 Administração/MFA, convites, reenvio e login já foram validados em 18/11.
-A eliminação de documentos permanece desativada por decisão da responsável.
+A responsável confirmou que não deve existir eliminação automática das cópias dos documentos.
+Quando o cliente deixar de trabalhar com a Orvel, haverá revisão manual, com análise das
+obrigações legais e pedidos válidos de direitos. Fechar um processo não termina essa relação;
+o procedimento de registo e execução ainda está por definir. Nenhuma eliminação foi executada.
 Em 18/11, a responsável confirmou **não contratar planos pagos por enquanto**; a proposta
 de custos fica adiada. A revisão do aviso está preparada localmente, sem publicação.
 
@@ -311,22 +314,33 @@ worker sem publicação e `RETENTION_ENABLED=false` preservado.
    das restantes plataformas.
    Marca carregada e verificada; caminhos preenchidos na organização.
    Não copiar o administrador fictício nem reaproveitar chaves do backend de testes.
-4. **Backups:** a responsável confirmou que não há destino e pediu proposta com custos.
-   [Solução e estimativa preparadas](backups-e-custos-2026-11-18.md), sem contratação ou cópia externa.
-   A contratação da solução proposta foi adiada pela decisão posterior de não ter planos pagos.
-   Escolher destino restrito e política para PostgreSQL e Storage separadamente.
-   Executar e registar a restauração, hashes, permissões e objetivos de perda/tempo de recuperação.
-   No painel do novo projeto ainda não existem backups. Não copiar documentação de clientes
-   para um destino não aprovado. [Backups Supabase](https://supabase.com/docs/guides/platform/backups).
-5. **Privacidade:** [rascunho revisto, revisão 9](aviso-privacidade-rascunho-2026-11-18.md),
+4. **Backups:** a responsável escolheu uma pasta privada neste Mac como proteção provisória.
+   Três cópias cifradas concluídas em 19/11; 22 testes fictícios e recuperação técnica real
+   da segunda passaram: 59 tabelas, 96 registos e 3 ficheiros de branding. Sem documentos
+   de clientes no Storage nesse momento. Agendamento diário local ativo no Codex às 09:00
+   Europe/Lisbon; executor verificado manualmente. Faltam destino independente para chave/cópias,
+   observação do primeiro disparo/avisos e ensaio completo dos serviços do portal recuperado.
+   **Não há limpeza automática.** [Estado](backup-local-2026-11-18.md).
+   A [proposta paga](backups-e-custos-2026-11-18.md) mantém-se adiada, sem contratação.
+5. **Privacidade:** [texto limpo 1.0](aviso-privacidade-2026-11-19.md), guardado como rascunho
+   na produção, ainda sem publicação. [Fecho editorial e pendências](fecho-privacidade-e-backup-2026-11-19.md),
    com **CATIA DROPFORCE MANAGEMENT - FZCO** e a sede em Building A1, Dubai Digital Park,
    Dubai Silicon Oasis, Dubai, United Arab Emirates, PO BOX 342001, indicadas pela responsável.
+   Entidade contratante confirmada. Contacto acompanhado por Catia Fernandes e Fabio Roque,
+   ambos General Manager; clientes, equipa e Mac nos EAU. **IFZA** identificada expressamente
+   como zona franca/entidade de registo; C1 respondido.
    Destinatários para constituição confirmados: IFZA ou entidade de constituição, apenas nos
-   EAU. Falta fechar os seis grupos de factos na [folha de decisões](confirmacoes-privacidade-2026-11-18.md),
-   fundamentos/transferências e prazos. O número da licença é informação de apoio à verificação
+   EAU. Documento médico limitado à aptidão para emissão do visto; Corporate Tax apenas
+   registo e certificado. Aptidão médica recebida do cliente; registo/certificado fiscal
+   obtidos pela equipa diretamente no portal da autoridade fiscal. Mantém-se a limitação
+   dos envios do serviço à IFZA/entidade de constituição nos EAU. Restam outros
+   pontos de C3 e C4 na [folha de decisões](confirmacoes-privacidade-2026-11-18.md),
+   além dos fundamentos, transferências e critérios legais. C4 está parcialmente confirmado:
+   sem eliminação automática e revisão manual no fim da relação. O número da licença é informação de apoio à verificação
    da entidade, não um requisito automático do aviso. A folha separa validação jurídica,
-   conservação sem ativação e publicação, incluindo disponibilização antes do login.
-   Aprovar o texto antes de publicar; a política de conservação não autoriza ativar eliminação.
+   conservação manual e publicação. A leitura antes do login está agora implementada
+   em `/aviso-de-privacidade`; [validação técnica](validacao-privacidade-publica-2026-11-18.md).
+   Aprovar o texto antes de publicar; a regra confirmada exclui a eliminação automática.
    O rascunho da migração não é aprovação jurídica. Texto de confirmação de leitura já no
    frontend publicado; aviso jurídico ainda sem publicação.
    [Constatações e decisões](revisao-privacidade-e-acesso-2026-11-18.md).
@@ -335,7 +349,9 @@ worker sem publicação e `RETENTION_ENABLED=false` preservado.
    isolamento entre clientes, cronologia e prazos no domínio final. Usar documentos fictícios
    controlados, sem importar o seed de testes.
 7. **Eliminação:** manter `RETENTION_ENABLED=false`, `purge-documents` sem deploy e sem cron.
-   A ativação exige decisão posterior, política aprovada e ensaio; não faz parte desta fase.
+   Não ativar limpeza automática. Definir o procedimento manual para o fim da relação com o
+   cliente, com responsável, prazo de atuação e exceções. O mecanismo existente baseado no
+   fecho de processos não corresponde a esta regra; não há eliminação autorizada nesta etapa.
 8. **Acesso após proposta aceite:** implementado no frontend e na base de dados. O convite
    abre a área inicial com Proposta/Contacto (após a leitura do aviso). Aceitar dentro do portal
    liberta apenas o respetivo processo, sem exigir pagamento. Ensaios automáticos e no Chrome

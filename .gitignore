@@ -8,3 +8,11 @@ dist/
 supabase/.temp/
 supabase/.branches/
 .vercel
+__pycache__/
+*.pyc
+# Backup material and recovery secrets must stay outside this public repository.
+*.age
+*.agekey
+*.dump
+credentials.json
+backups/

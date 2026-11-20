@@ -1,5 +1,9 @@
 # Leitura do aviso antes do login — 18/11/2026
 
+Atualização de 19/11: o [texto limpo 1.0](aviso-privacidade-2026-11-19.md) foi guardado como
+rascunho na produção. A RPC pública continua a devolver aviso nulo. Não houve nova publicação
+do frontend nem repetição do ensaio funcional descrito abaixo.
+
 O portal passa a disponibilizar `/aviso-de-privacidade`, acessível pelos rodapés dos ecrãs de
 entrada, sem pedir email ou sessão. A consulta é só de leitura e não confirma o aviso em
 nome do visitante. `/privacidade` mantém a confirmação autenticada e o bloqueio de entrada
@@ -19,8 +23,9 @@ enquanto não existir aviso publicado/aplicável.
 
 ## Verificação
 
-- **105 testes de frontend:** leitura sem sessão, ligação no login, ausência de confirmação
+- **106 testes de frontend:** leitura sem sessão, ligação no login, ausência de confirmação
   pública, aviso ausente, falha de rede com repetição, títulos/listas/negrito e HTML escapado.
+  Um teste com `AuthProvider` real garante que o evento inicial anónimo não cancela a consulta.
 - **453 verificações SQL em PGlite:** 16 novas verificações para o aviso público, incluindo
   seleção da versão, domínio/organização, ausência de rascunhos/futuras publicações,
   permissões de tabelas, confirmação ainda necessária e fila de eliminação vazia.
@@ -47,3 +52,32 @@ Esta verificação é do fluxo de leitura pública, não certificação integral
 As seis respostas de negócio e as validações jurídicas/contratuais da
 [folha de confirmações](confirmacoes-privacidade-2026-11-18.md) continuam pendentes.
 Não foram contratados planos pagos, ativada eliminação nem aberto o portal a clientes reais.
+
+## Correção durante a validação no Chrome
+
+A primeira versão técnica deixou a consulta pendente quando o evento inicial de autenticação
+limpava as consultas de sessão. A consulta do aviso passou para o prefixo de cache pública
+`org`, preservado na limpeza. As consultas privadas continuam a ser removidas; os testes
+de isolamento e logout mantêm-se a passar. Correção: commit `f5d6cd3798c72aeb842eb3039b2ce84e4ce8a460`.
+
+## Resultado da publicação técnica
+
+| Campo | Resultado |
+|---|---|
+| URL | https://portal.orvelpartners.com/aviso-de-privacidade |
+| Destino | Production, projeto `prj_qGopqpbxJ08ClmkSGLFbasqrGQ0Z`, equipa `team_4UE4GPF895jF3QvZu1crnFMN` |
+| Deployment | `dpl_QZ7ZQSVcNEEHjTJafiXv3M8RiwfZ`, **READY**, sem erro de alias |
+| Commit | `f5d6cd3798c72aeb842eb3039b2ce84e4ce8a460` |
+| Framework / build | Vite; build remoto de aproximadamente 13 segundos |
+| Chrome | Página carregada no domínio final; apresenta «O aviso de privacidade ainda está a ser preparado» |
+| Aviso jurídico | Zero versões publicadas em produção; texto de aprovação não foi carregado para a aplicação |
+
+A verificação visual confirmou o estado final depois da correção, não apenas o estado READY.
+O registo abaixo contém apenas a página pública e o contacto empresarial.
+
+![Página pública sem aviso aprovado](screenshots/privacidade-publica-2026-11-18.jpg)
+
+Observabilidade: consultas de erros/fatal do deployment anterior e do deployment final sem
+registos na janela de 15 minutos consultada. Trata-se de uma aplicação estática que usa
+Supabase; ausência de logs de funções Vercel não certifica toda a atividade do backend.
+Não foram configurados drains ou ferramentas pagas de monitorização.

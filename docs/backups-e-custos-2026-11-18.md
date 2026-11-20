@@ -1,10 +1,26 @@
 # Backups e custos para lançamento — 18/11/2026
 
-**Proposta adiada por decisão da responsável: sem planos pagos por enquanto (18/11/2026).**
+**Solução paga adiada; backup local provisório autorizado em 18/11/2026.**
+A responsável escolheu uma pasta privada neste Mac. Em 19/11 foram concluídas três cópias
+cifradas e um ensaio técnico de recuperação: 59 tabelas, 96 registos e 3 ficheiros de branding.
+O agendamento local diário está ativo no Codex às 09:00 Europe/Lisbon. Faltam destino independente
+para chave/cópias, observação da execução automática/avisos e recuperação completa dos serviços
+do portal. A responsável ainda não tem gestor de passwords nem disco externo disponível.
+Ver [estado do backup local](backup-local-2026-11-18.md).
+A autorização de configurar backup não autoriza contratar planos.
+
+## Proposta paga anterior — apenas referência
 As opções e estimativas abaixo ficam como referência; não constituem contratação ou tarefa
 autorizada para ativação. Não houve subscrição nem agendamento. A responsável confirmou que ainda
 não existe destino de backups e pediu a solução e os custos. Não foram copiados dados de clientes
-para outro fornecedor. A eliminação de documentos e de cópias permanece desativada.
+para outro fornecedor. A responsável confirmou que as cópias não devem ser apagadas
+automaticamente: o fim da relação com o cliente exige avaliação e decisão manual, com
+as exceções legais e os pedidos de direitos tratados separadamente. Não há eliminação autorizada.
+
+A solução paga futura deve ser revista à luz desta decisão. As janelas de disponibilidade de
+backups de um fornecedor não garantem a conservação das cópias exigida pela Orvel; não
+ativar expiração de versões, `prune` ou sincronização com apagamento. Continua por definir
+como tratar manualmente os dados de um cliente num backup que também inclua outros clientes.
 
 ## Solução proposta
 
@@ -70,8 +86,9 @@ uso comercial, a rever antes da abertura empresarial. [Termos Vercel](https://ve
 | Credenciais de recuperação | Cópia protegida da chave de descodificação e códigos de recuperação, separada do fornecedor e do job de backups. Testar acesso pela responsável. |
 
 O procedimento de exportação/restauração deve seguir a versão efetivamente instalada do CLI.
-O ambiente atual não tem Docker nem `pg_dump`/`psql` disponíveis; nenhuma restauração foi
-executada nesta etapa. Não improvisar uma exportação parcial de produção nem confundi-la com
+O CLI e o motor Docker foram instalados; a recuperação técnica foi ensaiada com PostgreSQL
+17.12 em memória, sem rede. A recuperação completa da aplicação continua pendente.
+Não improvisar uma exportação parcial de produção nem confundi-la com
 um ensaio de recuperação. [Guia oficial](https://supabase.com/docs/guides/platform/migrating-within-supabase/backup-restore).
 
 ## Critérios de aceitação antes de ativar
@@ -86,14 +103,16 @@ um ensaio de recuperação. [Guia oficial](https://supabase.com/docs/guides/plat
   produção. Em recuperação real, avaliar revogação de sessões e rotação conforme o incidente.
 - Medir duração e ponto recuperado; guardar o relatório sem dados pessoais. Ensaiar também
   a deteção de falha de backup e a recuperação da chave de cifra.
-- Definir a conservação das cópias com a revisão jurídica. Até lá, não configurar `prune`,
+- Definir a conservação das cópias com a revisão jurídica, respeitando a decisão de não
+  apagar automaticamente. Não configurar `prune`,
   regras de expiração, sincronização com apagamento ou eliminação de versões.
 - Antes de uma futura eliminação, impedir que uma restauração volte a disponibilizar documentos
   já eliminados pela política. O prazo dos backups deve integrar a política de conservação.
 
 ## Decisões necessárias
 
-Não contratar nem criar recursos pagos nesta fase. Quando a decisão de orçamento for retomada,
+Não contratar nem criar recursos pagos nesta fase. A pasta local provisória já foi escolhida;
+completar os requisitos e ensaio descritos no relatório local. Quando a decisão de orçamento for retomada,
 rever preços e opções, confirmar destino e local dos segredos, aprovar objetivos e conservação.
 Depois implementar, ensaiar e só então agendar. A recuperação continua por validar; esta proposta
 adiada não implica autorização de custos ou abertura a clientes.

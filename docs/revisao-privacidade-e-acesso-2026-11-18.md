@@ -1,26 +1,73 @@
 # Revisão do aviso de privacidade e acesso — 18/11/2026
 
 **Revisão editorial consolidada; validação jurídica e condições de publicação pendentes.**
-O [rascunho revisto, revisão 9](aviso-privacidade-rascunho-2026-11-18.md) permanece sem
-publicação. Após a confirmação da responsável, o percurso de proposta dentro do portal foi
+O [texto limpo 1.0](aviso-privacidade-2026-11-19.md) substitui editorialmente a revisão 16 e
+está guardado como rascunho em produção, sem publicação. O
+[registo atualizado](fecho-privacidade-e-backup-2026-11-19.md) documenta o resultado e o
+backup diário. Após a confirmação da responsável, o percurso de proposta dentro do portal foi
 implementado e instalado em produção. Não foram contratados serviços nem ativada eliminação.
 Esta revisão não é uma certificação de conformidade.
 
 As confirmações estão reunidas numa [folha de decisões](confirmacoes-privacidade-2026-11-18.md):
 C1–C4 para os factos e escolhas da Orvel; J1–J4 para fundamentos, regime, contratos e prazos;
-P1 para a publicação posterior. Inclui proposta de conservação e procedimento de resposta
-a pedidos, ambos sem ativação. Foram colocadas no chat as perguntas sobre licença/contacto,
+P1 para a publicação posterior. Inclui a regra de conservação confirmada, detalhes ainda
+pendentes e procedimento de resposta a pedidos, sem execução. Foram colocadas no chat as perguntas sobre licença/contacto,
 países e documentos/destinatários. A resposta parcial «Exames médicos, e corporate tax»
 foi incorporada na revisão 5. Na revisão 6 ficou registada a visibilidade apenas para a Orvel
 e o respetivo cliente. Na revisão 7 foram confirmados envios de alguns documentos pela equipa
 fora do portal para tratar dos serviços. Na revisão 8 ficaram identificados os destinatários
-como IFZA ou entidade junto da qual é constituída a empresa, apenas nos EAU. Faltam identificar
-documentos/dados, canais e papéis dos intervenientes, além do nível de informação médica e
-do âmbito fiscal.
+como IFZA ou entidade junto da qual é constituída a empresa, apenas nos EAU. A revisão 11
+fecha o âmbito médico e fiscal: documento de aptidão para emissão do visto e apenas registo
+e certificado de Corporate Tax. A revisão 16 distingue as origens: cliente para aptidão médica,
+portal da autoridade fiscal para registo/certificado. Mantém-se a limitação dos envios à
+IFZA/entidade de constituição nos EAU. Os papéis jurídicos dos intervenientes continuam por avaliar.
 
 A revisão 9 reúne as respostas ainda necessárias em seis grupos na folha de decisões,
 separa informação de apoio à identidade de requisitos do aviso e explicita os passos de
 publicação. Não voltou a pedir destinatários ou países dos envios já confirmados.
+
+A revisão 10 incorpora a decisão de não apagar cópias automaticamente e de rever manualmente
+os documentos quando o cliente deixar de trabalhar com a Orvel. Substitui a sugestão de
+30 dias após o fecho do processo; C4 fica parcialmente confirmado, com execução e exceções
+legais ainda por definir.
+
+A revisão 11 reduz as confirmações de negócio pendentes a quatro grupos: entidade/contacto,
+países de atividade e acesso, origem/circulação dos dados e procedimento de conservação manual.
+As validações jurídicas e a publicação ficam identificadas separadamente.
+
+A revisão 12 regista a confirmação da entidade contratante e a escolha de backup cifrado
+local provisório. A resposta «Sim» não fornece zona franca, pessoa responsável pelo email
+ou países; esses dados não foram inferidos. A preparação do backup não equivale a uma cópia
+operacional nem resolve a localização/condições de tratamento de documentos médicos.
+
+Atualização de 19/11 — revisão 13: Catia Fernandes e Fabio Roque, ambos General Manager,
+acompanham o contacto de privacidade. Clientes, acessos da equipa e Mac dos backups foram
+confirmados nos EAU. «Free zone» não identifica a autoridade de registo, que permanece por
+confirmar. Duas cópias cifradas e um ensaio técnico SQL/ficheiros foram concluídos; a recuperação
+completa dos serviços e a guarda da chave fora do Mac continuam pendentes. Não há agendamento,
+eliminação automática, contratação ou publicação do aviso.
+
+Ainda em 19/11 — revisão 14: a responsável identificou expressamente **IFZA** como zona
+franca/entidade de registo. C1 está respondido, sem voltar a pedir dados da entidade/contacto.
+Este facto não designa a IFZA como autoridade de proteção de dados nem resolve, por si só,
+fundamentos, transferências, informação médica e conservação. As referências atuais incluem
+o [guia da IFZA](https://ifza.com/en/uae-pdpl-compliance-guide-personal-data-protection-law/)
+e a [informação oficial sobre PDPL](https://ai.gov.ae/personal-data-protection-law/).
+
+Revisão 15: em resposta às perguntas sobre aptidão médica e registo/certificado fiscal, a
+responsável confirmou que os documentos são fornecidos pelo cliente e enviados apenas à
+IFZA ou à entidade onde é aberta a empresa, sempre nos EAU. O aviso e a folha de decisões
+passam a refletir essa origem e esses destinatários, sem voltar a perguntar. Não se acrescentam
+clínicas, bancos, contabilistas ou autoridades fiscais como destinatários por suposição.
+A confirmação dos envios da equipa não altera o alojamento na Irlanda nem aprova o
+tratamento de saúde ou as transferências tecnológicas; o aviso permanece por publicar.
+
+Revisão 16: a resposta específica posterior sobre Corporate Tax corrige a origem descrita
+na revisão 15. A equipa obtém o registo e o certificado diretamente no portal da autoridade
+fiscal; o documento de aptidão médica continua a ser recebido do cliente. A resposta não
+especifica uma nova partilha dos certificados: não se acrescentaram destinatários nem se
+alterou a limitação anteriormente confirmada dos envios do serviço. Sem publicação,
+alteração de dados no portal, eliminação ou contratação.
 
 ## Decisões da responsável
 
@@ -30,9 +77,12 @@ publicação. Não voltou a pedir destinatários ou países dos envios já confi
   Não exigir pagamento integral nem sinal como condição de abertura.
 - **Sem planos pagos por enquanto.** A proposta anterior de backups e custos fica adiada.
   Não iniciar subscrições, destinos pagos ou recursos faturáveis.
-- **Eliminação desativada.** Preservar `RETENTION_ENABLED=false`, sem publicar
-  `purge-documents` e sem agendar cron. Não executar eliminação manual de documentos ou cópias
-  nesta revisão. Aprovar uma política não autoriza automaticamente a sua execução.
+- **Sem eliminação automática.** A responsável determinou que as cópias só devem ser
+  apagadas quando o cliente deixar de trabalhar com a Orvel. Esse evento exige revisão manual,
+  com análise separada das obrigações legais e de pedidos válidos de direitos. A conclusão
+  de um processo não significa o fim da relação. Preservar `RETENTION_ENABLED=false`, sem
+  publicar `purge-documents` e sem agendar cron; o mecanismo existente baseado no fecho de
+  processos não corresponde à regra decidida. Não executar eliminações nesta revisão.
 - Entidade e sede fornecidas: **CATIA DROPFORCE MANAGEMENT - FZCO**, Building A1,
   Dubai Digital Park, Dubai Silicon Oasis, Dubai, United Arab Emirates, PO BOX 342001.
   Estes dados não foram verificados num registo comercial.
@@ -92,13 +142,13 @@ externa pela equipa não foi acrescentada. Os ensaios cobrem:
 |---|---|
 | Orvel + revisão jurídica | Confirmar entidade responsável, registo e regime aplicável nos EAU, eventuais regras da zona franca e alcance territorial do RGPD. O número de licença é informação de apoio, não um requisito automático do aviso. Não inferir o regime apenas de «FZCO», da língua do portal ou do servidor na Irlanda. |
 | Orvel + assessor jurídico | Fechar os fundamentos de cada finalidade e de dados de terceiros; avaliar condições adicionais para menores e dados especiais e a necessidade de representante, encarregado ou avaliação de impacto. |
-| Orvel | Destinatários para constituição já confirmados: IFZA ou entidade de constituição, apenas nos EAU. Completar categorias de dados/canais, países de acesso da equipa e fontes fora do portal; confirmar quem gere `hello@orvelpartners.com`. |
-| Orvel + assessor jurídico | Fixar prazos ou critérios verificáveis por categoria, incluindo propostas não aceites, logs, contas e futuras cópias; definir exceções, responsável e revisão. O valor técnico inicial de 30 dias não é política aprovada. |
+| Orvel | Aptidão médica recebida do cliente; registo/certificado fiscal obtidos diretamente no portal da autoridade fiscal. Mantém-se a limitação dos envios à IFZA/entidade de constituição nos EAU. Documentar canais/controlos e outros pontos de C3 sem voltar a pedir origens, países ou entidade/contacto. |
+| Orvel + assessor jurídico | Regra confirmada: sem eliminação automática e revisão manual no fim da relação com o cliente. Definir registo desse evento, responsável, prazo de atuação e exceções por categoria; tratar separadamente propostas não aceites, logs, contas e futuras cópias. O valor técnico de 30 dias não está autorizado para execução. |
 | Orvel + assessor jurídico | Confirmar contratos de tratamento, entidades, subcontratantes e garantias de transferências. Não apresentar um DPA público como prova de contrato adequado ao plano utilizado. |
 | Equipa técnica | Condição de acesso implementada e ensaiada. Falta disponibilizar o aviso aprovado antes da recolha e concluir os restantes ensaios no domínio final. A renderização atual divide texto por parágrafos; preparar versão de publicação legível sem tabelas Markdown não suportadas. |
 | Orvel + assessor jurídico | Aprovar o texto final, versão/data, autoridade/canal de reclamação e procedimento de resposta a direitos. Publicar só depois de fechar os campos pendentes. |
 
-A desativação da eliminação nesta fase de testes não permite ignorar um pedido válido de
+A ausência de eliminação automática não permite ignorar um pedido válido de
 apagamento quando existirem dados reais. Preparar um procedimento de análise, decisão,
 execução controlada e registo, sem executar eliminações agora.
 
@@ -242,3 +292,66 @@ Hobby e a adequação para dados médicos continuam pendentes. Sem auditoria rem
 alterações de código/configuração, publicação, eliminação, envios ou contratação. Diferenças,
 ligações locais e correspondência dos códigos de decisão verificadas; não se repetiram
 testes de aplicação porque só foram alterados documentos.
+
+## Preparação técnica posterior — leitura pública
+
+Após autorização para avançar com os passos necessários, foi implementada a leitura pública
+em `/aviso-de-privacidade`, separada da confirmação autenticada em `/privacidade`. O aviso
+jurídico permanece por aprovar e não foi publicado. A migração de consulta pública está
+instalada em testes e produção; a alteração não muda dados de clientes ou conservação.
+
+Esta etapa substitui a pendência técnica de leitura antes do login e de formatação do texto
+mencionada nas revisões anteriores. Continuam pendentes os factos e validações jurídicas.
+Passaram 106 testes de frontend, 453 verificações SQL e build. Evidências e limites:
+[validação da leitura pública](validacao-privacidade-publica-2026-11-18.md).
+
+## Regra de conservação confirmada, revisão 10
+
+A responsável esclareceu que as cópias não podem ser apagadas automaticamente e que a
+eliminação só deve ocorrer quando o cliente deixar de trabalhar com a Orvel. A decisão
+foi incorporada no aviso e na folha de confirmações: conservar as cópias necessárias durante
+a relação e avaliar manualmente a eliminação no seu termo, ressalvando obrigações legais e
+pedidos válidos relativos aos dados. A conclusão de um processo ou emissão de licença não
+é o evento de fim da relação. Foram retiradas as sugestões de 30 dias para identificação
+e de revisão do acesso 90 dias após o fecho de um serviço.
+
+Faltam definir o registo do fim da relação, responsável e prazo de atuação, além das
+exceções e critérios por categoria. Informação médica não pode ser conservada sem
+necessidade apenas por existir uma relação ativa; Corporate Tax mantém análise própria.
+A proposta de backups fica adiada e sem regras de expiração/limpeza automática autorizadas.
+
+Atualização apenas documental, sem publicar o aviso, eliminar dados, alterar configurações
+ou contratar serviços. Não foi feita nova inspeção remota; mantêm-se as evidências técnicas
+datadas acima. Verificadas diferenças, ligações locais e consistência das referências; testes
+de aplicação não repetidos por não haver alterações executáveis.
+
+## Fecho editorial e âmbito dos documentos, revisão 11
+
+No pedido de finalização, a responsável especificou «o documento que atesta o cliente para
+receber o visa» e «Apenas registo e certificado fiscal». O aviso passa a identificar o
+documento de aptidão médica para emissão do visto e a restringir Corporate Tax ao registo
+e certificado. Não foram inspecionados documentos reais. A recolha de relatórios clínicos,
+resultados detalhados, declarações fiscais e contabilidade não faz parte do âmbito definido.
+
+Foram retiradas as perguntas de escolha de âmbito já respondidas. A folha de decisões reúne
+quatro grupos de confirmações de negócio ainda necessários, os pontos jurídicos por fechar
+e os passos de publicação. As notas de conservação no aviso foram encurtadas, mantendo a
+regra confirmada sem eliminação automática e sem decisões presumidas sobre prazos legais.
+
+Fontes oficiais reconferidas em 18/11/2026:
+
+- [Governo dos EAU — proteção de dados](https://u.ae/en/about-the-uae/digital-uae/data/data-protection-laws):
+  enquadramento federal, regras específicas e UAE Data Office. O resumo não resolve o
+  enquadramento da entidade nem o canal de reclamação concreto a publicar.
+- [Governo dos EAU — informação de saúde](https://u.ae/en/about-the-uae/digital-uae/whole-of-government-approach/digital-health/ict-in-the-health-sector):
+  legislação específica de informação de saúde; não constitui autorização para guardar
+  o documento de aptidão na infraestrutura atual. O texto integral das leis 45/2021 e
+  2/2019 voltou a devolver HTTP 403 no portal legislativo.
+- [Comissão Europeia — aplicação do RGPD](https://commission.europa.eu/law/law-topic/data-protection/information-business-and-organisations/application-gdpr_en)
+  e [informação a prestar](https://commission.europa.eu/law/law-topic/data-protection/information-business-and-organisations/obligations_en):
+  os mercados e estabelecimentos importam para o âmbito; identidade, finalidades, bases,
+  fontes, conservação e direitos devem ser concretizados quando o regime seja aplicável.
+
+Sem publicação, alterações à aplicação, consultas remotas, eliminação, envios ou contratação.
+Diferenças, ligações locais e referências C/J/P verificadas. Os testes técnicos citados nas
+etapas anteriores não foram repetidos nesta atualização exclusivamente documental.

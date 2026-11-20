@@ -11,6 +11,17 @@ base de dados), sem o construir já.
 
 ## Estado
 
+**Atualização de 20/11/2026:** aviso de privacidade final publicado na produção como versão 2;
+backup diário com cópia cifrada e verificada no iCloud Drive; teste completo no Supabase de
+testes (db-test 452/452, e2e 68/68). Pendente: plano comercial da Vercel.
+[Detalhes](docs/fecho-privacidade-e-backup-2026-11-19.md).
+
+**Atualização de 19/11/2026:** [aviso limpo 1.0](docs/aviso-privacidade-2026-11-19.md)
+guardado como rascunho em produção, ainda sem publicação. Backup diário local configurado
+no Codex às 09:00 Europe/Lisbon, sem eliminação. A responsável ainda não dispõe de destino
+independente para a chave/cópias; proteção limitada a este Mac. O teste completo fica para
+o fim, por indicação da responsável. [Resultado e pendências concretas](docs/fecho-privacidade-e-backup-2026-11-19.md).
+
 | Etapa | Conteúdo | Estado |
 |---|---|---|
 | 1 | Esquema, RLS, funções do cliente, Storage, dados fictícios, testes de RLS | ✅ |
@@ -19,20 +30,23 @@ base de dados), sem o construir já.
 | 4 | Área do cliente: início, proposta e aceitação, pagamento, os meus dados | ✅ ramo `etapa-4-area-cliente` (também percurso por fases e prazos; testada no Supabase de dev a 18/11/2026: db-test 268/268, e2e 66/66) |
 | 5 | Documentos: pedidos, upload, validação, emitidos, downloads assinados | ✅ `codex/documentos-design`, publicada como Vercel Preview; migração e fluxo autenticado online de envio, revisão e download validados em 17/11/2026. Ver relatório e âmbito abaixo. |
 | 6 | Cronologia, prazos e calendário | Implementada e validada localmente em `codex/documentos-design`; frontend publicado em Preview e Production em 18/11. Validação autenticada online pendente. |
-| 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal, limpeza) | Conservação preparada e migração instalada nos testes e na produção. Eliminação desativada, sem worker publicado nem agendamento. Avisos e resumo semanal por implementar. |
+| 7 | Emails (Resend) e tarefas agendadas (avisos, resumo semanal) | Infraestrutura de conservação instalada, mas sem eliminação automática por decisão da responsável. Worker e agendamento inativos. Revisão manual no fim da relação com o cliente por definir. Avisos e resumo semanal por implementar. |
 | 8 | Teste do fluxo completo, deploy | Produção publicada no domínio final; administração/MFA, convites, reenvio e login validados em 18/11. Privacidade, backups e restantes condições de lançamento pendentes. |
 
 **Produção — 18/11/2026:** criado o Supabase `orvel-portal-producao`
 (`ilwkiruybzxplnhwcwrs`), separado dos testes, na organização Orvel Partners e no plano Free.
 As 15 migrações estão instaladas; registo público desligado, bucket privado e download protegido
 validados. Contém a administração e um cliente/processo fictício autorizado, sem documentos.
-A eliminação continua desativada. O commit `e9b6811` está publicado em Production em
+A eliminação automática não está autorizada; a regra é rever manualmente os documentos
+quando terminar a relação com o cliente, ressalvando obrigações legais e pedidos válidos de
+direitos. Fechar um processo não termina essa relação. O commit `e9b6811` está publicado em Production em
 `https://portal.orvelpartners.com`, com variáveis separadas, Node 24, DNS e HTTPS confirmados.
 A conta `hello@orvelpartners.com` entrou no painel com TOTP e sessão AAL2. Convite e reenvio
 pelo portal, entrega pelo Resend, novo link pelo Auth hook e login do cliente foram validados;
 um link reutilizado foi recusado. A área do cliente permanece bloqueada pela ausência de aviso
-de privacidade aprovado/publicado. A revisão 9 está preparada para aprovação, com confirmações
-de negócio e jurídicas identificadas. Está implementado o
+de privacidade aprovado/publicado. A revisão 16 incorpora o documento de aptidão para o visto
+e Corporate Tax apenas como registo/certificado; restam pontos operacionais de C3/C4 e a
+validação jurídica identificada na folha de decisões. Está implementado o
 acesso inicial à **proposta e contacto**, com aceitação dentro do portal. Só depois abre o
 acompanhamento do respetivo processo; esta regra também protege APIs e ficheiros. O pagamento
 não é a condição de abertura. **Sem planos pagos por enquanto**;
@@ -42,9 +56,10 @@ entregue após a alteração. Os logótipos originais já estão no Storage de p
 [Validação dos convites e login](docs/validacao-convites-login-2026-11-18.md).
 [Configuração e condições para lançamento](docs/preparacao-producao-2026-11-17.md).
 [Proposta de backups e custos](docs/backups-e-custos-2026-11-18.md).
+[Preparação do backup local provisório](docs/backup-local-2026-11-18.md).
 [Rascunho de privacidade para revisão](docs/aviso-privacidade-rascunho-2026-11-18.md).
 [Revisão de privacidade e regra de acesso](docs/revisao-privacidade-e-acesso-2026-11-18.md).
-[Confirmações para fechar o aviso e proposta de conservação](docs/confirmacoes-privacidade-2026-11-18.md).
+[Confirmações para fechar o aviso e regra de conservação](docs/confirmacoes-privacidade-2026-11-18.md).
 [Validação da proposta e abertura do processo](docs/validacao-proposta-2026-11-18.md).
 
 Validação desta regra: **100 testes de frontend, 437 verificações SQL**, typecheck e build
@@ -468,10 +483,12 @@ where u.email = 'email-do-administrador' and o.slug = 'orvel';
 - Confirmar backups e testar a recuperação da base de dados **e dos ficheiros**. Os backups
   de PostgreSQL do Supabase não incluem os objetos do Storage:
   [documentação oficial](https://supabase.com/docs/guides/platform/backups).
-- Validar remotamente a limpeza dos documentos sensíveis conforme o prazo de conservação
-  aprovado. A implementação local está preparada, mas a eliminação e o agendamento continuam
-  desativados a pedido da responsável, enquanto o texto e o prazo não forem aprovados.
-- Publicar o aviso de privacidade final validado pelo advogado. O texto criado pelas migrações
+- Definir e validar o procedimento manual de conservação quando terminar a relação com o
+  cliente: registo do evento, responsável, prazo de atuação e exceções. Não ativar limpeza
+  automática ou agendamento. O mecanismo existente baseado no fecho de um processo não
+  corresponde à regra atual e não deve ser utilizado para a executar.
+- Publicar o aviso de privacidade final após fechar os factos, a revisão jurídica e a aprovação
+  da responsável. O texto criado pelas migrações
   é provisório; a sua utilização nos testes não demonstra revisão jurídica. Sem um aviso
   publicado, a área de cliente não abre.
 - Rever com o advogado o texto de aceitação da proposta (`organizations.proposal_acceptance_text`).
@@ -541,18 +558,37 @@ aviso de privacidade aprovado e os restantes percursos autenticados continuam pe
 O MFA da conta proprietária Supabase foi configurado pela responsável e confirmado em 18/11:
 Google Authenticator ativo e 10 códigos de recuperação disponíveis, sem os abrir ou copiar.
 O MFA do administrador do portal também já foi validado. O rascunho de privacidade inclui a denominação
-CATIA DROPFORCE MANAGEMENT - FZCO e a morada no Dubai indicadas pela responsável. A revisão 9
+CATIA DROPFORCE MANAGEMENT - FZCO e a morada no Dubai indicadas pela responsável. A revisão 16
 descreve a aceitação dentro do portal e separa a confirmação de leitura dos consentimentos
-específicos. A folha de decisões reúne seis grupos de respostas ainda necessários, os fundamentos e prazos a validar;
-os prazos sugeridos não estão em vigor. O aviso continua sem publicação. O percurso inicial, a autorização após aceitar
+específicos. Inclui Catia Fernandes e Fabio Roque, ambos General Manager, como responsáveis
+pelo contacto, e os EAU como país dos clientes, dos acessos da equipa e do Mac dos backups.
+A IFZA foi identificada como zona franca/entidade de registo. A folha de decisões reúne
+os factos, fundamentos e critérios ainda por validar;
+C4 está parcialmente confirmado: sem eliminação automática e revisão manual quando o cliente
+deixar de trabalhar com a Orvel. A anterior sugestão de 30 dias após o fecho foi retirada.
+C3 confirma a aptidão médica recebida do cliente e o registo/certificado de Corporate Tax
+obtidos diretamente pela equipa no portal da autoridade fiscal. Mantém-se a limitação dos
+envios do serviço à IFZA/entidade de constituição nos EAU. Restam outros pontos de C3,
+sem voltar a perguntar estas origens nem acrescentar destinatários.
+O aviso continua sem publicação. O percurso inicial, a autorização após aceitar
 e a redação de confirmação de leitura estão publicados no commit `e9b6811`.
+
+A leitura pública está implementada em `/aviso-de-privacidade`, com ligação nos ecrãs de
+entrada e consulta apenas da versão publicada. A confirmação autenticada continua separada.
+Sem aviso publicado, a página informa que está em preparação. A migração
+`20261118190033_public_privacy_notice` está nos dois projetos; **106 testes de frontend e
+453 verificações SQL** passaram, incluindo a consulta durante a inicialização da sessão.
+[Validação da leitura pública](docs/validacao-privacidade-publica-2026-11-18.md).
 [Evidências e próximos passos](docs/preparacao-producao-2026-11-17.md).
 
 No Supabase de testes foram aplicadas as migrações de cronologia/prazos, conservação e
 permissões de infraestrutura. `sign-download` foi atualizada para a versão 4, com validação do
 caminho antes da assinatura. A função de eliminação **não foi publicada** e não existe
-agendamento de limpeza. A responsável confirmou que o aviso e o prazo de conservação ainda
-não estão aprovados: **não ativar a eliminação**.
+agendamento de limpeza. A responsável confirmou **não haver eliminação automática**: conservar
+as cópias necessárias durante a relação com o cliente e rever manualmente no seu termo,
+ressalvando obrigações legais e pedidos válidos de direitos. A execução e as exceções ainda
+precisam de definição; o aviso não está aprovado/publicado. O mecanismo abaixo é capacidade
+técnica anterior, **não autorizada para execução e incompatível com o critério atual**.
 
 - `20261118130000_retention.sql` instala uma fila privada e quatro funções exclusivas do
   servidor. A seleção limita-se à organização configurada, a processos fechados e a documentos
@@ -569,7 +605,8 @@ não estão aprovados: **não ativar a eliminação**.
   **e** `RETENTION_ENABLED=true`. A migração e o deploy não ativam qualquer tarefa.
 - O agendamento opcional em `scripts/remote/retention-schedule-dry-run.sql` usa Vault e faz
   apenas simulação diária. O ficheiro não foi executado. É preciso monitorizar a resposta HTTP,
-  além do estado do cron. Uma ativação futura exige aprovação da política e ensaio remoto.
+  além do estado do cron. A decisão atual exclui o seu agendamento e ativação; aprovar o
+  aviso de privacidade não altera essa decisão.
 - Os caminhos dos documentos e PDFs de propostas são validados também na alteração e antes
   de gerar downloads, impedindo que um registo visível aponte para outra organização/processo.
 - `20261118140000_platform_privileges.sql` retira a execução de `rls_auto_enable()` aos papéis
@@ -580,9 +617,15 @@ não estão aprovados: **não ativar a eliminação**.
 resultados sem emails, caminhos de documentos ou segredos. Distingue os controlos que pode
 verificar dos pontos que continuam a exigir acesso às plataformas ou decisão da responsável.
 
-Para backups, a escolha do destino e a configuração continuam pendentes. O ensaio deve restaurar
-uma base e ficheiros fictícios num projeto isolado, confirmar hashes e permissões e documentar
-o tempo e a perda máxima de dados possíveis. A política de conservação deve abranger também
+Para backups, foi escolhida uma pasta privada neste Mac como proteção provisória. Em 19/11,
+três cópias cifradas foram concluídas e a segunda recuperada num PostgreSQL em memória sem rede:
+59 tabelas, 96 registos e 3 ficheiros de branding, com contagens/hashes conferidos e RLS reposta.
+Há agendamento diário local no Codex às 09:00 Europe/Lisbon, sem limpeza automática. O executor
+foi verificado manualmente com a cópia mais recente. Faltam destino independente para chave/cópias,
+observação do primeiro disparo/avisos e recuperação completa dos serviços do portal.
+Ver o [relatório local](docs/backup-local-2026-11-18.md).
+O ensaio completo deve validar login/MFA, funções, emails e isolamento num Supabase separado,
+documentando tempo e perda máxima de dados possíveis. A política de conservação deve abranger também
 as cópias: uma restauração não deve voltar a disponibilizar ficheiros já eliminados pela política.
 Esta implementação de limpeza cobre documentos registados; ficheiros órfãos de uploads
 interrompidos e a conservação de backups ainda precisam de tratamento antes de prometer
